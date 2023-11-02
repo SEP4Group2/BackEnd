@@ -19,4 +19,9 @@ public class PlantManagerImpl : IPlantManager
     {
         return await plantDao.CreateAsync(plantCreationDto);
     }
+
+    public async Task<Plant> GetAsync(int id)
+    {
+        return await plantDao.GetAsync(id);
+    }
 }

@@ -9,15 +9,12 @@ namespace BackEndAPI.Controllers;
 [Route("[controller]")]
 public class PlantController : ControllerBase
 {
-
     private IPlantManager plantManager;
-
 
     public PlantController(IPlantManager plantManager)
     {
         this.plantManager = plantManager;
     }
-    
     
     [HttpPost]
     [Route("createPlant")]
@@ -27,13 +24,24 @@ public class PlantController : ControllerBase
         {
             Plant newPlant = await plantManager.CreateAsync(plant);
             return Created($"/file/{newPlant.PlantId}", newPlant);
-
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
             return StatusCode(500, e.Message);
         }
+    }
+    
+    [HttpGet]
+    [Route("plants/{plantId}")]
+    public async Task<ActionResult<Plant>> GetPlant(int plantId)
+    {
+        Plant plant = await plantManager.GetAsync(plantId);
+        if (plant == null)
+        {
+            return NotFound();
+        }
+        return Ok(plant);
     }
 
 
