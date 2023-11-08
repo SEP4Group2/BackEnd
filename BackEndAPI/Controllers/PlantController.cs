@@ -53,5 +53,21 @@ public class PlantController : ControllerBase
         }
     }
 
+    [HttpGet]
+    [Route("getAllPlants")]
+    public async Task<ActionResult<IEnumerable<GetAllPlantsDTO>>> GetAllPlantsAsync()
+    {
+        try
+        {
+            IEnumerable<GetAllPlantsDTO> plants = await plantManager.GetAllPlantsAsync();
+            return Ok(plants.ToList());
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
+
 
 }
