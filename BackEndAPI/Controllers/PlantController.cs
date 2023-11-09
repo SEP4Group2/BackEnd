@@ -35,6 +35,23 @@ public class PlantController : ControllerBase
             return StatusCode(500, e.Message);
         }
     }
+    
+    [HttpGet]
+    [Route("plants/{plantId:int}")]
+    public async Task<ActionResult<Plant>> GetPlant(int plantId)
+    {
+
+        try
+        {
+            Plant plant = await plantManager.GetAsync(plantId);
+            return Ok(plant);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
 
 
 }
