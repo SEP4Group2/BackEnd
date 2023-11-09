@@ -1,4 +1,5 @@
-﻿using DataAccess.DAOInterfaces;
+﻿using System.Linq.Expressions;
+using DataAccess.DAOInterfaces;
 using Domain.DTOs;
 using Domain.Model;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -18,11 +19,14 @@ public class PlantDAO : IPlantDAO
     {
         try
         {
-            var plant = new Plant()
+            PlantPreset? existing = await _appContext.Presets.FindAsync(plantCreationDto.PlantPresetId);
+            if (existing == null) throw new Exception("Preset not found");
+
+                var plant = new Plant()
             {
                 Location = plantCreationDto.Location,
                 Type = plantCreationDto.Type,
-                // PlantPreset = plantCreationDto.PlantPreset, 
+                PlantPreset = existing,
                 Name = plantCreationDto.Name
             };
             EntityEntry<Plant> newPlant = await _appContext.Plants.AddAsync(plant);
