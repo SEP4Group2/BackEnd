@@ -5,5 +5,6 @@ namespace Logic.Interfaces;
 
 public interface IPlantPresetManager
 {
-    Task<PlantPreset> CreateAsync(PlantPresetCreationDTO plantCreationDto); 
+    Task<PlantPreset> CreateAsync(PlantPresetCreationDTO plantCreationDto);
+    Task<PlantPreset> GetByIdAsync(int presetId);
 }

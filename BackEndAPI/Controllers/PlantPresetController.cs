@@ -38,4 +38,21 @@ public class PlantPresetController : ControllerBase
 
     }
     
+    [HttpGet]
+    [Route("presets/{presetId:int}")]
+    public async Task<ActionResult<PlantPreset>> GetPlant(int presetId)
+    {
+
+        try
+        {
+            PlantPreset plantPreset = await plantPresetManager.GetByIdAsync(presetId);
+            return Ok(plantPreset);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
+
 }
