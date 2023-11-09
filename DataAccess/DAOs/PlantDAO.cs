@@ -40,8 +40,14 @@ public class PlantDAO : IPlantDAO
         }
     }
 
-    public Task<Plant> GetAsync(int id)
+    public async Task<Plant> GetAsync(int id)
     {
-        throw new NotImplementedException();
+        Plant? plant = await _appContext.Plants.FindAsync(id);
+            if (plant == null)
+            {
+                throw new Exception("Plant not found");
+            }
+            
+        return plant;
     }
 }

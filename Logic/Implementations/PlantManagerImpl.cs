@@ -19,4 +19,17 @@ public class PlantManagerImpl : IPlantManager
     {
         return await plantDao.CreateAsync(plantCreationDto);
     }
+    
+    public async Task<Plant> GetAsync(int id)
+    {
+        try
+        {
+            return await plantDao.GetAsync(id);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }
