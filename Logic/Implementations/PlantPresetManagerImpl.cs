@@ -18,4 +18,9 @@ public class PlantPresetManagerImpl : IPlantPresetManager
     {
         return await plantPresetDao.CreateAsync(plantCreationDto);
     }
+
+    public async Task<PlantPreset> GetByIdAsync(int presetId)
+    {
+        return await plantPresetDao.GetAsync(presetId);
+    }
 }

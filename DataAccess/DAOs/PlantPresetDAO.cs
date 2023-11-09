@@ -42,6 +42,12 @@ public class PlantPresetDAO : IPlantPresetDAO
 
     public async Task<PlantPreset> GetAsync(int id)
     {
-        throw new NotImplementedException();
+        PlantPreset? plantPreset = await _appContext.Presets.FindAsync(id);
+        if (plantPreset == null)
+        {
+            throw new Exception("Plant Preset not found");
+        }
+            
+        return plantPreset;
     }
 }
