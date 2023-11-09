@@ -2,6 +2,7 @@
 
 public class PlantPresetCreationDTO
 {
+    
 
     public string Name { get; set; }
     public float Humidity { get; set; }
