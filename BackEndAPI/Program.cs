@@ -17,6 +17,8 @@ builder.Services.AddScoped<IPlantDataManager, PlantDataManagerImpl>();
 builder.Services.AddScoped<IPlantDAO, PlantDAO>();
 builder.Services.AddScoped<IPlantPresetDAO, PlantPresetDAO>();
 builder.Services.AddScoped<IPlantDataDAO, PlantDataDAO>();
+builder.Services.AddScoped<IUserDAO, UserDAO>();
+builder.Services.AddScoped<IUserManager, UserManagerImpl>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
