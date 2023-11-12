@@ -3,6 +3,7 @@ using DataAccess.DAOInterfaces;
 using DataAccess.DAOs;
 using Logic.Implementations;
 using Logic.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using AppContext = DataAccess.AppContext;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 //3000
 // builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
-builder.Services.AddDbContext<AppContext>();
+builder.Services.AddDbContext<AppContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 builder.Services.AddScoped<IPlantManager, PlantManagerImpl>();
 builder.Services.AddScoped<IPlantPresetManager, PlantPresetManagerImpl>();
 builder.Services.AddScoped<IPlantDAO, PlantDAO>();
@@ -23,11 +27,17 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+
+// Apply migrations
+using (var scope = app.Services.CreateScope())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppContext>();
+    dbContext.Database.Migrate();
 }
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 app.UseHttpsRedirection();
 
