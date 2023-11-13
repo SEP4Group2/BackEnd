@@ -32,5 +32,22 @@ public class UserController : ControllerBase
         }
 
     }
+    
+    [HttpGet]
+    [Route("getAllUsers")]
+    public async Task<ActionResult<IEnumerable<GetAllUsersDTO>>> GetAllUsersAsync()
+    {
+        try
+        {
+            IEnumerable<GetAllUsersDTO> users = await userManager.GetAllUsersAsync();
+            return Ok(users.ToList());
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
+    
 
 }
