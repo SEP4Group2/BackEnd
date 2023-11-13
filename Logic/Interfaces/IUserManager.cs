@@ -6,4 +6,6 @@ namespace Logic.Interfaces;
 public interface IUserManager
 {
     Task<User> CreateAsync(UserCreationDto userCreationDto);
+
+    Task<IEnumerable<GetAllUsersDTO>> GetAllUsersAsync();
 }

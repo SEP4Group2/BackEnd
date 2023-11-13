@@ -1,6 +1,7 @@
 using DataAccess.DAOInterfaces;
 using Domain.DTOs;
 using Domain.Model;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace DataAccess.DAOs;
@@ -35,5 +36,13 @@ public class UserDAO : IUserDAO
             Console.WriteLine(e);
             throw;
         }
+    }
+
+    public async Task<ICollection<GetAllUsersDTO>> GetAllUsersAsync()
+    {
+        return await _appContext.Users
+            .Select(user => new GetAllUsersDTO (
+                user.Username, user.Password))
+            .ToListAsync();
     }
 }

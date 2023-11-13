@@ -19,4 +19,12 @@ public class UserManagerImpl : IUserManager
     {
        return await _userDao.CreateAsync(userCreationDto);
     }
+
+    public async Task<IEnumerable<GetAllUsersDTO>> GetAllUsersAsync()
+    {
+        return await _userDao.GetAllUsersAsync();
+    }
+    
+    
+    
 }
