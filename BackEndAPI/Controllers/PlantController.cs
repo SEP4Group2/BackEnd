@@ -54,7 +54,6 @@ public class PlantController : ControllerBase
     }
 
     [HttpGet]
-    [Route("getAllPlants")]
     public async Task<ActionResult<IEnumerable<GetAllPlantsDTO>>> GetAllPlantsAsync()
     {
         try
