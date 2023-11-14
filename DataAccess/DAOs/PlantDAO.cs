@@ -2,6 +2,7 @@
 using DataAccess.DAOInterfaces;
 using Domain.DTOs;
 using Domain.Model;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace DataAccess.DAOs;
@@ -49,5 +50,13 @@ public class PlantDAO : IPlantDAO
             }
             
         return plant;
+    }
+
+    public async Task<List<GetAllPlantsDTO>> GetAllPlantsAsync()
+    {
+        return await _appContext.Plants
+            .Select(p => new GetAllPlantsDTO (
+                p.PlantId, p.Name, p.Location, p.Type, p.PlantPreset))
+            .ToListAsync();
     }
 }
