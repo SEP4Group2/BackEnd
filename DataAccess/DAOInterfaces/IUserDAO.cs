@@ -5,7 +5,7 @@ namespace DataAccess.DAOInterfaces;
 
 public interface IUserDAO
 {
-     Task<User> CreateAsync(UserCreationDto userCreationDto);
+     Task<User> CreateAsync(UserDTO userCreationDto);
 
-     Task<ICollection<GetAllUsersDTO>> GetAllUsersAsync();
+     Task<IEnumerable<User?>> GetAllUsersAsync();
 }

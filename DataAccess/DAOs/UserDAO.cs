@@ -15,7 +15,7 @@ public class UserDAO : IUserDAO
         _appContext = appContext;
     }
     
-    public async Task<User> CreateAsync(UserCreationDto userCreationDto)
+    public async Task<User> CreateAsync(UserDTO userCreationDto)
     {
         try
         {
@@ -38,11 +38,16 @@ public class UserDAO : IUserDAO
         }
     }
 
-    public async Task<ICollection<GetAllUsersDTO>> GetAllUsersAsync()
+    public async Task<IEnumerable<User?>> GetAllUsersAsync()
     {
-        return await _appContext.Users
-            .Select(user => new GetAllUsersDTO (
-                user.Username, user.Password))
-            .ToListAsync();
+       
+        var users = await _appContext.Users.ToListAsync();
+
+        if (users == null || !users.Any())
+        {
+            throw new Exception("No users found");
+        }
+        Console.WriteLine("done");
+        return users.Select(user => new User(user.UserId,user.Username, user.Password));
     }
 }
