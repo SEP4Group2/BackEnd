@@ -42,7 +42,6 @@ public class UserController : ControllerBase
     }
     
     [HttpGet]
-    [Route("getAllUsers")]
     public async Task<ActionResult<IEnumerable<User>>> GetAllUsersAsync()
     {
         try
