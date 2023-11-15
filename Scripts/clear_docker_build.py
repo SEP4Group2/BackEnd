@@ -11,13 +11,13 @@ def rename_image_name_in_compose_file(new_image_name):
     composePath = '../docker-compose.yml';
     with open(composePath, 'r') as file:
         content = file.read()
-        
-    content = re.sub(r'image: "plantapi"', f'image: "{new_image_name}"', content)
+
+    content = re.sub(r'(services:\s+plantapi:\s+image: ").*?(")', fr'\g<1>{new_image_name}\2', content, flags=re.DOTALL)
     
     with open(composePath, 'w') as file:
         file.write(content)
 def run_compose_up():
-    subprocess.run(["docker", "compose","-f", "../docker-compose.yml", "up"]).wait()
+    subprocess.run(["docker", "compose","-f", "../docker-compose.yml", "up"])
 
 def main():
     parser = argparse.ArgumentParser(description="clean build docker")
