@@ -26,7 +26,6 @@ public class PlantDAO : IPlantDAO
                 var plant = new Plant()
             {
                 Location = plantCreationDto.Location,
-                Type = plantCreationDto.Type,
                 PlantPreset = existing,
                 Name = plantCreationDto.Name
             };
@@ -56,7 +55,7 @@ public class PlantDAO : IPlantDAO
     {
         return await _appContext.Plants
             .Select(p => new GetAllPlantsDTO (
-                p.PlantId, p.Name, p.Location, p.Type, p.PlantPreset))
+                p.PlantId, p.Name, p.Location, p.PlantPreset))
             .ToListAsync();
     }
 }
