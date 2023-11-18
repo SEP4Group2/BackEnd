@@ -7,17 +7,14 @@ public class GetAllPlantsDTO
     public int Id { get; set; }
     public string Name { get; set; }
     public string Location { get; set; }
-    
-    public string Type { get; set; }
-    
+
     public PlantPreset PlantPreset { get; set; }
 
-    public GetAllPlantsDTO(int id, string name, string location, string type, PlantPreset plantPreset)
+    public GetAllPlantsDTO(int id, string name, string location, PlantPreset plantPreset)
     {
         Id = id;
         Name = name;
         Location = location;
-        Type = type;
         PlantPreset = plantPreset;
 
     }
