@@ -13,8 +13,10 @@ builder.Services.AddDbContext<AppContext>(options =>
 });
 builder.Services.AddScoped<IPlantManager, PlantManagerImpl>();
 builder.Services.AddScoped<IPlantPresetManager, PlantPresetManagerImpl>();
+builder.Services.AddScoped<IPlantDataManager, PlantDataManagerImpl>();
 builder.Services.AddScoped<IPlantDAO, PlantDAO>();
 builder.Services.AddScoped<IPlantPresetDAO, PlantPresetDAO>();
+builder.Services.AddScoped<IPlantDataDAO, PlantDataDAO>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
