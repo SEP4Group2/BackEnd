@@ -13,7 +13,7 @@ COPY --from=build-env /app/out .
 #Adding postgressql-client and a custom entrypoint, where the docker waits until the database is finished loading
 #Afterwards proceeds with running the API
 RUN apk add --no-cache postgresql-client
-COPY entrypoint1.sh ./
-RUN chmod +x ./entrypoint1.sh
+COPY entrypoint.sh ./
+RUN chmod +x ./entrypoint.sh
 
-ENTRYPOINT ["./entrypoint1.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
