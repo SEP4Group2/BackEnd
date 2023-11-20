@@ -37,7 +37,7 @@ public class PlantController : ControllerBase
     }
     
     [HttpGet]
-    [Route("plants/{plantId:int}")]
+    [Route("{plantId:int}")]
     public async Task<ActionResult<Plant>> GetPlant(int plantId)
     {
 
@@ -54,6 +54,7 @@ public class PlantController : ControllerBase
     }
 
     [HttpGet]
+    [Route("all")]
     public async Task<ActionResult<IEnumerable<GetAllPlantsDTO>>> GetAllPlantsAsync()
     {
         try
