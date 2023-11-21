@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   plantapi:
-    image: "testcompostcp"
+    image: "plantapi"
     ports:
       - "5000:5000"
     environment:
