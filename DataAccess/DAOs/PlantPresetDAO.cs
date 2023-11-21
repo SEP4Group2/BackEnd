@@ -56,17 +56,7 @@ public class PlantPresetDAO : IPlantPresetDAO
     {
         try
         {
-            return await _appContext.Presets
-                .Select(p => new PlantPreset()
-                {
-                    PresetId = p.PresetId,
-                    Name = p.Name,
-                    Humidity = p.Humidity,
-                    Moisture = p.Moisture,
-                    UVLight = p.UVLight,
-                    Temperature = p.Temperature
-                
-                }).ToListAsync();
+            return await _appContext.Presets.ToListAsync();
 
         }
         catch (Exception e)
