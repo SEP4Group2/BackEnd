@@ -17,4 +17,9 @@ public class PlantDataManagerImpl : IPlantDataManager
     {
         return await plantDataDao.SaveAsync(plantData);
     }
+
+    public async Task<List<PlantData>> GetAllByPlantIdAsync(int id)
+    {
+        return await plantDataDao.GetAllByPlantIdAsync(id);
+    }
 }

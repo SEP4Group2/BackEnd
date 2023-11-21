@@ -8,4 +8,5 @@ public interface IPlantDataManager
     
    
     Task<PlantData> SaveAsync(PlantData plantData);
+    Task<List<PlantData>> GetAllByPlantIdAsync(int id);
 }

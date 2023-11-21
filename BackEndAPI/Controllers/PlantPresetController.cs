@@ -39,7 +39,7 @@ public class PlantPresetController : ControllerBase
     }
     
     [HttpGet]
-    [Route("presets/{presetId:int}")]
+    [Route("{presetId:int}")]
     public async Task<ActionResult<PlantPreset>> GetPlant(int presetId)
     {
 
