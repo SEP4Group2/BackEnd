@@ -54,5 +54,20 @@ public class PlantPresetController : ControllerBase
             return StatusCode(500, e.Message);
         }
     }
+    
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<PlantPreset>>> GetAllPlantPresetsAsync()
+    {
+        try
+        {
+            IEnumerable<PlantPreset> presets = await plantPresetManager.GetAllPlantPresetsAsync();
+            return Ok(presets.ToList());
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
 
 }
