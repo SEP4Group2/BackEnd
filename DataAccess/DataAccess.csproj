@@ -21,4 +21,9 @@
       <ProjectReference Include="..\Domain\Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Migrations\20231115140256_InitialMigration.Designer.cs" />
+      <Compile Remove="Migrations\AppContextModelSnapshot.cs" />
+    </ItemGroup>
+
 </Project>

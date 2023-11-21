@@ -1,6 +1,7 @@
 ﻿using DataAccess.DAOInterfaces;
 using Domain.DTOs;
 using Domain.Model;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace DataAccess.DAOs;
@@ -49,5 +50,30 @@ public class PlantPresetDAO : IPlantPresetDAO
         }
             
         return plantPreset;
+    }
+    
+    public async Task<List<PlantPreset>> GetAllPlantPresentsAsync()
+    {
+        try
+        {
+            return await _appContext.Presets
+                .Select(p => new PlantPreset()
+                {
+                    PresetId = p.PresetId,
+                    Name = p.Name,
+                    Humidity = p.Humidity,
+                    Moisture = p.Moisture,
+                    UVLight = p.UVLight,
+                    Temperature = p.Temperature
+                
+                }).ToListAsync();
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        
     }
 }
