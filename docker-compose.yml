@@ -1,8 +1,7 @@
 version: "3.8"
-
 services:
   plantapi:
-    image: "plantapi"
+    image: "testcompostcp"
     ports:
       - "5000:5000"
     environment:
@@ -19,5 +18,13 @@ services:
       - POSTGRES_PASSWORD=root
     volumes:
       - postgres_data:/var/lib/postgresql/data
+  tcpserver:
+      image: tinajassik/tcp-server-1:latest
+      depends_on:
+        - plantapi
+      ports:
+        - "23:23"
+      environment:
+        - PLANTAPI_URL=http://plantapi:5000
 volumes:
   postgres_data:
