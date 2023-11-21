@@ -14,7 +14,7 @@ def install_ef():
 
 def run_migration(migration_name):
     subprocess.run([
-        "C:\\Users\\Ola\\.dotnet\\tools\\dotnet-ef", "migrations", "add", migration_name,
+        "dotnet", "ef", migrations", "add", migration_name,
         "--project", "../DataAccess/DataAccess.csproj",
         "--startup-project", "../BackEndAPI/BackEndAPI.csproj"
     ])
