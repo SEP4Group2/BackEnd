@@ -26,7 +26,8 @@ public class PlantPresetDAO : IPlantPresetDAO
                 Humidity = preset.Humidity,
                UVLight = preset.UVLight,
                Moisture = preset.Moisture,
-               Temperature = preset.Temperature
+               Temperature = preset.Temperature,
+               UserId = preset.UserId
             };
             
            EntityEntry<PlantPreset> newPreset = await _appContext.Presets.AddAsync(plantPreset);
