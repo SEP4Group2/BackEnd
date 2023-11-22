@@ -10,4 +10,7 @@ public interface IPlantPresetDAO
     Task<PlantPreset> GetAsync(int id);
 
     Task<List<PlantPreset>> GetAllPlantPresentsAsync();
+
+    Task<List<PlantPreset>> GetPresetsByUserIdAsync(int userId);
+
 }

@@ -67,4 +67,19 @@ public class PlantPresetDAO : IPlantPresetDAO
         }
         
     }
+    
+    public async Task<List<PlantPreset>> GetPresetsByUserIdAsync(int userId)
+    {
+        try
+        {
+            return await _appContext.Presets.Where(p=>p.UserId == userId).ToListAsync();
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        
+    }
 }
