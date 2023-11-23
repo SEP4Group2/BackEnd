@@ -5,10 +5,8 @@ namespace Logic.Interfaces;
 
 public interface IPlantManager
 {
-
     Task<Plant> CreateAsync(PlantCreationDTO plantCreationDto);
     Task<Plant> GetAsync(int id);
-
     Task<IEnumerable<GetAllPlantsDTO>> GetAllPlantsAsync();
-
+    Task RemoveAsync(int id);
 }
