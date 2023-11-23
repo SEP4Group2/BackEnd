@@ -7,7 +7,6 @@ namespace Logic.Implementations;
 
 public class PlantManagerImpl : IPlantManager
 {
-
     private IPlantDAO plantDao;
 
     public PlantManagerImpl(IPlantDAO plantDao)
@@ -24,7 +23,12 @@ public class PlantManagerImpl : IPlantManager
     {
         return await plantDao.GetAllPlantsAsync();
     }
-    
+
+    public async Task RemoveAsync(int id)
+    {
+        await plantDao.RemoveAsync(id);
+    }
+
     public async Task<Plant> GetAsync(int id)
     {
         try

@@ -9,15 +9,12 @@ namespace BackEndAPI.Controllers;
 [Route("[controller]")]
 public class PlantController : ControllerBase
 {
-
     private IPlantManager plantManager;
-
 
     public PlantController(IPlantManager plantManager)
     {
         this.plantManager = plantManager;
     }
-    
     
     [HttpPost]
     [Route("createPlant")]
@@ -68,5 +65,19 @@ public class PlantController : ControllerBase
         }
     }
 
-
+    [HttpDelete]
+    [Route("{plantId:int}")]
+    public async Task<ActionResult> DeletePlantAsync(int plantId)
+    {
+        try
+        {
+            await plantManager.RemoveAsync(plantId);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
 }
