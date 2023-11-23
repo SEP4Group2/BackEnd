@@ -6,11 +6,27 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "PlantData",
+                columns: table => new
+                {
+                    TimeStamp = table.Column<string>(type: "text", nullable: false),
+                    Humidity = table.Column<float>(type: "real", nullable: true),
+                    Temperature = table.Column<float>(type: "real", nullable: true),
+                    UVLight = table.Column<float>(type: "real", nullable: false),
+                    Moisture = table.Column<float>(type: "real", nullable: false),
+                    TankLevel = table.Column<float>(type: "real", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlantData", x => x.TimeStamp);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Presets",
                 columns: table => new
@@ -58,6 +74,9 @@ namespace DataAccess.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "PlantData");
+
             migrationBuilder.DropTable(
                 name: "Plants");
 
