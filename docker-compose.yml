@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  plantapi:
+    image: "plantapi"
+    ports:
+      - "5000:5000"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=db;Port=5432;Database=plantdb;UserId=admin;Password=root;
+    depends_on:
+      - db
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=plantdb
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=root
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  tcpserver:
+      image: tinajassik/tcp-server-1:latest
+      depends_on:
+        - plantapi
+      ports:
+        - "23:23"
+      environment:
+        - PLANTAPI_URL=http://plantapi:5000
+volumes:
+  postgres_data:

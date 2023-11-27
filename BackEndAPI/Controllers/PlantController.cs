@@ -33,16 +33,50 @@ public class PlantController : ControllerBase
     }
     
     [HttpGet]
-    [Route("plants/{plantId}")]
+    [Route("{plantId:int}")]
     public async Task<ActionResult<Plant>> GetPlant(int plantId)
     {
-        Plant plant = await plantManager.GetAsync(plantId);
-        if (plant == null)
+
+        try
         {
-            return NotFound();
+            Plant plant = await plantManager.GetAsync(plantId);
+            return Ok(plant);
         }
-        return Ok(plant);
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
     }
 
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<GetAllPlantsDTO>>> GetAllPlantsAsync()
+    {
+        try
+        {
+            IEnumerable<GetAllPlantsDTO> plants = await plantManager.GetAllPlantsAsync();
+            return Ok(plants.ToList());
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
 
+    [HttpDelete]
+    [Route("{plantId:int}")]
+    public async Task<ActionResult> DeletePlantAsync(int plantId)
+    {
+        try
+        {
+            await plantManager.RemoveAsync(plantId);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
 }
