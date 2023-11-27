@@ -47,7 +47,7 @@ public class UserDAO : IUserDAO
         {
             throw new Exception("No users found");
         }
-        Console.WriteLine("done");
+    
         return users.Select(user => new User(user.UserId,user.Username, user.Password));
     }
 }
