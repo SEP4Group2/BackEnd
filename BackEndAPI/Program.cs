@@ -1,8 +1,12 @@
+using System.Text;
+using DataAccess;
 using DataAccess.DAOInterfaces;
 using DataAccess.DAOs;
 using Logic.Implementations;
 using Logic.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using AppContext = DataAccess.AppContext;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +21,21 @@ builder.Services.AddScoped<IPlantDataManager, PlantDataManagerImpl>();
 builder.Services.AddScoped<IPlantDAO, PlantDAO>();
 builder.Services.AddScoped<IPlantPresetDAO, PlantPresetDAO>();
 builder.Services.AddScoped<IPlantDataDAO, PlantDataDAO>();
+builder.Services.AddScoped<IUserDAO, UserDAO>();
+builder.Services.AddScoped<IUserManager, UserManagerImpl>();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+});
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
