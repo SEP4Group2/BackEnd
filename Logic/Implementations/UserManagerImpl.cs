@@ -22,18 +22,15 @@ public class UserManagerImpl : IUserManager
 
     public async Task<IEnumerable<User?>> GetAllUsersAsync()
     {
-        Console.WriteLine("done2");
         return await _userDao.GetAllUsersAsync();
     }
 
 
     public async Task<User?> ValidateUser(UserDTO dto)
     {
-        Console.WriteLine("done1");
         IEnumerable<User?> users = await _userDao.GetAllUsersAsync();
         User? existingUser = users.FirstOrDefault(u =>
             u.Username.Equals(dto.Username, StringComparison.OrdinalIgnoreCase));
-        Console.WriteLine("After this");
 
         if (existingUser == null)
         {
