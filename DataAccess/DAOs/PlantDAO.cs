@@ -20,13 +20,14 @@ public class PlantDAO : IPlantDAO
     {
         try
         {
-            PlantPreset? existing = await _appContext.Presets.FindAsync(plantCreationDto.PlantPresetId);
-            if (existing == null) throw new Exception("Preset not found");
-
+            PlantPreset? existingPreset = await _appContext.Presets.FindAsync(plantCreationDto.PlantPresetId);
+            if (existingPreset == null) throw new Exception("Preset not found");
+            
+            
                 var plant = new Plant()
             {
                 Location = plantCreationDto.Location,
-                PlantPreset = existing,
+                PlantPreset = existingPreset,
                 Name = plantCreationDto.Name
             };
             EntityEntry<Plant> newPlant = await _appContext.Plants.AddAsync(plant);

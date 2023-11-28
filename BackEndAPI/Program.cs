@@ -23,6 +23,9 @@ builder.Services.AddScoped<IPlantPresetDAO, PlantPresetDAO>();
 builder.Services.AddScoped<IPlantDataDAO, PlantDataDAO>();
 builder.Services.AddScoped<IUserDAO, UserDAO>();
 builder.Services.AddScoped<IUserManager, UserManagerImpl>();
+builder.Services.AddScoped<IDeviceDAO, DeviceDAO>();
+builder.Services.AddScoped<IDeviceManager, DeviceManagerImpl>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.RequireHttpsMetadata = false;
