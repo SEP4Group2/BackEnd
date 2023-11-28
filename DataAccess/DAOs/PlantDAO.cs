@@ -59,4 +59,16 @@ public class PlantDAO : IPlantDAO
                 p.PlantId, p.Name, p.Location, p.PlantPreset))
             .ToListAsync();
     }
+
+    public async Task RemoveAsync(int id)
+    {
+        Plant? plant = await _appContext.Plants.FindAsync(id);
+        if (plant == null)
+        {
+            throw new Exception("Plant not found");
+        }
+
+        _appContext.Remove(plant);
+        await _appContext.SaveChangesAsync();
+    }
 }
