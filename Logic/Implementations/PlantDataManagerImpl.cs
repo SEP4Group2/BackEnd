@@ -15,11 +15,20 @@ public class PlantDataManagerImpl : IPlantDataManager
     }
     public async Task<PlantData> SaveAsync(PlantData plantData)
     {
-        return await plantDataDao.SaveAsync(plantData);
+        try
+        {
+            return await plantDataDao.SaveAsync(plantData);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     public async Task<List<PlantData>> GetAllByPlantIdAsync(int id)
     {
         return await plantDataDao.GetAllByPlantIdAsync(id);
     }
+    
 }
