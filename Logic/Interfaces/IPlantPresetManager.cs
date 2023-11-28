@@ -9,4 +9,7 @@ public interface IPlantPresetManager
     Task<PlantPreset> GetByIdAsync(int presetId);
     
     Task<IEnumerable<PlantPreset>> GetAllPlantPresetsAsync();
+
+    Task<IEnumerable<PlantPreset>> GetPresetsByUserIdAsync(int userId);
+
 }

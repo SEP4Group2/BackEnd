@@ -1,4 +1,6 @@
-﻿namespace Domain.DTOs;
+﻿using Domain.Model;
+
+namespace Domain.DTOs;
 
 public class PlantPresetCreationDTO
 {
@@ -12,4 +14,6 @@ public class PlantPresetCreationDTO
     public float UVLight { get; set; }
     
     public float Moisture { get; set; }
+    
+    public int UserId { get; set; }
 }

@@ -17,4 +17,6 @@ public class PlantData
     public string TimeStamp { get; set; }
 
     public float TankLevel { get; set; }
+    
+    public Device PlantDevice { get; set; }
 }

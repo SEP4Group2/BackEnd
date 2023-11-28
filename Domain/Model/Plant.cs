@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Model;
 
@@ -15,5 +14,8 @@ public class Plant
     public string Location { get; set; }
 
     public PlantPreset PlantPreset { get; set; }
+    
+    public User User { get; set; }
+    
    
 }

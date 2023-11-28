@@ -26,7 +26,8 @@ public class PlantPresetDAO : IPlantPresetDAO
                 Humidity = preset.Humidity,
                UVLight = preset.UVLight,
                Moisture = preset.Moisture,
-               Temperature = preset.Temperature
+               Temperature = preset.Temperature,
+               UserId = preset.UserId
             };
             
            EntityEntry<PlantPreset> newPreset = await _appContext.Presets.AddAsync(plantPreset);
@@ -56,17 +57,22 @@ public class PlantPresetDAO : IPlantPresetDAO
     {
         try
         {
-            return await _appContext.Presets
-                .Select(p => new PlantPreset()
-                {
-                    PresetId = p.PresetId,
-                    Name = p.Name,
-                    Humidity = p.Humidity,
-                    Moisture = p.Moisture,
-                    UVLight = p.UVLight,
-                    Temperature = p.Temperature
-                
-                }).ToListAsync();
+            return await _appContext.Presets.ToListAsync();
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        
+    }
+    
+    public async Task<List<PlantPreset>> GetPresetsByUserIdAsync(int userId)
+    {
+        try
+        {
+            return await _appContext.Presets.Where(p=>p.UserId == userId).ToListAsync();
 
         }
         catch (Exception e)
