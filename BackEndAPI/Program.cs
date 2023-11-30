@@ -16,6 +16,7 @@ builder.Services.AddDbContext<AppContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddScoped<IPlantManager, PlantManagerImpl>();
+builder.Services.AddScoped<INotificationSender, HttpClientNotificationSender>();
 builder.Services.AddScoped<IPlantPresetManager, PlantPresetManagerImpl>();
 builder.Services.AddScoped<IPlantDataManager, PlantDataManagerImpl>();
 builder.Services.AddScoped<IPlantDAO, PlantDAO>();

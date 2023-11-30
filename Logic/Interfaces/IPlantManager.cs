@@ -9,4 +9,5 @@ public interface IPlantManager
     Task<Plant> GetAsync(int id);
     Task<IEnumerable<GetAllPlantsDTO>> GetAllPlantsAsync();
     Task RemoveAsync(int id);
+    Task<Plant> EditAsync(EditPlantDTO editPlantDto);
 }

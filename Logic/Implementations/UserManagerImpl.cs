@@ -1,3 +1,4 @@
+using System.Net.Http.Json;
 using DataAccess.DAOInterfaces;
 using Domain.DTOs;
 using Domain.Model;
@@ -41,8 +42,7 @@ public class UserManagerImpl : IUserManager
         {
             throw new Exception("Password mismatch");
         }
-
         return existingUser;
     }
-
+    
 }

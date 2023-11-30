@@ -1,3 +1,4 @@
+using Domain.DTOs;
 using Domain.Model;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ public class DeviceController:ControllerBase
     
     [HttpPost]
     [Route("registerDevice")]
-    public async Task<ActionResult<Device>> CreateAsync(Device device)
+    public async Task<ActionResult<Device>> CreateAsync(DeviceRegistrationDTO device)
     {
         try
         {

@@ -1,4 +1,5 @@
-﻿using Domain.Model;
+﻿using Domain.DTOs;
+using Domain.Model;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,13 +22,13 @@ public class PlantDataController : ControllerBase
     
     [HttpPost]
     [Route("savePlantData")]
-    public async Task<ActionResult<PlantData>> CreateAsync([FromBody] PlantData plantData)
+    public async Task<ActionResult<PlantData>> CreateAsync([FromBody] PlantDataCreationDTO plantData)
     {
         try
         {
             PlantData newPlantData = await plantDataManager.SaveAsync(plantData);
+            await plantDataManager.CheckDataWithPlantPreset(newPlantData);
             return Created($"/plant/{newPlantData.TimeStamp}", newPlantData);
-
         }
         catch (Exception e)
         {
