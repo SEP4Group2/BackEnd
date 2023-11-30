@@ -39,7 +39,7 @@ public class PlantPresetController : ControllerBase
     }
     
     [HttpGet]
-    [Route("getPresetsByUser/{presetId:int}")]
+    [Route("getPreset/{presetId:int}")]
     public async Task<ActionResult<PlantPreset>> GetPlant(int presetId)
     {
 
@@ -71,7 +71,7 @@ public class PlantPresetController : ControllerBase
     }
     
     [HttpGet]
-    [Route("getPresetsByUser/{userId:int}")]
+    [Route("getPresetsByUserId/{userId:int}")]
     public async Task<ActionResult<IEnumerable<PlantPreset>>> GetPresetsByUserId(int userId)
     {
 
