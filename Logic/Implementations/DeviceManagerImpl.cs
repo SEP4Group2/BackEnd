@@ -1,4 +1,5 @@
 using DataAccess.DAOInterfaces;
+using Domain.DTOs;
 using Domain.Model;
 using Logic.Interfaces;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
@@ -14,7 +15,7 @@ public class DeviceManagerImpl:IDeviceManager
         this.deviceDAO = deviceDAO;
     }
 
-    public async Task<Device> CreateAsync(Device newDevice)
+    public async Task<Device> CreateAsync(DeviceRegistrationDTO newDevice)
     {
         return await deviceDAO.CreateAsync(newDevice);
     }
