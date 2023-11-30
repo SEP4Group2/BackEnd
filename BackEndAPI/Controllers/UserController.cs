@@ -110,4 +110,18 @@ public class UserController : ControllerBase
         string serializedToken = new JwtSecurityTokenHandler().WriteToken(token);
         return serializedToken;
     }
+
+    [HttpPatch]
+    public async Task<ActionResult<User>> EditAsync([FromBody] UserDTO userToUpdate)
+    {
+        try
+        {
+           return await userManager.EditAsync(userToUpdate);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
 }

@@ -1,4 +1,3 @@
-using System.Net.Http.Json;
 using DataAccess.DAOInterfaces;
 using Domain.DTOs;
 using Domain.Model;
@@ -45,4 +44,8 @@ public class UserManagerImpl : IUserManager
         return existingUser;
     }
     
+    public async Task<User> EditAsync(UserDTO dto)
+    {
+        return await _userDao.EditAsync(dto);
+    }
 }

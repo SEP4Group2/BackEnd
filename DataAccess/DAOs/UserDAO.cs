@@ -38,6 +38,24 @@ public class UserDAO : IUserDAO
         }
     }
 
+    public async Task<User> EditAsync(UserDTO user)
+    {
+        User updatedUser = _appContext.Users.First(u => u.UserId == user.UserId);
+        if (user.Username != null) updatedUser.Username = user.Username;
+        if (user.Password != null) updatedUser.Password = user.Password;
+        try
+        {
+            _appContext.Users.Update(updatedUser);
+            await _appContext.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        return updatedUser;
+    }
+    
     public async Task<IEnumerable<User?>> GetAllUsersAsync()
     {
        
