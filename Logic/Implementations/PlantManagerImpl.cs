@@ -29,6 +29,11 @@ public class PlantManagerImpl : IPlantManager
         await plantDao.RemoveAsync(id);
     }
 
+    public async Task<Plant> EditAsync(EditPlantDTO editPlantDto)
+    {
+       return await plantDao.EditAsync(editPlantDto);
+    }
+
     public async Task<Plant> GetAsync(int id)
     {
         try
