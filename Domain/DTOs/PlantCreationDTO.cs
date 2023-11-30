@@ -8,5 +8,5 @@ public class PlantCreationDTO
     public string Location { get; set; }
     public int PlantPresetId { get; set; }
     public int UserId { get; set; }
-
+    public int DeviceId { get; set; }
 }

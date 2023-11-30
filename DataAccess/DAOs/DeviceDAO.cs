@@ -22,6 +22,7 @@ public class DeviceDAO : IDeviceDAO
         {
             Plant? existing = await Task.FromResult(_appContext.Plants.Include(p => p.PlantPreset).Include(p => p.User)
                 .FirstOrDefault(p => p.PlantId == newDevice.PlantId));
+            
             var device = new Device()
             {
                 DeviceId = newDevice.DeviceId,
