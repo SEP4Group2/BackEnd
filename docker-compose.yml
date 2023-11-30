@@ -6,7 +6,7 @@ services:
       - "5000:5000"
     environment:
       - ConnectionStrings__DefaultConnection=Server=db;Port=5432;Database=plantdb;UserId=admin;Password=root;
-      - NotificationServerURL=http://notificationserver:5016 #not using it yet, but we might in the future
+#      - NotificationServerURL=http://notificationserver:5016 #not using it yet, but we might in the future
     depends_on:
       - db
       - notificationserver

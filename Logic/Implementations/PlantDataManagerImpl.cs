@@ -10,10 +10,12 @@ public class PlantDataManagerImpl : IPlantDataManager
 {
 
     private IPlantDataDAO plantDataDao;
+    private INotificationSender notificationSener;
 
-    public PlantDataManagerImpl(IPlantDataDAO plantDataDao)
+    public PlantDataManagerImpl(IPlantDataDAO plantDataDao, INotificationSender notificationSener)
     {
         this.plantDataDao = plantDataDao;
+        this.notificationSener = notificationSener;
     }
     public async Task<PlantData> SaveAsync(PlantDataCreationDTO plantData)
     {
@@ -35,61 +37,46 @@ public class PlantDataManagerImpl : IPlantDataManager
 
     public async Task CheckDataWithPlantPreset(PlantData plantData)
     {
-        Console.WriteLine(plantData.PlantDevice);
-        Console.WriteLine(plantData);
+        int maxDifferenceAllowed = 50;
         PlantPreset optimalPreset = plantData.PlantDevice.Plant.PlantPreset;
+        string name = plantData.PlantDevice.Plant.Name;
         string currentUserId = plantData.PlantDevice.Plant.User.UserId.ToString();
         
         // I am making this up, we can change the numbers later so it's more accurate
-        if (Math.Abs(optimalPreset.Humidity - plantData.Humidity) > 50)
+        if (Math.Abs(optimalPreset.Humidity - plantData.Humidity) > maxDifferenceAllowed)
         {
-            await SendNotification(new NotificationRequestDTO()
+            await notificationSener.SendNotification(new NotificationRequestDTO()
             {
                 UserId = currentUserId,
-                Message = "Humidity levels are currently out of optimal range. Please check your plant"
+                Message = $"Humidity levels of plant {name} are currently out of optimal range. Please check your plant"
             });
         }
         
-        if (Math.Abs(optimalPreset.Temperature - plantData.Temperature) > 50)
+        if (Math.Abs(optimalPreset.Temperature - plantData.Temperature) > maxDifferenceAllowed)
         {
-            await SendNotification(new NotificationRequestDTO()
+            await notificationSener.SendNotification(new NotificationRequestDTO()
             {
                 UserId = currentUserId,
-                Message = "Temperature levels are currently out of optimal range. Please check your plant"
+                Message = $"Temperature levels of plant {name} are currently out of optimal range. Please check your plant"
             });
         }
         
-        if (Math.Abs(optimalPreset.UVLight- plantData.UVLight) > 50)
+        if (Math.Abs(optimalPreset.UVLight- plantData.UVLight) > maxDifferenceAllowed)
         {
-            await SendNotification(new NotificationRequestDTO()
+            await notificationSener.SendNotification(new NotificationRequestDTO()
             {
                 UserId = currentUserId,
-                Message = "UV Light levels are currently out of optimal range. Please check your plant"
+                Message = $"UV Light levels of plant {name} are currently out of optimal range. Please check your plant"
             });
         }
         
-        if (Math.Abs(optimalPreset.Moisture- plantData.Moisture) > 50)
+        if (Math.Abs(optimalPreset.Moisture- plantData.Moisture) > maxDifferenceAllowed)
         {
-            await SendNotification(new NotificationRequestDTO()
+            await notificationSener.SendNotification(new NotificationRequestDTO()
             {
                 UserId = currentUserId,
-                Message = "Moisture levels are currently out of optimal range. Please check your plant"
+                Message = $"Moisture levels of plant {name} are currently out of optimal range. Please check your plant"
             });
-        }
-    }
-
-    public async Task SendNotification(NotificationRequestDTO dto)
-    {
-        try
-        {
-            using (var client = new HttpClient())
-            {
-                await client.PostAsJsonAsync("http://notificationserver:5016/notification/send", dto);
-            }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error occurred: {e}");
         }
     }
 
