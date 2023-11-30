@@ -9,4 +9,5 @@ public interface IPlantDAO
     Task<Plant> GetAsync(int id);
     Task<List<GetAllPlantsDTO>> GetAllPlantsAsync();
     Task RemoveAsync(int id);
+    Task<Plant> EditAsync(EditPlantDTO editPlantDto);
 }

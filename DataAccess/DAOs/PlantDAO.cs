@@ -71,4 +71,21 @@ public class PlantDAO : IPlantDAO
         _appContext.Remove(plant);
         await _appContext.SaveChangesAsync();
     }
+
+    public async Task<Plant> EditAsync(EditPlantDTO editPlantDto)
+    {
+        Plant plantToBeEdited = _appContext.Plants.First(p => p.PlantId == editPlantDto.PlantId);
+        if (editPlantDto.Location != null) plantToBeEdited.Location = editPlantDto.Location;
+        if (editPlantDto.Name != null) plantToBeEdited.Name = editPlantDto.Name;
+        try
+        {
+            _appContext.Plants.Update(plantToBeEdited);
+            await _appContext.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex)
+        {
+            throw new Exception(ex.Message);
+        }
+        return plantToBeEdited;
+    }
 }
