@@ -69,7 +69,6 @@ public class UserController : ControllerBase
         {
             User user = await userManager.ValidateUser(userLogin);
             string token = GenerateJwt(user);
-    
             return Ok(token);
         }
         catch (Exception e)

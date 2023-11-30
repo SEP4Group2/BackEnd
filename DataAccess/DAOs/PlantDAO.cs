@@ -22,13 +22,16 @@ public class PlantDAO : IPlantDAO
         {
             PlantPreset? existingPreset = await _appContext.Presets.FindAsync(plantCreationDto.PlantPresetId);
             if (existingPreset == null) throw new Exception("Preset not found");
+            User? existingUser = await _appContext.Users.FindAsync(plantCreationDto.UserId);
+            if (existingUser == null) throw new Exception("User does not exist in the database");
             
             
                 var plant = new Plant()
             {
                 Location = plantCreationDto.Location,
                 PlantPreset = existingPreset,
-                Name = plantCreationDto.Name
+                Name = plantCreationDto.Name,
+                User = existingUser
             };
             EntityEntry<Plant> newPlant = await _appContext.Plants.AddAsync(plant);
             await _appContext.SaveChangesAsync();
@@ -43,7 +46,7 @@ public class PlantDAO : IPlantDAO
 
     public async Task<Plant> GetAsync(int id)
     {
-        Plant? plant = await _appContext.Plants.FindAsync(id);
+        Plant? plant = await Task.FromResult(_appContext.Plants.Include(p => p.PlantPreset).FirstOrDefault(p=> p.PlantId == id));
             if (plant == null)
             {
                 throw new Exception("Plant not found");

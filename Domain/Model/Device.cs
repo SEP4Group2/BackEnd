@@ -10,6 +10,6 @@ public class Device
     
     public bool Status { get; set; }
 
-    public Plant Plant { get; set; }
+    public Plant? Plant { get; set; }
 
 }

@@ -1,4 +1,5 @@
 ﻿using DataAccess.DAOInterfaces;
+using Domain.DTOs;
 using Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -14,18 +15,34 @@ public class PlantDataDAO : IPlantDataDAO
         this._appContext = _appContext;
     }
     
-    public async Task<PlantData> SaveAsync(PlantData plantData)
+    public async Task<PlantData> SaveAsync(PlantDataCreationDTO plantData)
     {
-        EntityEntry<PlantData> newPlantData =  await _appContext.PlantData.AddAsync(plantData);
+        Device? existingDevice = await Task.FromResult(_appContext.Devices.Include(d => d.Plant)
+            .ThenInclude(p => p.PlantPreset).Include(d=> d.Plant).ThenInclude(p=> p.User).FirstOrDefault(d => d.DeviceId == plantData.DeviceId));
+        if (existingDevice == null) throw new Exception("Device not found");
+        
+        var newPlantData = new PlantData()
+        {
+            Humidity = plantData.Humidity,
+            Temperature = plantData.Temperature, 
+            Moisture = plantData.Moisture, 
+            UVLight = plantData.UVLight,
+            PlantDevice = existingDevice,
+            TimeStamp = plantData.TimeStamp,
+            TankLevel = plantData.TankLevel
+        };
+        
+        EntityEntry<PlantData> plantDataEntity = await _appContext.PlantData.AddAsync(newPlantData);
         await _appContext.SaveChangesAsync();
-        return newPlantData.Entity;
+        return plantDataEntity.Entity;
     }
 
     public async Task<List<PlantData>> GetAllByPlantIdAsync(int id)
     {
         try
         {
-            List<PlantData> fetchedPlantData = await _appContext.PlantData.ToListAsync();
+            List<PlantData> fetchedPlantData = await _appContext.PlantData.Include(pd => pd.PlantDevice).ThenInclude(p=>p.Plant)
+                .ThenInclude(p=>p.PlantPreset).ToListAsync();
             return fetchedPlantData;
         }
         catch (Exception e)
