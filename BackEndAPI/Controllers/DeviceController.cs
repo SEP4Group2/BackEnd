@@ -51,6 +51,27 @@ public class DeviceController:ControllerBase
         }
     }
     
+    [HttpPost]
+    [Route("waterPlant/{deviceId}")]
+    public async Task<ActionResult> WaterPlant([FromRoute] int deviceId)
+    {
+        try
+        {
+            int action = await deviceManager.WaterPlant(deviceId);
+            return Ok(new
+                {
+                    Message = "Plant successfully watered",
+                    DeviceId = action,
+                });
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
+    
     
     
 }

@@ -22,8 +22,10 @@ public class DeviceManagerImpl:IDeviceManager
     public async Task<int> GetDeviceIdAsync(int deviceId)
     {
         return await deviceDAO.GetDeviceIdAsync(deviceId);
-        
-
     }
 
+    public Task<int> WaterPlant(int deviceId)
+    {
+        throw new NotImplementedException();
+    }
 }
