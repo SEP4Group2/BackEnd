@@ -80,4 +80,9 @@ public class PlantDataManagerImpl : IPlantDataManager
         }
     }
 
+    public async Task<List<PlantData>> GetAllByUserIdAsync(int userId)
+    {
+        return await plantDataDao.GetAllByUserId(userId);
+    }
+
 }

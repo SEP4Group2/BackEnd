@@ -51,4 +51,19 @@ public class PlantDataDAO : IPlantDataDAO
             throw new Exception("Error fetching data from plantdb");
         }
     }
+    
+    public async Task<List<PlantData>> GetAllByUserId(int userId)
+    {
+        try
+        {
+            List<PlantData> fetchedPlantData = await _appContext.PlantData
+                .Where(p => p.PlantDevice.Plant.User.UserId == userId).Include(p => p.PlantDevice.Plant).ToListAsync();
+            return fetchedPlantData;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error fetching data from plantdb");
+            throw new Exception("Error fetching data from plantdb");
+        }
+    }
 }

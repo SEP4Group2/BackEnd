@@ -17,9 +17,9 @@ public class PlantDataController : ControllerBase
     {
         this.plantDataManager = plantDataManager;
     }
-    
-    
-    
+
+
+
     [HttpPost]
     [Route("savePlantData")]
     public async Task<ActionResult<PlantData>> CreateAsync([FromBody] PlantDataCreationDTO plantData)
@@ -38,13 +38,13 @@ public class PlantDataController : ControllerBase
     }
 
     [HttpGet]
-    [Route("fetchPlantData/{id:int}")]
-    public async Task<ActionResult<List<PlantData>>> GetAsync(int id)
+    [Route("fetchPlantDataByPlantId/{plantId:int}")]
+    public async Task<ActionResult<List<PlantData>>> GetByPlantIdAsync([FromRoute] int plantId)
     {
         // id to be used once we associate iot device to a particular plant - as of now, not implemented
         try
         {
-            List<PlantData> plantDatas = await plantDataManager.GetAllByPlantIdAsync(id);
+            List<PlantData> plantDatas = await plantDataManager.GetAllByPlantIdAsync(plantId);
             return Ok(plantDatas);
 
         }
@@ -53,5 +53,24 @@ public class PlantDataController : ControllerBase
             Console.WriteLine(e);
             return StatusCode(500, e.Message);
         }
+
+
     }
+
+    [HttpGet]
+    [Route("fetchPlantData/{userId:int}")]
+    public async Task<ActionResult<List<PlantData>>> GetAsync([FromRoute] int userId)
+    {
+        try
+        {
+            List<PlantData> plantData = await plantDataManager.GetAllByUserIdAsync(userId);
+            return Ok(plantData);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
+
 }

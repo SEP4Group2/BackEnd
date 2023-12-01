@@ -10,5 +10,8 @@ public interface IPlantDataManager
    
     Task<PlantData> SaveAsync(PlantDataCreationDTO plantData);
     Task<List<PlantData>> GetAllByPlantIdAsync(int id);
+    
+    Task<List<PlantData>> GetAllByUserIdAsync(int userId);
+
     Task CheckDataWithPlantPreset(PlantData plantData);
 }
