@@ -19,6 +19,8 @@ public class PlantPresetDAO : IPlantPresetDAO
     {
         try
         {
+            User? existingUser = await _appContext.Users.FindAsync(preset.UserId);
+            if (existingUser == null) throw new Exception("User not found");
 
             var plantPreset = new PlantPreset()
             {
@@ -72,7 +74,10 @@ public class PlantPresetDAO : IPlantPresetDAO
     {
         try
         {
-            return await _appContext.Presets.Where(p=>p.UserId == userId).ToListAsync();
+            return await _appContext.Presets
+                .Where(p => p.UserId == userId || p.UserId == null)
+                .ToListAsync();
+
 
         }
         catch (Exception e)

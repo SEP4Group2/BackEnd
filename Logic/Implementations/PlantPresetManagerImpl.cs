@@ -24,13 +24,8 @@ public class PlantPresetManagerImpl : IPlantPresetManager
         return await plantPresetDao.GetAsync(presetId);
     }
 
-    public async Task<IEnumerable<PlantPreset>> GetAllPlantPresetsAsync()
+    public async Task<IEnumerable<PlantPreset>> GetAllPresetsAsync(int userId)
     {
-        return await plantPresetDao.GetAllPlantPresentsAsync();
-    }
-
-    public async Task<IEnumerable<PlantPreset>> GetPresetsByUserIdAsync(int userId)
-    {
-        return await plantPresetDao.GetPresetsByUserIdAsync(userId);
+        return await plantPresetDao.GetAllPresetsAsync(userId);
     }
 }

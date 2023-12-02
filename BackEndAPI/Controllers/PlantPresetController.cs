@@ -39,7 +39,7 @@ public class PlantPresetController : ControllerBase
     }
     
     [HttpGet]
-    [Route("getPresetsByUser/{presetId:int}")]
+    [Route("getPreset/{presetId:int}")]
     public async Task<ActionResult<PlantPreset>> GetPlant(int presetId)
     {
 
@@ -54,30 +54,15 @@ public class PlantPresetController : ControllerBase
             return StatusCode(500, e.Message);
         }
     }
-    
+
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<PlantPreset>>> GetAllPlantPresetsAsync()
-    {
-        try
-        {
-            IEnumerable<PlantPreset> presets = await plantPresetManager.GetAllPlantPresetsAsync();
-            return Ok(presets.ToList());
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return StatusCode(500, e.Message);
-        }
-    }
-    
-    [HttpGet]
-    [Route("getPresetsByUser/{userId:int}")]
+    [Route("getAllPresets/{userId:int}")]
     public async Task<ActionResult<IEnumerable<PlantPreset>>> GetPresetsByUserId(int userId)
     {
 
         try
         {
-            IEnumerable<PlantPreset> plantPresets = await plantPresetManager.GetPresetsByUserIdAsync(userId);
+            IEnumerable<PlantPreset> plantPresets = await plantPresetManager.GetAllPresetsAsync(userId);
             return Ok(plantPresets.ToList());
         }
         catch (Exception e)

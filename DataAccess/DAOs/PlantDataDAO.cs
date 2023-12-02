@@ -37,12 +37,12 @@ public class PlantDataDAO : IPlantDataDAO
         return plantDataEntity.Entity;
     }
 
-    public async Task<List<PlantData>> GetAllByPlantIdAsync(int id)
+    public async Task<List<PlantData>> FetchPlantDataAsync(int userId)
     {
         try
         {
-            List<PlantData> fetchedPlantData = await _appContext.PlantData.Include(pd => pd.PlantDevice).ThenInclude(p=>p.Plant)
-                .ThenInclude(p=>p.PlantPreset).ToListAsync();
+            List<PlantData> fetchedPlantData = await _appContext.PlantData
+                .Where(p => p.PlantDevice.Plant.User.UserId == userId).Include(p => p.PlantDevice.Plant).ToListAsync();
             return fetchedPlantData;
         }
         catch (Exception e)

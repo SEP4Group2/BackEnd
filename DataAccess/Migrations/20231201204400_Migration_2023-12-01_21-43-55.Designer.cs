@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(AppContext))]
-    [Migration("20231129103058_Migration_2023-11-29_11-30-53")]
-    partial class Migration_20231129_113053
+    [Migration("20231201204400_Migration_2023-12-01_21-43-55")]
+    partial class Migration_20231201_214355
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -133,7 +133,7 @@ namespace DataAccess.Migrations
                     b.Property<float>("UVLight")
                         .HasColumnType("real");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("PresetId");

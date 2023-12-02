@@ -29,12 +29,7 @@ public class PlantDataManagerImpl : IPlantDataManager
             throw;
         }
     }
-
-    public async Task<List<PlantData>> GetAllByPlantIdAsync(int id)
-    {
-        return await plantDataDao.GetAllByPlantIdAsync(id);
-    }
-
+    
     public async Task CheckDataWithPlantPreset(PlantData plantData)
     {
         int maxDifferenceAllowed = 50;
@@ -78,6 +73,10 @@ public class PlantDataManagerImpl : IPlantDataManager
                 Message = $"Moisture levels of plant {name} are currently out of optimal range. Please check your plant"
             });
         }
+    }
+    public async Task<List<PlantData>> FetchPlantDataAsync(int userId)
+    {
+        return await plantDataDao.FetchPlantDataAsync(userId);
     }
 
 }

@@ -24,6 +24,8 @@ public class PlantDAO : IPlantDAO
             if (existingPreset == null) throw new Exception("Preset not found");
             User? existingUser = await _appContext.Users.FindAsync(plantCreationDto.UserId);
             if (existingUser == null) throw new Exception("User does not exist in the database");
+            Device? existingDevice = await _appContext.Devices.FindAsync(plantCreationDto.DeviceId);
+            if (existingDevice == null) throw new Exception("Device does not exist in the database");
             
             
                 var plant = new Plant()
@@ -35,6 +37,12 @@ public class PlantDAO : IPlantDAO
             };
             EntityEntry<Plant> newPlant = await _appContext.Plants.AddAsync(plant);
             await _appContext.SaveChangesAsync();
+            
+            //add Plant object to the already existing Device 
+            existingDevice.Plant = plant;
+            _appContext.Devices.Update(existingDevice);
+            await _appContext.SaveChangesAsync();
+            
             return newPlant.Entity;
         }
         catch (Exception e)

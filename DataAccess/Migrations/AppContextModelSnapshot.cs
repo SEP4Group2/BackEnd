@@ -130,7 +130,7 @@ namespace DataAccess.Migrations
                     b.Property<float>("UVLight")
                         .HasColumnType("real");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("PresetId");

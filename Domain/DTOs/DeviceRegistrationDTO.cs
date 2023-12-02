@@ -6,5 +6,5 @@ public class DeviceRegistrationDTO
     
     public bool Status { get; set; }
 
-    public int PlantId { get; set; }
+    public int? PlantId { get; set; }
 }
