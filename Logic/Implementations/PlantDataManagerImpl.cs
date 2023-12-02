@@ -29,12 +29,7 @@ public class PlantDataManagerImpl : IPlantDataManager
             throw;
         }
     }
-
-    public async Task<List<PlantData>> GetAllByPlantIdAsync(int id)
-    {
-        return await plantDataDao.GetAllByPlantIdAsync(id);
-    }
-
+    
     public async Task CheckDataWithPlantPreset(PlantData plantData)
     {
         int maxDifferenceAllowed = 50;
@@ -79,10 +74,9 @@ public class PlantDataManagerImpl : IPlantDataManager
             });
         }
     }
-
-    public async Task<List<PlantData>> GetAllByUserIdAsync(int userId)
+    public async Task<List<PlantData>> FetchPlantDataAsync(int userId)
     {
-        return await plantDataDao.GetAllByUserId(userId);
+        return await plantDataDao.FetchPlantDataAsync(userId);
     }
 
 }

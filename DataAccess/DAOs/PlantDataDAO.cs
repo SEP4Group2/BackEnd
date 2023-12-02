@@ -37,22 +37,7 @@ public class PlantDataDAO : IPlantDataDAO
         return plantDataEntity.Entity;
     }
 
-    public async Task<List<PlantData>> GetAllByPlantIdAsync(int id)
-    {
-        try
-        {
-            List<PlantData> fetchedPlantData = await _appContext.PlantData.Include(pd => pd.PlantDevice).ThenInclude(p=>p.Plant)
-                .ThenInclude(p=>p.PlantPreset).ToListAsync();
-            return fetchedPlantData;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("Error fetching data from plantdb");
-            throw new Exception("Error fetching data from plantdb");
-        }
-    }
-    
-    public async Task<List<PlantData>> GetAllByUserId(int userId)
+    public async Task<List<PlantData>> FetchPlantDataAsync(int userId)
     {
         try
         {
