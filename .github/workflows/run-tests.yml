@@ -28,9 +28,10 @@ jobs:
           # Look to see if there is a cache hit for the corresponding requirements file
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
           restore-keys:  ${{ runner.os }}-nuget
+      - name: Navigate to project directory
+        run: cd ${{ github.workspace }}/BackEnd/BackEndAPI
       - name: Install dependencies 
         run: |
-          cd BackEnd/BackEndAPI
           dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer --version 7.0.13
           dotnet add package Microsoft.AspNetCore.OpenApi --version 7.0.13
           dotnet add package Microsoft.EntityFrameworkCore --version 7.0.13
