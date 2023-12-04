@@ -55,22 +55,8 @@ public class PlantPresetDAO : IPlantPresetDAO
         return plantPreset;
     }
     
-    public async Task<List<PlantPreset>> GetAllPlantPresentsAsync()
-    {
-        try
-        {
-            return await _appContext.Presets.ToListAsync();
-
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-        
-    }
     
-    public async Task<List<PlantPreset>> GetPresetsByUserIdAsync(int userId)
+    public async Task<List<PlantPreset>> GetAllPresetsAsync(int userId)
     {
         try
         {
