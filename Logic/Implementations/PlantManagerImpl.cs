@@ -16,6 +16,10 @@ public class PlantManagerImpl : IPlantManager
 
     public async Task<Plant> CreateAsync(PlantCreationDTO plantCreationDto)
     {
+        if (plantCreationDto.PlantPresetId <= 0)
+        {
+            throw new ArgumentException("Invalid plant preset ID");
+        }
         return await plantDao.CreateAsync(plantCreationDto);
     }
 
