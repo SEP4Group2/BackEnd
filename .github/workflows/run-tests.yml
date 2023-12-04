@@ -30,14 +30,16 @@ jobs:
 #          restore-keys:  ${{ runner.os }}-nuget
 #      - name: Navigate to project directory
 #        run: cd BackEndAPI
-      - name: Install dependencies 
-        run: |
-          dotnet add "${{ github.workspace }}/BackEnd/BackEndAPI.csproj" package Microsoft.AspNetCore.Authentication.JwtBearer --version 7.0.13
-          dotnet add "${{ github.workspace }}/BackEnd/BackEndAPI.csproj" package Microsoft.AspNetCore.OpenApi --version 7.0.13
-          dotnet add "${{ github.workspace }}/BackEnd/BackEndAPI.csproj" package Microsoft.EntityFrameworkCore --version 7.0.13
-          dotnet add "${{ github.workspace }}/BackEnd/BackEndAPI.csproj" package Microsoft.EntityFrameworkCore.Design --version 7.0.13
-          dotnet add "${{ github.workspace }}/BackEnd/BackEndAPI.csproj" package Npgsql.EntityFrameworkCore.PostgreSQL  --version 7.0.11
-          dotnet add "${{ github.workspace }}/BackEnd/BackEndAPI.csproj" package Swashbuckle.AspNetCore --version 6.4.0
+#      - name: Install dependencies 
+#        run: |
+#          dotnet add "${{ github.workspace }}/BackEnd/BackEndAPI.csproj" package Microsoft.AspNetCore.Authentication.JwtBearer --version 7.0.13
+#          dotnet add "${{ github.workspace }}/BackEnd/BackEndAPI.csproj" package Microsoft.AspNetCore.OpenApi --version 7.0.13
+#          dotnet add "${{ github.workspace }}/BackEnd/BackEndAPI.csproj" package Microsoft.EntityFrameworkCore --version 7.0.13
+#          dotnet add "${{ github.workspace }}/BackEnd/BackEndAPI.csproj" package Microsoft.EntityFrameworkCore.Design --version 7.0.13
+#          dotnet add "${{ github.workspace }}/BackEnd/BackEndAPI.csproj" package Npgsql.EntityFrameworkCore.PostgreSQL  --version 7.0.11
+#          dotnet add "${{ github.workspace }}/BackEnd/BackEndAPI.csproj" package Swashbuckle.AspNetCore --version 6.4.0
+      - name: Install dependencies
+        run: dotnet restore
       - name: Build
         run: dotnet build
       - name: Test
