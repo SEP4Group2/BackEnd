@@ -28,7 +28,7 @@ jobs:
       - name: Test
         run: dotnet test --collect:"XPlat Code Coverage"
       - name: Upload test results as artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: test-results
           path: TestResults
