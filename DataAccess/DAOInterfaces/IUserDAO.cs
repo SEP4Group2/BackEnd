@@ -8,4 +8,6 @@ public interface IUserDAO
      Task<User> CreateAsync(UserDTO userCreationDto);
 
      Task<IEnumerable<User?>> GetAllUsersAsync();
+
+      Task<User> EditAsync(UserDTO user);
 }

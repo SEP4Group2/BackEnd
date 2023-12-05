@@ -9,4 +9,6 @@ public interface IUserManager
 
     Task<IEnumerable<User?>> GetAllUsersAsync();
     Task<User?> ValidateUser(UserDTO dto);
+
+    Task<User> EditAsync(UserDTO dto);
 }
