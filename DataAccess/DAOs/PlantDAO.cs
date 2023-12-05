@@ -33,7 +33,8 @@ public class PlantDAO : IPlantDAO
                 Location = plantCreationDto.Location,
                 PlantPreset = existingPreset,
                 Name = plantCreationDto.Name,
-                User = existingUser
+                User = existingUser,
+                IconId = plantCreationDto.IcondId
             };
             EntityEntry<Plant> newPlant = await _appContext.Plants.AddAsync(plant);
             await _appContext.SaveChangesAsync();
@@ -71,7 +72,7 @@ public class PlantDAO : IPlantDAO
         {
             Device device = _appContext.Devices.FirstOrDefault(d => d.Plant.PlantId == plant.PlantId);
             GetAllPlantsDTO dto = new GetAllPlantsDTO(plant.PlantId, plant.Name, plant.Location, plant.PlantPreset,
-                device.DeviceId);
+                device.DeviceId, plant.IconId);
             listDtos.Add(dto);
         }
         return listDtos;
