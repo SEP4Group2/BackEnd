@@ -20,8 +20,8 @@ public class PlantDataManagerTests
         var notificationSenderMock = new Mock<INotificationSender>();
         var plantDataManager = new PlantDataManagerImpl(plantDataDaoMock.Object, notificationSenderMock.Object);
 
-        var plantDataCreationDto = new PlantDataCreationDTO { /* provide valid data */ };
-        var expectedPlantData = new PlantData { /* create a valid PlantData object */ };
+        var plantDataCreationDto = new PlantDataCreationDTO {Temperature = 1, Moisture = 2, UVLight = 3, Humidity = 4, DeviceId = 1, TankLevel = 12, TimeStamp = "5/12/2023 13.44.23"};
+        var expectedPlantData = new PlantData {Temperature = 1, Moisture = 2, UVLight = 3, Humidity = 4, TankLevel = 12, TimeStamp = "5/12/2023 13.44.23"};
 
         plantDataDaoMock.Setup(dao => dao.SaveAsync(It.IsAny<PlantDataCreationDTO>()))
                         .ReturnsAsync(expectedPlantData);
@@ -44,19 +44,43 @@ public class PlantDataManagerTests
 
         var plantData = new PlantData
         {
-            Humidity = 60, // Assume the optimal preset is 50, and the difference is more than 50
+            Humidity = 1,
+            Moisture = 1,
+            Temperature = 1,
+            UVLight = 1
+        };
+
+        // Set optimal preset values here for testing
+        var optimalPreset = new PlantPreset
+        {
+            Humidity = 50,
             Temperature = 25,
             UVLight = 300,
             Moisture = 40
         };
 
+        var plantDevice = new Device
+        {
+            Plant = new Plant
+            {
+                PlantPreset = optimalPreset,
+                Name = "TestPlant",
+                User = new User { UserId = 123 }
+            }
+        };
+
+        plantData.PlantDevice = plantDevice;
+
         // Act
         await plantDataManager.CheckDataWithPlantPreset(plantData);
 
         // Assert
-        notificationSenderMock.Verify(sender => sender.SendNotification(It.IsAny<NotificationRequestDTO>()), Times.Exactly(1));
-        // Add more assertions based on your requirements
+        notificationSenderMock.Verify(
+            sender => sender.SendNotification(It.IsAny<NotificationRequestDTO>()),
+            Times.Exactly(1) // Assuming all conditions are met
+        );
     }
+
 
     [Test]
     public async Task FetchPlantDataAsync_ValidUserId_ReturnsPlantDataList()
@@ -67,7 +91,13 @@ public class PlantDataManagerTests
         var plantDataManager = new PlantDataManagerImpl(plantDataDaoMock.Object, notificationSenderMock.Object);
 
         var userId = 1;
-        var expectedPlantDataList = new List<PlantData> { /* create a list of PlantData objects */ };
+        var expectedPlantDataList = new List<PlantData> {new PlantData()
+        {
+            Humidity = 1, Temperature = 1, Moisture = 1, TankLevel = 1, TimeStamp = "5/12/2023 13.44.22", UVLight = 1
+        },new PlantData()
+            {
+            Humidity = 1, Temperature = 2, Moisture = 3, TankLevel = 4, TimeStamp = "5/12/2023 13.44.22", UVLight = 5
+        }};
 
         plantDataDaoMock.Setup(dao => dao.FetchPlantDataAsync(It.IsAny<int>()))
                         .ReturnsAsync(expectedPlantDataList);
@@ -77,6 +107,5 @@ public class PlantDataManagerTests
 
         // Assert
         Assert.NotNull(result);
-        // Add more assertions based on your requirements
     }
 }

@@ -16,8 +16,8 @@ public class PlantPresetManagerImplTests
         var plantPresetDaoMock = new Mock<IPlantPresetDAO>();
         var plantPresetManager = new PlantPresetManagerImpl(plantPresetDaoMock.Object);
 
-        var plantPresetCreationDto = new PlantPresetCreationDTO { /* provide valid data */ };
-        var expectedPlantPreset = new PlantPreset { /* create a valid PlantPreset object */ };
+        var plantPresetCreationDto = new PlantPresetCreationDTO {Humidity = 10, Temperature = 30, UVLight = 10, Moisture = 20, UserId = 1, Name = "Preset"};
+        var expectedPlantPreset = new PlantPreset{Humidity = 10, Temperature = 30, UVLight = 10, Moisture = 20, UserId = 1, Name = "Preset" };
 
         plantPresetDaoMock.Setup(dao => dao.CreateAsync(It.IsAny<PlantPresetCreationDTO>()))
                           .ReturnsAsync(expectedPlantPreset);
@@ -27,7 +27,6 @@ public class PlantPresetManagerImplTests
 
         // Assert
         Assert.NotNull(result);
-        // Add more assertions based on your requirements
     }
 
     [Test]
@@ -38,7 +37,7 @@ public class PlantPresetManagerImplTests
         var plantPresetManager = new PlantPresetManagerImpl(plantPresetDaoMock.Object);
 
         var presetId = 1;
-        var expectedPlantPreset = new PlantPreset { /* create a valid PlantPreset object */ };
+        var expectedPlantPreset = new PlantPreset { Humidity = 10, Temperature = 30, UVLight = 10, Moisture = 20, UserId = 1, Name = "Preset" };
 
         plantPresetDaoMock.Setup(dao => dao.GetAsync(It.IsAny<int>()))
                           .ReturnsAsync(expectedPlantPreset);
@@ -59,7 +58,10 @@ public class PlantPresetManagerImplTests
         var plantPresetManager = new PlantPresetManagerImpl(plantPresetDaoMock.Object);
 
         var userId = 1;
-        var expectedPlantPresetsList = new List<PlantPreset> { /* create a list of PlantPreset objects */ };
+        var expectedPlantPresetsList = new List<PlantPreset> {new PlantPreset()
+        {
+            Humidity = 10, Temperature = 20, UserId = 1, Name = "Preset2", Moisture = 20, UVLight = 15
+        }, new PlantPreset(){Humidity = 30, UVLight = 20, UserId = 1, Name = "Preset5", Temperature = 30, Moisture = 20} };
 
         plantPresetDaoMock.Setup(dao => dao.GetAllPresetsAsync(It.IsAny<int>()))
                           .ReturnsAsync(expectedPlantPresetsList);
@@ -69,6 +71,5 @@ public class PlantPresetManagerImplTests
 
         // Assert
         Assert.NotNull(result);
-        // Add more assertions based on your requirements
     }
 }

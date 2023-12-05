@@ -19,7 +19,7 @@ public class UserManagerImplTests
         var userDto = new UserDTO {Username = "Anushri", Password = "Gupta"};
         var mockUserDao = new Mock<IUserDAO>();
         mockUserDao.Setup(dao => dao.CreateAsync(It.IsAny<UserDTO>()))
-                   .ReturnsAsync(new User { /* create a valid user object */ });
+                   .ReturnsAsync(new User {Username = "Anushri", Password = "Gupta"});
         var userManager = new UserManagerImpl(mockUserDao.Object);
 
         // Act
@@ -27,7 +27,6 @@ public class UserManagerImplTests
 
         // Assert
         Assert.NotNull(result);
-        // Add more assertions based on your requirements
     }
 
     [Test]
@@ -36,7 +35,15 @@ public class UserManagerImplTests
         // Arrange
         var mockUserDao = new Mock<IUserDAO>();
         mockUserDao.Setup(dao => dao.GetAllUsersAsync())
-                   .ReturnsAsync(new List<User> { /* create a list of users */ });
+                   .ReturnsAsync(new List<User> { new User()
+                   {
+                       Password = "Password", Username = "Username"
+                   },
+                       new User()
+                       {
+                           Password = "Gupta", Username = "Anushri"
+                       }
+                   });
         var userManager = new UserManagerImpl(mockUserDao.Object);
 
         // Act
@@ -44,17 +51,24 @@ public class UserManagerImplTests
 
         // Assert
         Assert.NotNull(result);
-        // Add more assertions based on your requirements
     }
 
     [Test]
     public async Task ValidateUser_ValidCredentials_ReturnsUser()
     {
         // Arrange
-        var userDto = new UserDTO { /* provide valid user DTO data */ };
+        var userDto = new UserDTO { Username = "Anushri1", Password = "Guptaa"};
         var mockUserDao = new Mock<IUserDAO>();
         mockUserDao.Setup(dao => dao.GetAllUsersAsync())
-                   .ReturnsAsync(new List<User> { /* create a list of users including the valid user */ });
+                   .ReturnsAsync(new List<User> { new User()
+                   {
+                       Username = "Anushri1", Password = "Guptaa"
+                   },
+                       new User()
+                       {
+                           Username = "Username1", Password = "Passowrd"
+                       }
+                   });
         var userManager = new UserManagerImpl(mockUserDao.Object);
 
         // Act
@@ -69,10 +83,18 @@ public class UserManagerImplTests
     public async Task ValidateUser_UserNotFound_ThrowsException()
     {
         // Arrange
-        var userDto = new UserDTO { /* provide invalid user DTO data */ };
+        var userDto = new UserDTO { Username = "Wrong", Password = "User"};
         var mockUserDao = new Mock<IUserDAO>();
         mockUserDao.Setup(dao => dao.GetAllUsersAsync())
-                   .ReturnsAsync(new List<User> { /* create a list of users */ });
+                   .ReturnsAsync(new List<User> {new User()
+                   {
+                       Username = "Anushri2", Password = "Gupta1"
+                   } ,
+                       new User()
+                       {
+                           Username = "Ansuhri3", Password = "Gupta11"
+                       }
+                   });
         var userManager = new UserManagerImpl(mockUserDao.Object);
 
         // Act & Assert
@@ -83,10 +105,18 @@ public class UserManagerImplTests
     public async Task ValidateUser_PasswordMismatch_ThrowsException()
     {
         // Arrange
-        var userDto = new UserDTO { /* provide valid user DTO data with incorrect password */ };
+        var userDto = new UserDTO {Username = "User", Password = "Wrong"};
         var mockUserDao = new Mock<IUserDAO>();
         mockUserDao.Setup(dao => dao.GetAllUsersAsync())
-                   .ReturnsAsync(new List<User> { /* create a list of users including the valid user */ });
+                   .ReturnsAsync(new List<User> {new User()
+                   {
+                       Username = "User", Password = "Right"
+                   } ,
+                       new User()
+                       {
+                           Username = "Anushri4", Password = "Guptaaaa"
+                       }
+                   });
         var userManager = new UserManagerImpl(mockUserDao.Object);
 
         // Act & Assert
