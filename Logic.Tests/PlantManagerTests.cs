@@ -59,17 +59,17 @@ public class PlantManagerTests
         {
             // Arrange
             var mockPlantDao = new Mock<IPlantDAO>();
-            mockPlantDao.Setup(dao => dao.GetAllPlantsAsync()).ReturnsAsync(new List<GetAllPlantsDTO>
+            mockPlantDao.Setup(dao => dao.GetAllPlantsAsync(1)).ReturnsAsync(new List<GetAllPlantsDTO>
             {
-                new GetAllPlantsDTO (2, "Tina1", "garden", new Mock<PlantPreset>().Object),
-                new GetAllPlantsDTO (3, "Tina2", "garden", new Mock<PlantPreset>().Object),
-                new GetAllPlantsDTO (4, "Tina3", "garden", new Mock<PlantPreset>().Object),
+                new GetAllPlantsDTO (2, "Tina1", "garden", new Mock<PlantPreset>().Object, 1),
+                new GetAllPlantsDTO (3, "Tina2", "garden", new Mock<PlantPreset>().Object,2),
+                new GetAllPlantsDTO (4, "Tina3", "garden", new Mock<PlantPreset>().Object,3),
 
             });
 
             var plantManager = new PlantManagerImpl(mockPlantDao.Object);
             
-            var result = await plantManager.GetAllPlantsAsync();
+            var result = await plantManager.GetAllPlantsAsync(1);
 
             // Assert
             Assert.NotNull(result);

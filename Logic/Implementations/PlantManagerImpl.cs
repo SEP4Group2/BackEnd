@@ -23,9 +23,9 @@ public class PlantManagerImpl : IPlantManager
         return await plantDao.CreateAsync(plantCreationDto);
     }
 
-    public async Task<IEnumerable<GetAllPlantsDTO>> GetAllPlantsAsync()
+    public async Task<IEnumerable<GetAllPlantsDTO>> GetAllPlantsAsync(int userId)
     {
-        return await plantDao.GetAllPlantsAsync();
+        return await plantDao.GetAllPlantsAsync(userId);
     }
 
     public async Task RemoveAsync(int id)

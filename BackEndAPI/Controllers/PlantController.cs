@@ -33,29 +33,30 @@ public class PlantController : ControllerBase
         }
     }
     
-    [HttpGet]
-    [Route("{plantId:int}")]
-    public async Task<ActionResult<Plant>> GetPlant(int plantId)
-    {
+    // [HttpGet]
+    // [Route("{plantId:int}")]
+    // public async Task<ActionResult<Plant>> GetPlant(int plantId)
+    // {
+    //
+    //     try
+    //     {
+    //         Plant plant = await plantManager.GetAsync(plantId);
+    //         return Ok(plant);
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         Console.WriteLine(e);
+    //         return StatusCode(500, e.Message);
+    //     }
+    // }
 
+    [HttpGet]
+    [Route("{userId:int}")]
+    public async Task<ActionResult<IEnumerable<GetAllPlantsDTO>>> GetAllPlantsAsync(int userId)
+    {
         try
         {
-            Plant plant = await plantManager.GetAsync(plantId);
-            return Ok(plant);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return StatusCode(500, e.Message);
-        }
-    }
-
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<GetAllPlantsDTO>>> GetAllPlantsAsync()
-    {
-        try
-        {
-            IEnumerable<GetAllPlantsDTO> plants = await plantManager.GetAllPlantsAsync();
+            IEnumerable<GetAllPlantsDTO> plants = await plantManager.GetAllPlantsAsync(userId);
             return Ok(plants.ToList());
         }
         catch (Exception e)

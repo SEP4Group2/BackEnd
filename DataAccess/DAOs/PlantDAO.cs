@@ -63,12 +63,18 @@ public class PlantDAO : IPlantDAO
         return plant;
     }
 
-    public async Task<List<GetAllPlantsDTO>> GetAllPlantsAsync()
+    public async Task<List<GetAllPlantsDTO>> GetAllPlantsAsync(int userId)
     {
-        return await _appContext.Plants
-            .Select(p => new GetAllPlantsDTO (
-                p.PlantId, p.Name, p.Location, p.PlantPreset))
-            .ToListAsync();
+        List<Plant> plants = await _appContext.Plants.Where(p => p.User.UserId == userId).Include(p => p.PlantPreset).ToListAsync();
+        List<GetAllPlantsDTO> listDtos = new List<GetAllPlantsDTO>();
+        foreach (var plant in plants)
+        {
+            Device device = _appContext.Devices.FirstOrDefault(d => d.Plant.PlantId == plant.PlantId);
+            GetAllPlantsDTO dto = new GetAllPlantsDTO(plant.PlantId, plant.Name, plant.Location, plant.PlantPreset,
+                device.DeviceId);
+            listDtos.Add(dto);
+        }
+        return listDtos;
     }
 
     public async Task RemoveAsync(int id)
