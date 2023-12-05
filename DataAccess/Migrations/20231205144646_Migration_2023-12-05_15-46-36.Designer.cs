@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(AppContext))]
-    [Migration("20231201204400_Migration_2023-12-01_21-43-55")]
-    partial class Migration_20231201_214355
+    [Migration("20231205144646_Migration_2023-12-05_15-46-36")]
+    partial class Migration_20231205_154636
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,6 +53,9 @@ namespace DataAccess.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PlantId"));
+
+                    b.Property<int>("IconId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Location")
                         .IsRequired()
