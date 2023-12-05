@@ -5,5 +5,5 @@ namespace Domain.DTOs;
 public class LoginResponseDTO
 {
     public string Token { get; set; }
-    public User User { get; set; }
+    public UserDTO User { get; set; }
 }

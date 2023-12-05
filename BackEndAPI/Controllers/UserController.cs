@@ -72,7 +72,7 @@ public class UserController : ControllerBase
             LoginResponseDTO responseDto = new LoginResponseDTO()
             {
                 Token = token,
-                User = new User()
+                User = new UserDTO()
                 {
                     Password = user.Password,
                     Username = user.Username,
