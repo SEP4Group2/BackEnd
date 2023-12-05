@@ -27,6 +27,11 @@ jobs:
         run: dotnet build
       - name: Test
         run: dotnet test --collect:"XPlat Code Coverage"
+      - name: Upload test results as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: TestResults
         
   generate-coverage-report:
     needs: build-and-test
