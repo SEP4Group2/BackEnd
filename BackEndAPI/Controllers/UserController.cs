@@ -63,13 +63,23 @@ public class UserController : ControllerBase
     }
 
     [HttpPost, Route("login")]
-    public async Task<ActionResult> Login([FromBody]UserDTO userLogin)
+    public async Task<ActionResult<LoginResponseDTO>> Login([FromBody]UserDTO userLogin)
     {
         try
         {
             User user = await userManager.ValidateUser(userLogin);
             string token = GenerateJwt(user);
-            return Ok(token);
+            LoginResponseDTO responseDto = new LoginResponseDTO()
+            {
+                Token = token,
+                User = new UserDTO()
+                {
+                    Password = user.Password,
+                    Username = user.Username,
+                    UserId = user.UserId
+                }
+            };
+            return Ok(responseDto);
         }
         catch (Exception e)
         {
