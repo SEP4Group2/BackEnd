@@ -51,4 +51,22 @@ public class PlantDataDAO : IPlantDataDAO
             throw new Exception("Error fetching data from plantdb");
         }
     }
+
+    public async Task<List<PlantData>> GetPlantDataByPlantIdAsync(int plantId)
+    {
+        try
+        {
+            //get the device that is associated to the plant
+            Device connectedDevice = _appContext.Devices.FirstOrDefault(d => d.Plant.PlantId == plantId);
+            //return just plantData that are associated to this particular device, thus plant
+            return await _appContext.PlantData.Where(pd => pd.PlantDevice.DeviceId == connectedDevice.DeviceId)
+                .Include(pd => pd.PlantDevice.Plant)
+                .ToListAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }
