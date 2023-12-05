@@ -99,6 +99,7 @@ public class UserController : ControllerBase
         };
         return claims.ToList();
     }
+    
     private string GenerateJwt(User user)
     {
         List<Claim> claims = GenerateClaims(user);
