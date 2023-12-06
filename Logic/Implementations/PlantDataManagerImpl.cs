@@ -95,21 +95,21 @@ public class PlantDataManagerImpl : IPlantDataManager
     {
         return await plantDataDao.FetchPlantDataAsync(userId);
     }
-    
-    private IEnumerable<PlantData> FilterPlantDataForLastSevenDays(List<PlantData> plantDatas)
+
+    public IEnumerable<PlantData> FilterPlantDataForLastSevenDays(List<PlantData> plantDatas)
     {
         return plantDatas
             .Where(pd =>
                 DateTime.ParseExact(pd.TimeStamp, "yyyy-MM-dd HH:mm:ss", null).Date >= DateTime.Now.Date.AddDays(-7));
     }
 
-    private IEnumerable<IGrouping<DateTime, PlantData>> GroupPlantDataByDate(IEnumerable<PlantData> plantData)
+    public IEnumerable<IGrouping<DateTime, PlantData>> GroupPlantDataByDate(IEnumerable<PlantData> plantData)
     {
         return plantData
             .GroupBy(data => DateTime.ParseExact(data.TimeStamp, "yyyy-MM-dd HH:mm:ss", null).Date);
     }
 
-    private IEnumerable<AnalyticsDTO> CalculateAverageValues(IEnumerable<IGrouping<DateTime, PlantData>> groupedData)
+    public IEnumerable<AnalyticsDTO> CalculateAverageValues(IEnumerable<IGrouping<DateTime, PlantData>> groupedData)
     {
         return groupedData
             .Select(group => new AnalyticsDTO()
