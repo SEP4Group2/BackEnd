@@ -41,13 +41,21 @@ public class PlantDataDAO : IPlantDataDAO
     {
         try
         {
-            List<PlantData> fetchedPlantData = await _appContext.PlantData
-                .Where(p => p.PlantDevice.Plant.User.UserId == userId).Include(p => p.PlantDevice.Plant).ToListAsync();
+            var groupedData = await _appContext.PlantData
+                .Where(p => p.PlantDevice.Plant!.User.UserId == userId)
+                .Include(p => p.PlantDevice.Plant)
+                .GroupBy(p => p.PlantDevice.Plant!.PlantId)
+                .ToListAsync();
+
+            var fetchedPlantData = groupedData
+                .SelectMany(g => g.OrderByDescending(p => DateTime.Parse(p.TimeStamp)).Take(1))
+                .ToList();
+
             return fetchedPlantData;
         }
         catch (Exception e)
         {
-            Console.WriteLine("Error fetching data from plantdb");
+            Console.WriteLine(e.Message);
             throw new Exception("Error fetching data from plantdb");
         }
     }
