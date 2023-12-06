@@ -10,8 +10,7 @@ public class DeviceDAO : IDeviceDAO
 {
     private readonly AppContext _appContext;
 
-    public 
-        DeviceDAO(AppContext appContext)
+    public DeviceDAO(AppContext appContext)
     {
         _appContext = appContext;
     }
@@ -25,6 +24,7 @@ public class DeviceDAO : IDeviceDAO
                 DeviceId = newDevice.DeviceId,
                 Status = true
             };
+            device.Status = false;
             EntityEntry<Device> deviceEntity = await _appContext.Devices.AddAsync(device);
             await _appContext.SaveChangesAsync();
             return deviceEntity.Entity;
@@ -60,5 +60,36 @@ public class DeviceDAO : IDeviceDAO
         
     }
 
-    
+    public async Task<IEnumerable<int>> GetAllDeviceIdsAsync()
+    {
+        try
+        {
+            var devicesIds = await _appContext.Devices.Select(d => d.DeviceId).ToListAsync();
+            return devicesIds;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task SetStatusByIdAsync(int id)
+    {
+        try
+        {
+            var device = await _appContext.Devices.FindAsync(id);
+
+            if (device != null)
+            {
+                device.Status = true; 
+                await _appContext.SaveChangesAsync();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

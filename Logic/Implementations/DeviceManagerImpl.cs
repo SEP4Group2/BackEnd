@@ -27,4 +27,13 @@ public class DeviceManagerImpl:IDeviceManager
 
     }
 
+    public async Task<IEnumerable<int>> GetAllDeviceIdsAsync()
+    {
+        return await deviceDAO.GetAllDeviceIdsAsync();
+    }
+
+    public async Task SetStatusByIdAsync(int deviceId)
+    {
+        await deviceDAO.SetStatusByIdAsync(deviceId);
+    }
 }
