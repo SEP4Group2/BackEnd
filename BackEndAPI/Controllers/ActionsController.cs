@@ -1,5 +1,6 @@
 ﻿using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,28 +12,43 @@ namespace BackEndAPI.Controllers;
 public class ActionsController : ControllerBase
 {
     private IActionsManager _actionsManager;
-    private NetworkStream stream;
+    private HttpClient client;
 
     public ActionsController(IActionsManager actionsManager)
     {
         _actionsManager = actionsManager;
-        stream = actionsManager.tcpClientStream();
+        client = _actionsManager.GetHttpClient();
     }
     [HttpPost]
-    [Route("waterPlant")]
-    public async Task<IActionResult> SendMessage()
+    [Route("waterPlant/{deviceId:int}")]
+    public async Task<IActionResult> WaterPlant([FromRoute] int deviceId)
     {
         try
         {
-                byte[] messageBytes = Encoding.UTF8.GetBytes("waterPlant"); 
-                await stream.WriteAsync(messageBytes, 0, messageBytes.Length);
+            string apiUrl = "http://tcpserver";
 
-                // Read the response from the TCPServer
-                byte[] responseBytes = new byte[4096];
-                int bytesRead = await stream.ReadAsync(responseBytes, 0, responseBytes.Length);
-                string response = Encoding.UTF8.GetString(responseBytes, 0, bytesRead);
+            // Construct the JSON object
+            var waterCommand = new WaterPlantCommand()
+            {
+                DeviceId = deviceId
+            };
+            string waterCommandSerialized = JsonSerializer.Serialize(waterCommand);
 
-                return Ok(response);
+            var bridgeMessage = new IoTBridgeMessage()
+            {
+                DataType = 0,
+                Data = waterCommandSerialized
+            };
+            string bridgeMessageSerialized = JsonSerializer.Serialize(bridgeMessage);
+            
+            var content = new StringContent(bridgeMessageSerialized, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+            // Read the response from the HTTP server
+            string responseContent = await response.Content.ReadAsStringAsync();
+
+            return Ok(responseContent);
             
         }
         catch (Exception ex)

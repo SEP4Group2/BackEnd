@@ -4,5 +4,5 @@ namespace Logic.Interfaces;
 
 public interface IActionsManager
 {
-    NetworkStream tcpClientStream();
+    public HttpClient GetHttpClient();
 }

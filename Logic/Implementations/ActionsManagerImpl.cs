@@ -5,16 +5,9 @@ namespace Logic.Implementations;
 
 public class ActionsManagerImpl : IActionsManager
 {
-    public NetworkStream tcpClientStream()
-
+    public HttpClient GetHttpClient()
     {
-        string tcpServerIp = "tcpserver";
-        int tcpServerPort = 23;
-
-        TcpClient tcpClient = new TcpClient(tcpServerIp, tcpServerPort);
-
-        return tcpClient.GetStream();
-
+        return new HttpClient();
     }
 
 }
