@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackEndAPI.Tests", "BackEnd
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic.Tests", "Logic.Tests\Logic.Tests.csproj", "{08E9F440-14EF-459E-9E75-F2CA4B61567B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess.Tests", "DataAccess.Tests\DataAccess.Tests.csproj", "{38C84083-3AF6-470F-AC19-DFE22DDD1A6B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{08E9F440-14EF-459E-9E75-F2CA4B61567B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08E9F440-14EF-459E-9E75-F2CA4B61567B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08E9F440-14EF-459E-9E75-F2CA4B61567B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38C84083-3AF6-470F-AC19-DFE22DDD1A6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38C84083-3AF6-470F-AC19-DFE22DDD1A6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38C84083-3AF6-470F-AC19-DFE22DDD1A6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38C84083-3AF6-470F-AC19-DFE22DDD1A6B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

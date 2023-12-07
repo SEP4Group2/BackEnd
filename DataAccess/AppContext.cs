@@ -16,4 +16,12 @@ public class AppContext : DbContext
     public AppContext(DbContextOptions<AppContext> options) : base(options)
     {
     }
+    
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseInMemoryDatabase("TestDatabase");
+        }
+    }
 }

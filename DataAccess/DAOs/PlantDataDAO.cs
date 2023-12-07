@@ -42,14 +42,15 @@ public class PlantDataDAO : IPlantDataDAO
         try
         {
             var groupedData = await _appContext.PlantData
-                .Where(p => p.PlantDevice.Plant!.User.UserId == userId)
-                .Include(p => p.PlantDevice.Plant)
-                .GroupBy(p => p.PlantDevice.Plant!.PlantId)
-                .ToListAsync();
+            .Where(p => p.PlantDevice.Plant!.User.UserId == userId)
+            .Include(p => p.PlantDevice.Plant)
+            .ToListAsync();
 
-            var fetchedPlantData = groupedData
-                .SelectMany(g => g.OrderByDescending(p => DateTime.Parse(p.TimeStamp)).Take(1))
-                .ToList();
+        var fetchedPlantData = groupedData
+            .GroupBy(p => p.PlantDevice.Plant!.PlantId)
+            .SelectMany(g => g.OrderByDescending(p => DateTime.Parse(p.TimeStamp)).Take(1))
+            .ToList();
+
 
             return fetchedPlantData;
         }
