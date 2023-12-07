@@ -23,7 +23,7 @@ public class DeviceDAO : IDeviceDAO
             var device = new Device()
             {
                 DeviceId = newDevice.DeviceId,
-                Status = newDevice.Status
+                Status = true
             };
             EntityEntry<Device> deviceEntity = await _appContext.Devices.AddAsync(device);
             await _appContext.SaveChangesAsync();
