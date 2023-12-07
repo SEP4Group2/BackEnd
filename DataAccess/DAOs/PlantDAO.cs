@@ -34,7 +34,7 @@ public class PlantDAO : IPlantDAO
                 PlantPreset = existingPreset,
                 Name = plantCreationDto.Name,
                 User = existingUser,
-                IconId = plantCreationDto.IcondId
+                IconId = plantCreationDto.IconId
             };
             EntityEntry<Plant> newPlant = await _appContext.Plants.AddAsync(plant);
             await _appContext.SaveChangesAsync();

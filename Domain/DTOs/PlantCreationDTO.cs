@@ -9,5 +9,5 @@ public class PlantCreationDTO
     public int PlantPresetId { get; set; }
     public int UserId { get; set; }
     public int DeviceId { get; set; }
-    public int IcondId { get; set; }
+    public int IconId { get; set; }
 }
