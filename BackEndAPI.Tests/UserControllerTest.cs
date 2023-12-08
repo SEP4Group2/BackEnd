@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text;
 using System.Web.Http;
+using BackEndAPI.Tests;
 using Domain.DTOs;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
@@ -10,7 +11,7 @@ namespace IntegrationTests
 {
 
     [TestFixture]
-    public class UserControllerIntegrationTests
+    public class UserControllerIntegrationTests : DatabaseTestFixture
     {
         private TestServer _server;
         private HttpClient _client;

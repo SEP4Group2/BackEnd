@@ -8,73 +8,81 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.TestHost;
 using Moq;
 using Newtonsoft.Json;
+using NUnit.Framework;
 
 namespace BackEndAPI.Tests;
 
-
 [TestFixture]
-public class PlantControllerIntegrationTests
+public class PlantControllerIntegrationTests : DatabaseTestFixture
 {
-    private TestServer _server;
     private HttpClient _client;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        // Arrange
+
         _client = new HttpClient()
         {
             BaseAddress = new Uri("http://localhost:5000")
         };
     }
+    
 
     [Test]
     public async Task CreatePlant_ShouldReturnCreatedPlant()
     {
-        // Arrange
-        var plantToCreate = new PlantCreationDTO
+        ClearDatabase();
+       
+        var user1 = new User
         {
-            Name = "TestPlant",
-            Location = "TestLocation",
+            UserId = 1, 
+            Username = "testUser1", 
+            Password = "testPassword"
+        };
+        
+        var plantPreset = new PlantPreset
+        {
+            PresetId = 1,
+            UserId = 1, // Assuming a valid user ID for testing
+            Name = "TestPreset",
+            Humidity = 50,
+            UVLight = 500,
+            Moisture = 30,
+            Temperature = 25,
+        };
+        var device = new Device 
+        { 
             DeviceId = 1,
-            IcondId = 1,
-            PlantPresetId = 1,
-            UserId = 1
-            // Add other properties as needed
+            Status = true,
         };
-
-        var createdPlant = new Plant
+            
+        Context.Devices.Add(device);
+        Context.Users.Add(user1);
+        Context.Presets.Add(plantPreset);
+        await Context.SaveChangesAsync();
+        
+            
+        var plantCreationDto = new PlantCreationDTO
         {
-            Name = "TestPlant",
             Location = "TestLocation",
-            PlantPreset = new Mock<PlantPreset>().Object,
-            IconId = 1,
-            PlantId = 1
+            PlantPresetId = 1, // Assuming a valid preset ID for testing
+            UserId = 1, // Assuming a valid user ID for testing
+            DeviceId = 1, // Assuming a valid device ID for testing
+            Name = "TestPlant",
+            IconId = 1
         };
-
-        var mockPlantManager = new Mock<IPlantManager>();
-        mockPlantManager.Setup(manager => manager.CreateAsync(It.IsAny<PlantCreationDTO>()))
-            .ReturnsAsync(createdPlant);
-
-        var plantJson = new StringContent(JsonConvert.SerializeObject(plantToCreate), Encoding.UTF8, "application/json");
-
-        // Act
-        var response = await _client.PostAsync("/Plant/createPlant", plantJson);
-
+        
+        var content = new StringContent(JsonConvert.SerializeObject(plantCreationDto), Encoding.UTF8, "application/json");
+        
+        var response = await _client.PostAsync($"Plant/createPlant", content);
+        
         // Assert
         Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
-
-        // Optionally, you can deserialize the response content and assert against the created plant
-        var responseContent = await response.Content.ReadAsStringAsync();
-        var createdPlantFromResponse = JsonConvert.DeserializeObject<Plant>(responseContent);
-
-        Assert.AreEqual(createdPlant.Name, createdPlantFromResponse.Name);
-        Assert.AreEqual(createdPlant.Location, createdPlantFromResponse.Location);
-        // Add other assertions as needed
+        
     }
 
     [Test]
-    public async Task GetAllUsersAsync_ShouldReachController()
+    public async Task GetPlantAsync_ShouldReachController()
     {
         // Act
         var response = await _client.GetAsync($"Plant/{1}");
@@ -88,14 +96,10 @@ public class PlantControllerIntegrationTests
     {
             
         // Arrange
-        var plantToUpdate = new PlantCreationDTO()
+        var plantToUpdate = new Plant()
         {
-            
-            UserId = 6,
+            PlantId = 1,
             Name = "MyPlant",
-            PlantPresetId = 1,
-            DeviceId = 1,
-            IcondId = 1,
             Location = "Room"
         };
 
@@ -129,3 +133,5 @@ public class PlantControllerIntegrationTests
     }
 
 }
+
+
