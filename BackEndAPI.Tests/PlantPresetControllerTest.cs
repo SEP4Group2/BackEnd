@@ -10,7 +10,7 @@ namespace BackEndAPI.Tests
 
 {
    [TestFixture]
-    public class PlantPresetControllerIntegrationTests : DatabaseTestFixture
+    public class PlantPresetControllerTests : DatabaseTestFixture
     {
       
         private HttpClient _client;
@@ -92,6 +92,7 @@ namespace BackEndAPI.Tests
             // Add a sample user and plant preset to the database
             var user = new User
             {
+                UserId = 1,
                 Username = "TestUsername",
                 Password = "TestPassword"
             };
@@ -113,6 +114,7 @@ namespace BackEndAPI.Tests
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            ClearDatabase();
         }
       
         

@@ -7,13 +7,10 @@ using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace IntegrationTests
-{
 
-    [TestFixture]
-    public class UserControllerIntegrationTests : DatabaseTestFixture
+   [TestFixture]
+    public class UserControllerTests : DatabaseTestFixture
     {
-        private TestServer _server;
         private HttpClient _client;
 
         [OneTimeSetUp]
@@ -32,6 +29,7 @@ namespace IntegrationTests
            //Arrange
             var userCreationDto = new UserDTO
             {
+                UserId = 10,
                 Username = "Anushri",
                 Password = "Gupta"
             };
@@ -44,16 +42,22 @@ namespace IntegrationTests
 
             // Assert
             Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
+            Context.Dispose();
+
+            
         }
 
         [Test]
         public async Task GetAllUsersAsync_ShouldReachController()
         {
+            
             // Act
             var response = await _client.GetAsync("User");
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Context.Dispose();
+
         }
 
         [Test]
@@ -103,4 +107,4 @@ namespace IntegrationTests
             _client.Dispose();
         }
     }
-}
+
