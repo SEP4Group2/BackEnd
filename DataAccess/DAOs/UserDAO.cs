@@ -59,15 +59,19 @@ public class UserDAO : IUserDAO
     public async Task RemoveAsync(int id)
     {
        
-            User? user = await _appContext.Users.FindAsync(id);
-            if (user == null)
-            {
-                throw new Exception("User not found");
-            }
+        User? user = await _appContext.Users.FindAsync(id);
+        if (user == null)
+        {
+            throw new Exception("User not found");
+        }
 
-            _appContext.Remove(user);
-            await _appContext.SaveChangesAsync();
-
+        var plantsToRemove = _appContext.Plants.Where(plant => plant.User.UserId == id).ToList();
+        if (plantsToRemove.Count > 0)
+        {
+            _appContext.Plants.RemoveRange(plantsToRemove);
+        }
+        _appContext.Users.Remove(user);
+        await _appContext.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<User?>> GetAllUsersAsync()
