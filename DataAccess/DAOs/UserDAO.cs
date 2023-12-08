@@ -55,7 +55,21 @@ public class UserDAO : IUserDAO
         }
         return updatedUser;
     }
-    
+
+    public async Task RemoveAsync(int id)
+    {
+       
+            User? user = await _appContext.Users.FindAsync(id);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            _appContext.Remove(user);
+            await _appContext.SaveChangesAsync();
+
+    }
+
     public async Task<IEnumerable<User?>> GetAllUsersAsync()
     {
        

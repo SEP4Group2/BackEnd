@@ -11,4 +11,5 @@ public interface IUserManager
     Task<User?> ValidateUser(UserDTO dto);
 
     Task<User> EditAsync(UserDTO dto);
+    Task RemoveAsync(int id);
 }
