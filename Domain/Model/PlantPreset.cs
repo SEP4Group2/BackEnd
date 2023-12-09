@@ -18,7 +18,7 @@ public class PlantPreset
     
     public float Moisture { get; set; }
 
-    public int UserId { get; set; }
+    public int? UserId { get; set; }
 
 
 

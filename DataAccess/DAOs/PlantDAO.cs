@@ -24,6 +24,8 @@ public class PlantDAO : IPlantDAO
             if (existingPreset == null) throw new Exception("Preset not found");
             User? existingUser = await _appContext.Users.FindAsync(plantCreationDto.UserId);
             if (existingUser == null) throw new Exception("User does not exist in the database");
+            Device? existingDevice = await _appContext.Devices.FindAsync(plantCreationDto.DeviceId);
+            if (existingDevice == null) throw new Exception("Device does not exist in the database");
             
             
                 var plant = new Plant()
@@ -31,10 +33,17 @@ public class PlantDAO : IPlantDAO
                 Location = plantCreationDto.Location,
                 PlantPreset = existingPreset,
                 Name = plantCreationDto.Name,
-                User = existingUser
+                User = existingUser,
+                IconId = plantCreationDto.IconId
             };
             EntityEntry<Plant> newPlant = await _appContext.Plants.AddAsync(plant);
             await _appContext.SaveChangesAsync();
+            
+            //add Plant object to the already existing Device 
+            existingDevice.Plant = plant;
+            _appContext.Devices.Update(existingDevice);
+            await _appContext.SaveChangesAsync();
+            
             return newPlant.Entity;
         }
         catch (Exception e)
@@ -55,12 +64,18 @@ public class PlantDAO : IPlantDAO
         return plant;
     }
 
-    public async Task<List<GetAllPlantsDTO>> GetAllPlantsAsync()
+    public async Task<List<GetAllPlantsDTO>> GetAllPlantsAsync(int userId)
     {
-        return await _appContext.Plants
-            .Select(p => new GetAllPlantsDTO (
-                p.PlantId, p.Name, p.Location, p.PlantPreset))
-            .ToListAsync();
+        List<Plant> plants = await _appContext.Plants.Where(p => p.User.UserId == userId).Include(p => p.PlantPreset).ToListAsync();
+        List<GetAllPlantsDTO> listDtos = new List<GetAllPlantsDTO>();
+        foreach (var plant in plants)
+        {
+            Device device = _appContext.Devices.FirstOrDefault(d => d.Plant.PlantId == plant.PlantId);
+            GetAllPlantsDTO dto = new GetAllPlantsDTO(plant.PlantId, plant.Name, plant.Location, plant.PlantPreset,
+                device.DeviceId, plant.IconId);
+            listDtos.Add(dto);
+        }
+        return listDtos;
     }
 
     public async Task RemoveAsync(int id)

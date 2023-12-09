@@ -16,12 +16,16 @@ public class PlantManagerImpl : IPlantManager
 
     public async Task<Plant> CreateAsync(PlantCreationDTO plantCreationDto)
     {
+        if (plantCreationDto.PlantPresetId <= 0)
+        {
+            throw new ArgumentException("Invalid plant preset ID");
+        }
         return await plantDao.CreateAsync(plantCreationDto);
     }
 
-    public async Task<IEnumerable<GetAllPlantsDTO>> GetAllPlantsAsync()
+    public async Task<IEnumerable<GetAllPlantsDTO>> GetAllPlantsAsync(int userId)
     {
-        return await plantDao.GetAllPlantsAsync();
+        return await plantDao.GetAllPlantsAsync(userId);
     }
 
     public async Task RemoveAsync(int id)

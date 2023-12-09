@@ -9,6 +9,7 @@ public interface IPlantDataManager
     
    
     Task<PlantData> SaveAsync(PlantDataCreationDTO plantData);
-    Task<List<PlantData>> GetAllByPlantIdAsync(int id);
+    Task<List<PlantData>> FetchPlantDataAsync(int userId);
     Task CheckDataWithPlantPreset(PlantData plantData);
+    Task<List<AnalyticsDTO>> GetPlantDataForAnalytics(int plantId);
 }

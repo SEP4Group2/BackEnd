@@ -63,13 +63,23 @@ public class UserController : ControllerBase
     }
 
     [HttpPost, Route("login")]
-    public async Task<ActionResult> Login([FromBody]UserDTO userLogin)
+    public async Task<ActionResult<LoginResponseDTO>> Login([FromBody]UserDTO userLogin)
     {
         try
         {
             User user = await userManager.ValidateUser(userLogin);
             string token = GenerateJwt(user);
-            return Ok(token);
+            LoginResponseDTO responseDto = new LoginResponseDTO()
+            {
+                Token = token,
+                User = new UserDTO()
+                {
+                    Password = user.Password,
+                    Username = user.Username,
+                    UserId = user.UserId
+                }
+            };
+            return Ok(responseDto);
         }
         catch (Exception e)
         {
@@ -89,6 +99,7 @@ public class UserController : ControllerBase
         };
         return claims.ToList();
     }
+    
     private string GenerateJwt(User user)
     {
         List<Claim> claims = GenerateClaims(user);
@@ -109,5 +120,19 @@ public class UserController : ControllerBase
     
         string serializedToken = new JwtSecurityTokenHandler().WriteToken(token);
         return serializedToken;
+    }
+
+    [HttpPatch]
+    public async Task<ActionResult<User>> EditAsync([FromBody] UserDTO userToUpdate)
+    {
+        try
+        {
+           return await userManager.EditAsync(userToUpdate);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
     }
 }

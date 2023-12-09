@@ -37,18 +37,45 @@ public class PlantDataDAO : IPlantDataDAO
         return plantDataEntity.Entity;
     }
 
-    public async Task<List<PlantData>> GetAllByPlantIdAsync(int id)
+    public async Task<List<PlantData>> FetchPlantDataAsync(int userId)
     {
         try
         {
-            List<PlantData> fetchedPlantData = await _appContext.PlantData.Include(pd => pd.PlantDevice).ThenInclude(p=>p.Plant)
-                .ThenInclude(p=>p.PlantPreset).ToListAsync();
+            var groupedData = await _appContext.PlantData
+            .Where(p => p.PlantDevice.Plant!.User.UserId == userId)
+            .Include(p => p.PlantDevice.Plant)
+            .ToListAsync();
+
+        var fetchedPlantData = groupedData
+            .GroupBy(p => p.PlantDevice.Plant!.PlantId)
+            .SelectMany(g => g.OrderByDescending(p => DateTime.Parse(p.TimeStamp)).Take(1))
+            .ToList();
+
+
             return fetchedPlantData;
         }
         catch (Exception e)
         {
-            Console.WriteLine("Error fetching data from plantdb");
+            Console.WriteLine(e.Message);
             throw new Exception("Error fetching data from plantdb");
+        }
+    }
+
+    public async Task<List<PlantData>> GetPlantDataByPlantIdAsync(int plantId)
+    {
+        try
+        {
+            //get the device that is associated to the plant
+            Device connectedDevice = _appContext.Devices.FirstOrDefault(d => d.Plant.PlantId == plantId);
+            //return just plantData that are associated to this particular device, thus plant
+            return await _appContext.PlantData.Where(pd => pd.PlantDevice.DeviceId == connectedDevice.DeviceId)
+                .Include(pd => pd.PlantDevice.Plant)
+                .ToListAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
         }
     }
 }
