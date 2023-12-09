@@ -72,11 +72,11 @@ public class DeviceController:ControllerBase
 
     [HttpPatch]
     [Route("changeStatusCode")]
-    public async Task<ActionResult> SetStatusByIdAsync(int id)
+    public async Task<ActionResult> SetStatusByIdAsync([FromBody]DeviceStatusDTO device)
     {
         try
         {
-            await deviceManager.SetStatusByIdAsync(id);
+            await deviceManager.SetStatusByIdAsync(device);
             return Ok();
         }
         catch (Exception e)

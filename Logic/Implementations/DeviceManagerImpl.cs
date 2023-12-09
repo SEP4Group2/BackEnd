@@ -32,8 +32,8 @@ public class DeviceManagerImpl:IDeviceManager
         return await deviceDAO.GetAllDeviceIdsAsync();
     }
 
-    public async Task SetStatusByIdAsync(int deviceId)
+    public async Task SetStatusByIdAsync(DeviceStatusDTO dto)
     {
-        await deviceDAO.SetStatusByIdAsync(deviceId);
+        await deviceDAO.SetStatusById(dto);
     }
 }

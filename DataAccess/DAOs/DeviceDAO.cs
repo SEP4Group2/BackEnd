@@ -74,15 +74,15 @@ public class DeviceDAO : IDeviceDAO
         }
     }
 
-    public async Task SetStatusByIdAsync(int id)
+    public async Task SetStatusById(DeviceStatusDTO device)
     {
         try
         {
-            var device = await _appContext.Devices.FindAsync(id);
+            var Changeddevice =  _appContext.Devices.First(d=> d.DeviceId==device.DeviceId);
 
-            if (device != null)
+            if (Changeddevice != null)
             {
-                device.Status = true; 
+                device.Status = device.Status; 
                 await _appContext.SaveChangesAsync();
             }
         }

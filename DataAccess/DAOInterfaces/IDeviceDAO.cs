@@ -10,6 +10,6 @@ public interface IDeviceDAO
 
     public Task<IEnumerable<int>> GetAllDeviceIdsAsync();
 
-    public Task SetStatusByIdAsync(int deviceId);
+    public Task SetStatusById(DeviceStatusDTO device);
 
 }

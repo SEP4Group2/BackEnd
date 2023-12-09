@@ -10,5 +10,5 @@ public interface IDeviceManager
     public Task<int> GetDeviceIdAsync(int deviceId);
     public Task<IEnumerable<int>> GetAllDeviceIdsAsync();
 
-    public Task SetStatusByIdAsync(int deviceId);
+    public Task SetStatusByIdAsync(DeviceStatusDTO device);
 }
