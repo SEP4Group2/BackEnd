@@ -135,4 +135,19 @@ public class UserController : ControllerBase
             return StatusCode(500, e.Message);
         }
     }
+
+    [HttpDelete]
+    public async Task<ActionResult> RemoveAsync([FromBody] int id)
+    {
+        try
+        {
+            await userManager.RemoveAsync(id);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
 }

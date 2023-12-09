@@ -10,8 +10,7 @@ public class DeviceDAO : IDeviceDAO
 {
     private readonly AppContext _appContext;
 
-    public 
-        DeviceDAO(AppContext appContext)
+    public DeviceDAO(AppContext appContext)
     {
         _appContext = appContext;
     }
@@ -60,5 +59,36 @@ public class DeviceDAO : IDeviceDAO
         
     }
 
-    
+    public async Task<IEnumerable<int>> GetAllDeviceIdsAsync()
+    {
+        try
+        {
+            var devicesIds = await _appContext.Devices.Select(d => d.DeviceId).ToListAsync();
+            return devicesIds;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task SetStatusById(DeviceStatusDTO device)
+    {
+        try
+        {
+            var Changeddevice =  _appContext.Devices.First(d=> d.DeviceId==device.DeviceId);
+
+            if (Changeddevice != null)
+            {
+                device.Status = device.Status; 
+                await _appContext.SaveChangesAsync();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }
