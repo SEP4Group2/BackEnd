@@ -11,45 +11,22 @@ namespace BackEndAPI.Controllers;
 [Route("Actions")]
 public class ActionsController : ControllerBase
 {
-    private IActionsManager _actionsManager;
-    private HttpClient client;
+    private IActionsSender _actionsSender;
 
-    public ActionsController(IActionsManager actionsManager)
+    public ActionsController(IActionsSender actionsManager)
     {
-        _actionsManager = actionsManager;
-        client = _actionsManager.GetHttpClient();
+        _actionsSender = actionsManager;
     }
+    
     [HttpPost]
     [Route("waterPlant/{deviceId:int}")]
     public async Task<IActionResult> WaterPlant([FromRoute] int deviceId)
     {
         try
         {
-            string apiUrl = "http://tcpserver";
+            string response = await _actionsSender.SendWaterPlantAction(deviceId);
+            return Ok(response);
 
-            // Construct the JSON object
-            var waterCommand = new WaterPlantCommand()
-            {
-                DeviceId = deviceId
-            };
-            string waterCommandSerialized = JsonSerializer.Serialize(waterCommand);
-
-            var bridgeMessage = new IoTBridgeMessage()
-            {
-                DataType = 0,
-                Data = waterCommandSerialized
-            };
-            string bridgeMessageSerialized = JsonSerializer.Serialize(bridgeMessage);
-            
-            var content = new StringContent(bridgeMessageSerialized, Encoding.UTF8, "application/json");
-
-            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
-
-            // Read the response from the HTTP server
-            string responseContent = await response.Content.ReadAsStringAsync();
-
-            return Ok(responseContent);
-            
         }
         catch (Exception ex)
         {
