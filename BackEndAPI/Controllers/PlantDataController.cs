@@ -18,17 +18,16 @@ public class PlantDataController : ControllerBase
         this.plantDataManager = plantDataManager;
     }
 
-
-
     [HttpPost]
     [Route("savePlantData")]
-    public async Task<ActionResult<PlantData>> CreateAsync([FromBody] PlantDataCreationDTO plantData)
+    public async Task<ActionResult<PlantData>> CreateAsync([FromBody] PlantDataCreationListDTO plantData)
     {
+        Console.WriteLine($"Recieved data in this format: {plantData.ToString()}");
         try
         {
-            PlantData newPlantData = await plantDataManager.SaveAsync(plantData);
-            await plantDataManager.CheckDataWithPlantPreset(newPlantData);
-            return Created($"/plant/{newPlantData.TimeStamp}", newPlantData);
+            await plantDataManager.SaveAsync(plantData);
+            //await plantDataManager.CheckDataWithPlantPreset(newPlantData);
+            return Ok();
         }
         catch (Exception e)
         {

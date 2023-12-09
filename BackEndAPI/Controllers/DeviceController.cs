@@ -10,7 +10,6 @@ namespace BackEndAPI.Controllers;
 [Route("[controller]")]
 public class DeviceController:ControllerBase
 {
-    
     private IDeviceManager deviceManager;
 
 
@@ -20,12 +19,12 @@ public class DeviceController:ControllerBase
     }
     
     [HttpPost]
-    [Route("registerDevice")]
-    public async Task<ActionResult<Device>> CreateAsync(DeviceRegistrationDTO device)
+    [Route("registerDevice/{deviceId:int}")]
+    public async Task<ActionResult<Device>> CreateAsync(int deviceId)
     {
         try
         {
-            Device newDevice = await deviceManager.CreateAsync(device);
+            Device newDevice = await deviceManager.CreateAsync(deviceId);
             return Created($"/file/{newDevice.DeviceId}", newDevice);
 
         }
@@ -61,7 +60,10 @@ public class DeviceController:ControllerBase
         try
         {
             IEnumerable<int> deviceIds = await deviceManager.GetAllDeviceIdsAsync();
-            return Ok(deviceIds.ToList());
+            return Ok(new DeviceIdsResponse()
+            {
+                DeviceIds = deviceIds.ToList()
+            });
         }
         catch (Exception e)
         {

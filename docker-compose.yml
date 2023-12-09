@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   plantapi:
-    image: tinajassik/plantapi:latest
+    image: "plantapi"
     ports:
       - "5000:5000"
     environment:
@@ -24,12 +24,13 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - backend
-  tcpserver:
-      image: tinajassik/tcp-server-1:latest
+  iotbridgeserver:
+      image: "iotbridge"
       depends_on:
         - plantapi
       ports:
-        - "23:23"
+        - "3014:3014"
+        - "5024:5024"
       environment:
         - PLANTAPI_URL=http://plantapi:5000
       networks:

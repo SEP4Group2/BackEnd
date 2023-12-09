@@ -46,8 +46,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigin",
+    options.AddPolicy("AllowFrontendOrigin",
         builder => builder.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
+    options.AddPolicy("AllowIotBridgeOrigin",
+        builder => builder.WithOrigins("http://iotbridgeserver:5024")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials());
@@ -66,7 +71,8 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
-app.UseCors("AllowSpecificOrigin");
+app.UseCors("AllowFrontendOrigin");
+app.UseCors("AllowIotBridgeOrigin");
 app.UseAuthorization();
 app.MapControllers();
 

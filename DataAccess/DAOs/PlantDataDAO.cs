@@ -15,26 +15,32 @@ public class PlantDataDAO : IPlantDataDAO
         this._appContext = _appContext;
     }
     
-    public async Task<PlantData> SaveAsync(PlantDataCreationDTO plantData)
+    public async Task SaveAsync(PlantDataCreationListDTO plantDataList)
     {
         Device? existingDevice = await Task.FromResult(_appContext.Devices.Include(d => d.Plant)
-            .ThenInclude(p => p.PlantPreset).Include(d=> d.Plant).ThenInclude(p=> p.User).FirstOrDefault(d => d.DeviceId == plantData.DeviceId));
+            .ThenInclude(p => p.PlantPreset).Include(d=> d.Plant).ThenInclude(p=> p.User).FirstOrDefault(d => d.DeviceId == plantDataList.PlantDataApi.First().DeviceId));
         if (existingDevice == null) throw new Exception("Device not found");
-        
-        var newPlantData = new PlantData()
+
+        List<PlantData> plantData = new();
+
+        foreach (PlantDataCreationDTO plantDataCreationDto in plantDataList.PlantDataApi)
         {
-            Humidity = plantData.Humidity,
-            Temperature = plantData.Temperature, 
-            Moisture = plantData.Moisture, 
-            UVLight = plantData.UVLight,
-            PlantDevice = existingDevice,
-            TimeStamp = plantData.TimeStamp,
-            TankLevel = plantData.TankLevel
-        };
+            var newPlantData = new PlantData()
+            {
+                Humidity = plantDataCreationDto.Humidity,
+                Temperature = plantDataCreationDto.Temperature, 
+                Moisture = plantDataCreationDto.Moisture, 
+                UVLight = plantDataCreationDto.UVLight,
+                PlantDevice = existingDevice,
+                TimeStamp = plantDataCreationDto.TimeStamp,
+                TankLevel = plantDataCreationDto.TankLevel
+            };
+            plantData.Add(newPlantData);
+        }
         
-        EntityEntry<PlantData> plantDataEntity = await _appContext.PlantData.AddAsync(newPlantData);
+        
+        await _appContext.PlantData.AddRangeAsync(plantData);
         await _appContext.SaveChangesAsync();
-        return plantDataEntity.Entity;
     }
 
     public async Task<List<PlantData>> FetchPlantDataAsync(int userId)
