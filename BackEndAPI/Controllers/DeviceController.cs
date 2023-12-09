@@ -1,3 +1,4 @@
+using System.Text;
 using Domain.DTOs;
 using Domain.Model;
 using Logic.Interfaces;
@@ -51,7 +52,37 @@ public class DeviceController:ControllerBase
             return StatusCode(500, e.Message);
         }
     }
-    
-    
-    
+
+
+    [HttpGet]
+    [Route("getAllIds")]
+    public async Task<ActionResult<IEnumerable<int>>> GetAllDeviceIdsAsync()
+    {
+        try
+        {
+            IEnumerable<int> deviceIds = await deviceManager.GetAllDeviceIdsAsync();
+            return Ok(deviceIds.ToList());
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
+
+    [HttpPatch]
+    [Route("changeStatusCode")]
+    public async Task<ActionResult> SetStatusByIdAsync([FromBody]DeviceStatusDTO device)
+    {
+        try
+        {
+            await deviceManager.SetStatusByIdAsync(device);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
 }
