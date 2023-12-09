@@ -48,4 +48,9 @@ public class UserManagerImpl : IUserManager
     {
         return await _userDao.EditAsync(dto);
     }
+
+    public async Task RemoveAsync(int id)
+    {
+        await _userDao.RemoveAsync(id);
+    }
 }
