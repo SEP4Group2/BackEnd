@@ -66,10 +66,20 @@ public class UserDAO : IUserDAO
         }
 
         var plantsToRemove = _appContext.Plants.Where(plant => plant.User.UserId == id).ToList();
+
         if (plantsToRemove.Count > 0)
         {
+            foreach (Plant plant in plantsToRemove)
+            {
+                Device device = _appContext.Devices.First(d => d.Plant.Equals(plant));
+                if (device != null)
+                {
+                    device.Plant.Equals(null);
+                }
+            }
             _appContext.Plants.RemoveRange(plantsToRemove);
         }
+
         _appContext.Users.Remove(user);
         await _appContext.SaveChangesAsync();
     }
