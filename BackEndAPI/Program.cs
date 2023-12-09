@@ -25,6 +25,8 @@ builder.Services.AddScoped<IUserDAO, UserDAO>();
 builder.Services.AddScoped<IUserManager, UserManagerImpl>();
 builder.Services.AddScoped<IDeviceDAO, DeviceDAO>();
 builder.Services.AddScoped<IDeviceManager, DeviceManagerImpl>();
+builder.Services.AddScoped<IActionsSender, HttpClientActionsSender>();
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
