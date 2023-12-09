@@ -19,4 +19,6 @@ public class PlantData
     public float TankLevel { get; set; }
     
     public Device PlantDevice { get; set; }
+    
+    public int? PercentageStatus { get; set; }
 }

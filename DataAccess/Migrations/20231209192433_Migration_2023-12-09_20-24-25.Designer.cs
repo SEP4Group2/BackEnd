@@ -12,8 +12,13 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(AppContext))]
+<<<<<<<< HEAD:DataAccess/Migrations/20231209185800_Migration_2023-12-09_19-57-50.Designer.cs
     [Migration("20231209185800_Migration_2023-12-09_19-57-50")]
     partial class Migration_20231209_195750
+========
+    [Migration("20231209192433_Migration_2023-12-09_20-24-25")]
+    partial class Migration_20231209_202425
+>>>>>>>> 67e150f (Added percentageStatus to PlantData model object so that it's returned with fetchPlantData. Also added logic for it in the PlantDataManagerImpl.cs):DataAccess/Migrations/20231209192433_Migration_2023-12-09_20-24-25.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -92,6 +97,9 @@ namespace DataAccess.Migrations
 
                     b.Property<float>("Moisture")
                         .HasColumnType("real");
+
+                    b.Property<int?>("PercentageStatus")
+                        .HasColumnType("integer");
 
                     b.Property<int>("PlantDeviceDeviceId")
                         .HasColumnType("integer");
