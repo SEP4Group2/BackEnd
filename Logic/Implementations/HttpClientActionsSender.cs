@@ -18,7 +18,7 @@ public class HttpClientActionsSender : IActionsSender
 
     public async Task<string> SendWaterPlantAction(int deviceId)
     {
-        string apiUrl = "http://tcpserver";
+        string apiUrl = "http://iotbridgeserver:5024/api/plants";
 
         // Construct the JSON object
         var waterCommand = new WaterPlantCommand()

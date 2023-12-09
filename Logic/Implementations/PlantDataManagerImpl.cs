@@ -17,11 +17,11 @@ public class PlantDataManagerImpl : IPlantDataManager
         this.plantDataDao = plantDataDao;
         this.notificationSener = notificationSener;
     }
-    public async Task<PlantData> SaveAsync(PlantDataCreationDTO plantData)
+    public async Task SaveAsync(PlantDataCreationListDTO plantData)
     {
         try
         {
-            return await plantDataDao.SaveAsync(plantData);
+            await plantDataDao.SaveAsync(plantData);
         }
         catch (Exception e)
         {

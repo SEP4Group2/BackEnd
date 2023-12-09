@@ -5,7 +5,7 @@ namespace Logic.Interfaces;
 
 public interface IDeviceManager
 {
-    public Task<Device> CreateAsync(DeviceRegistrationDTO newDevice);
+    public Task<Device> CreateAsync(int newDevice);
 
     public Task<int> GetDeviceIdAsync(int deviceId);
     public Task<IEnumerable<int>> GetAllDeviceIdsAsync();

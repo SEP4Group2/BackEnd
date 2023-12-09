@@ -15,9 +15,12 @@ public class DeviceManagerImpl:IDeviceManager
         this.deviceDAO = deviceDAO;
     }
 
-    public async Task<Device> CreateAsync(DeviceRegistrationDTO newDevice)
+    public async Task<Device> CreateAsync(int newDevice)
     {
-        return await deviceDAO.CreateAsync(newDevice);
+        return await deviceDAO.CreateAsync(new DeviceRegistrationDTO()
+        {
+            DeviceId = newDevice
+        });
     }
     
     public async Task<int> GetDeviceIdAsync(int deviceId)
