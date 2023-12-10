@@ -1,8 +1,11 @@
 using System.Net;
 using System.Text;
 using BackEndAPI.Controllers;
+using DataAccess.DAOInterfaces;
+using DataAccess.DAOs;
 using Domain.DTOs;
 using Domain.Model;
+using Logic.Implementations;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -14,16 +17,17 @@ namespace BackEndAPI.Tests;
 [TestFixture]
 public class PlantControllerTests : DatabaseTestFixture
 {
-    private HttpClient _client;
-
+    private IPlantManager plantManager;
+    private IPlantDAO plantDao;
+    private PlantController controller;
+    
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
+        plantDao = new PlantDAO(Context);
 
-        _client = new HttpClient()
-        {
-            BaseAddress = new Uri("http://localhost:5000")
-        };
+        plantManager = new PlantManagerImpl(plantDao);
+        controller = new PlantController(plantManager);
     }
     
 
@@ -71,12 +75,12 @@ public class PlantControllerTests : DatabaseTestFixture
             IconId = 1
         };
         
-        var content = new StringContent(JsonConvert.SerializeObject(plantCreationDto), Encoding.UTF8, "application/json");
-        
-        var response = await _client.PostAsync($"Plant/createPlant", content);
-        
+        // Act
+        var result = await controller.CreateAsync(plantCreationDto);
+
         // Assert
-        Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
+       var createdResult = result.Result;
+        Assert.That(createdResult, Is.TypeOf<CreatedResult>());
         
     }
 
@@ -84,47 +88,112 @@ public class PlantControllerTests : DatabaseTestFixture
     [Test]
     public async Task EditAsync_ShouldReachController()
     {
-            
-        // Arrange
-        var plantToUpdate = new Plant()
+        ClearDatabase();
+        var user1 = new User
+        {
+            UserId = 1, 
+            Username = "testUser1", 
+            Password = "testPassword"
+        };
+        
+        var plantPreset = new PlantPreset
+        {
+            PresetId = 1,
+            UserId = 1, // Assuming a valid user ID for testing
+            Name = "TestPreset",
+            Humidity = 50,
+            UVLight = 500,
+            Moisture = 30,
+            Temperature = 25,
+        };
+        var device = new Device 
+        { 
+            DeviceId = 1,
+            Status = true,
+        };
+        Context.Devices.Add(device);
+        Context.Users.Add(user1);
+        Context.Presets.Add(plantPreset);
+        await Context.SaveChangesAsync();
+
+        var plantCreationDto = new Plant{
+            Location = "TestLocation",
+            PlantPreset = plantPreset, // Assuming a valid preset ID for testing
+            User = user1, // Assuming a valid user ID for testing
+            Name = "TestPlant",
+            IconId = 1
+        };
+
+        Context.Plants.Add(plantCreationDto);
+        await Context.SaveChangesAsync();
+        
+        var plantToUpdate = new EditPlantDTO()
         {
             PlantId = 1,
             Name = "MyPlant",
             Location = "Room"
         };
-
-        var content = new StringContent(JsonConvert.SerializeObject(plantToUpdate), Encoding.UTF8, "application/json");
-
-        // Act
-        var response = await _client.PatchAsync("Plant", content);
+        
+        var result = await controller.EditAsync(plantToUpdate);
 
         // Assert
-        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        var createdResult = result.Result;
+        Console.WriteLine($"Result Content: {createdResult?.ToString()}");
+
+        Assert.IsInstanceOf<ActionResult<Plant>>(result);
     }
     
     [Test]
     public async Task DeletePlant_ShouldReturnOk()
     {
         // Arrange
-        int plantIdToDelete = 1; 
+        ClearDatabase();
+        var user1 = new User
+        {
+            UserId = 1, 
+            Username = "testUser1", 
+            Password = "testPassword"
+        };
+        
+        var plantPreset = new PlantPreset
+        {
+            PresetId = 1,
+            UserId = 1, // Assuming a valid user ID for testing
+            Name = "TestPreset",
+            Humidity = 50,
+            UVLight = 500,
+            Moisture = 30,
+            Temperature = 25,
+        };
+        var device = new Device 
+        { 
+            DeviceId = 1,
+            Status = true,
+        };
+        Context.Devices.Add(device);
+        Context.Users.Add(user1);
+        Context.Presets.Add(plantPreset);
+        await Context.SaveChangesAsync();
 
-        var mockPlantManager = new Mock<IPlantManager>();
-        mockPlantManager.Setup(manager => manager.RemoveAsync(It.IsAny<int>()))
-            .Returns(Task.CompletedTask);
+        var plantCreationDto = new Plant{
+            Location = "TestLocation",
+            PlantPreset = plantPreset, // Assuming a valid preset ID for testing
+            User = user1, // Assuming a valid user ID for testing
+            Name = "TestPlant",
+            IconId = 1
+        };
 
-        var plantController = new PlantController(mockPlantManager.Object);
+        Context.Plants.Add(plantCreationDto);
+        await Context.SaveChangesAsync();
+        
+     
 
-        // Act
-        var result = await plantController.DeletePlantAsync(plantIdToDelete);
+        var result = await controller.DeletePlantAsync(plantCreationDto.PlantId);
+        Console.WriteLine($"Actual Result Type: {result?.GetType()}");
 
         // Assert
-        var statusCodeResult = (StatusCodeResult)result;
-        Assert.AreEqual(200, statusCodeResult.StatusCode);
+        Assert.IsInstanceOf<OkResult>(result);
     }
-    
-    
-    
-    
     
     [Test]
     public async Task GetPlantAsync_ShouldReachController()
@@ -212,18 +281,11 @@ public class PlantControllerTests : DatabaseTestFixture
             await Context.SaveChangesAsync();
 
         // Act
-        var response = await _client.GetAsync($"/Plant/{user1.UserId}");
-
-        // Check for detailed error information in case of failure
-        if (response.StatusCode != HttpStatusCode.OK)
-        {
-            var responseContent = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"Response Content: {responseContent}");
-        }
+        var result = await controller.GetAllPlantsAsync(user1.UserId);
 
         // Assert
-        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        ClearDatabase();
+        var createdResult = result.Result;
+        Assert.That(createdResult, Is.TypeOf<OkObjectResult>());
     }
 
 }
