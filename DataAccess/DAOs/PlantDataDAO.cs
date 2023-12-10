@@ -15,7 +15,7 @@ public class PlantDataDAO : IPlantDataDAO
         this._appContext = _appContext;
     }
     
-    public async Task SaveAsync(PlantDataCreationListDTO plantDataList)
+    public async Task<PlantData> SaveAsync(PlantDataCreationListDTO plantDataList)
     {
         Device? existingDevice = await Task.FromResult(_appContext.Devices.Include(d => d.Plant)
             .ThenInclude(p => p.PlantPreset).Include(d=> d.Plant).ThenInclude(p=> p.User).FirstOrDefault(d => d.DeviceId == plantDataList.PlantDataApi.First().DeviceId));
@@ -41,6 +41,7 @@ public class PlantDataDAO : IPlantDataDAO
         
         await _appContext.PlantData.AddRangeAsync(plantData);
         await _appContext.SaveChangesAsync();
+        return plantData.Last();
     }
 
     public async Task<List<PlantData>> FetchPlantDataAsync(int userId)

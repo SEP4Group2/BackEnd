@@ -5,7 +5,7 @@ namespace DataAccess.DAOInterfaces;
 
 public interface IPlantDataDAO
 {
-    Task SaveAsync(PlantDataCreationListDTO plantDataList);
+    Task<PlantData> SaveAsync(PlantDataCreationListDTO plantDataList);
     Task<List<PlantData>> FetchPlantDataAsync(int userId);
 
     Task<List<PlantData>> GetPlantDataByPlantIdAsync(int plantId);
