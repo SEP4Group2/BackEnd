@@ -6,7 +6,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     /// <inheritdoc />
+<<<<<<<< HEAD:DataAccess/Migrations/20231209201537_Migration_2023-12-09_21-15-28.cs
     public partial class Migration_20231209_211528 : Migration
+========
+    public partial class Migration_20231210_141538 : Migration
+>>>>>>>> 164216a (Remove plant fix with the migrations):DataAccess/Migrations/20231210131547_Migration_2023-12-10_14-15-38.cs
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

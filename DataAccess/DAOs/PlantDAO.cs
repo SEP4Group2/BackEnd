@@ -80,6 +80,25 @@ public class PlantDAO : IPlantDAO
 
     public async Task RemoveAsync(int id)
     {
+        // Removing the Plant attribute from the Device
+        Device deviceWithPlant = await _appContext.Devices
+            .Include(d => d.Plant)  // Ensure Plant is loaded
+            .FirstOrDefaultAsync(d => d.Plant.PlantId == id);
+        Console.WriteLine("Im here");
+
+        if (deviceWithPlant != null)
+        {
+            Console.WriteLine("Im there");
+
+            deviceWithPlant.Plant = null;
+            _appContext.Devices.Update(deviceWithPlant);
+            await _appContext.SaveChangesAsync();  // Save changes for the device
+        }
+        else
+        {
+            throw new Exception("Device not found for the specified plant");
+        }
+        //Removing the plant
         Plant? plant = await _appContext.Plants.FindAsync(id);
         if (plant == null)
         {
@@ -87,6 +106,8 @@ public class PlantDAO : IPlantDAO
         }
 
         _appContext.Remove(plant);
+        
+        
         await _appContext.SaveChangesAsync();
     }
 
