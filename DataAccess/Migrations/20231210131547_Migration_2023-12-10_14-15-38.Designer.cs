@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(AppContext))]
-    [Migration("20231209185800_Migration_2023-12-09_19-57-50")]
-    partial class Migration_20231209_195750
+    [Migration("20231210131547_Migration_2023-12-10_14-15-38")]
+    partial class Migration_20231210_141538
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
