@@ -1,0 +1,57 @@
+name: Build and Test CI
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    types:
+      - closed
+    branches:
+      - develop 
+
+jobs:
+  build-and-test:
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Setup dotnet 7.x
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.x'
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build
+      - name: Test
+        run: dotnet test --results-directory "TestResults" --collect:"XPlat Code Coverage"
+      - name: Upload test results as artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: TestResults
+        
+  generate-coverage-report:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+        - name: Download test results
+          uses: actions/download-artifact@v3
+          with:
+            name: test-results
+            path: TestResults
+
+        - name: Install ReportGenerator
+          run: dotnet tool install -g dotnet-reportgenerator-globaltool
+
+        - name: Generate Code Coverage Report
+          run: reportgenerator "-reports:TestResults/**/coverage.cobertura.xml" "-targetdir:coverage" "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
+
+        - name: Publish Code Coverage
+          uses: actions/upload-artifact@v3
+          with:
+            name: coverage-results
+            path: coverage
+        

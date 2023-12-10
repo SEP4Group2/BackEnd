@@ -1,4 +1,5 @@
-﻿using Domain.Model;
+﻿using Domain.DTOs;
+using Domain.Model;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,18 +17,17 @@ public class PlantDataController : ControllerBase
     {
         this.plantDataManager = plantDataManager;
     }
-    
-    
-    
+
     [HttpPost]
     [Route("savePlantData")]
-    public async Task<ActionResult<PlantData>> CreateAsync([FromBody] PlantData plantData)
+    public async Task<ActionResult<PlantData>> CreateAsync([FromBody] PlantDataCreationListDTO plantData)
     {
+        Console.WriteLine($"Recieved data in this format: {plantData.ToString()}");
         try
         {
-            PlantData newPlantData = await plantDataManager.SaveAsync(plantData);
-            return Created($"/plant/{newPlantData.TimeStamp}", newPlantData);
-
+            await plantDataManager.SaveAsync(plantData);
+            //await plantDataManager.CheckDataWithPlantPreset(newPlantData);
+            return Ok();
         }
         catch (Exception e)
         {
@@ -35,17 +35,16 @@ public class PlantDataController : ControllerBase
             return StatusCode(500, e.Message);
         }
     }
+    
 
     [HttpGet]
-    [Route("fetchPlantData/{id:int}")]
-    public async Task<ActionResult<List<PlantData>>> GetAsync(int id)
+    [Route("fetchPlantData/{userId:int}")]
+    public async Task<ActionResult<List<PlantData>>> FetchPlantData([FromRoute] int userId)
     {
-        // id to be used once we associate iot device to a particular plant - as of now, not implemented
         try
         {
-            List<PlantData> plantDatas = await plantDataManager.GetAllByPlantIdAsync(id);
-            return Ok(plantDatas);
-
+            List<PlantData> plantData = await plantDataManager.FetchPlantDataAsync(userId);
+            return Ok(plantData);
         }
         catch (Exception e)
         {
@@ -53,4 +52,5 @@ public class PlantDataController : ControllerBase
             return StatusCode(500, e.Message);
         }
     }
+
 }

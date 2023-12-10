@@ -8,6 +8,6 @@ public interface IPlantPresetDAO
     Task<PlantPreset> CreateAsync(PlantPresetCreationDTO plant);
 
     Task<PlantPreset> GetAsync(int id);
+    Task<List<PlantPreset>> GetAllPresetsAsync(int userId);
 
-    Task<List<PlantPreset>> GetAllPlantPresentsAsync();
 }

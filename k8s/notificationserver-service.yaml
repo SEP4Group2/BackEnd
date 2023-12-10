@@ -1,0 +1,21 @@
+﻿apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml -o k8s
+    kompose.version: 1.30.0 (9d8dcb518)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: notificationserver
+  name: notificationserver
+  namespace: default
+spec:
+  ports:
+    - name: "5016"
+      port: 5016
+      targetPort: 5016
+  type: LoadBalancer
+  selector:
+    io.kompose.service: notificationserver
+status:
+  loadBalancer: {}

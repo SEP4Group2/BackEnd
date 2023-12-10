@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose convert
+    kompose.cmd: kompose convert -f docker-compose.yml -o k8s
     kompose.version: 1.30.0 (9d8dcb518)
   creationTimestamp: null
   labels:
@@ -18,23 +18,21 @@ spec:
   template:
     metadata:
       annotations:
-        kompose.cmd: kompose convert
+        kompose.cmd: kompose convert -f docker-compose.yml -o k8s
         kompose.version: 1.30.0 (9d8dcb518)
       creationTimestamp: null
       labels:
-        io.kompose.network/backend-default: "true"
+        io.kompose.network/backend-backend: "true"
         io.kompose.service: plantapi
     spec:
       containers:
         - env:
             - name: ConnectionStrings__DefaultConnection
               value: Server=db;Port=5432;Database=plantdb;UserId=admin;Password=root;
-          image: api
-          imagePullPolicy: Never
+          image: tinajassik/plantapi:latest
           name: plantapi
           ports:
             - containerPort: 5000
-              hostPort: 5000
               protocol: TCP
           resources: {}
       restartPolicy: Always

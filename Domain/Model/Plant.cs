@@ -14,4 +14,9 @@ public class Plant
     public string Location { get; set; }
 
     public PlantPreset PlantPreset { get; set; }
+    
+    public User User { get; set; }
+    public int IconId { get; set; } //for front-end to associate plants with icons 
+
+
 }

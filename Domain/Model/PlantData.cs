@@ -5,9 +5,9 @@ namespace Domain.Model;
 public class PlantData
 {
 
-    public float? Humidity { get; set; }
+    public float Humidity { get; set; }
 
-    public float? Temperature { get; set; }
+    public float Temperature { get; set; }
     
     public float UVLight { get; set; }
     
@@ -17,4 +17,8 @@ public class PlantData
     public string TimeStamp { get; set; }
 
     public float TankLevel { get; set; }
+    
+    public Device PlantDevice { get; set; }
+    
+    public int? PercentageStatus { get; set; }
 }

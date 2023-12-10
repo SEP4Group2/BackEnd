@@ -6,8 +6,12 @@ services:
       - "5000:5000"
     environment:
       - ConnectionStrings__DefaultConnection=Server=db;Port=5432;Database=plantdb;UserId=admin;Password=root;
+#      - NotificationServerURL=http://notificationserver:5016 #not using it yet, but we might in the future
     depends_on:
       - db
+      - notificationserver
+    networks:
+      - backend
   db:
     image: postgres:latest
     ports:
@@ -18,13 +22,26 @@ services:
       - POSTGRES_PASSWORD=root
     volumes:
       - postgres_data:/var/lib/postgresql/data
-  tcpserver:
-      image: tinajassik/tcp-server-1:latest
+    networks:
+      - backend
+  iotbridgeserver:
+      image: "iotbridge"
       depends_on:
         - plantapi
       ports:
-        - "23:23"
+        - "3014:3014"
+        - "5024:5024"
       environment:
         - PLANTAPI_URL=http://plantapi:5000
+      networks:
+        - backend
+  notificationserver:
+    image: tinajassik/notification-server:latest
+    ports:
+      - "5016:5016"  
+    networks:
+      - backend
+networks:
+  backend:
 volumes:
   postgres_data:
