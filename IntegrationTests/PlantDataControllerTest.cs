@@ -1,25 +1,36 @@
 using System.Net;
 using System.Runtime.InteropServices.JavaScript;
 using System.Text;
+using BackEndAPI.Controllers;
 using BackEndAPI.Tests;
+using DataAccess.DAOInterfaces;
+using DataAccess.DAOs;
 using Domain.DTOs;
 using Domain.Model;
+using Logic.Implementations;
+using Logic.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
 [TestFixture]
 public class PlantDataControllerTests : DatabaseTestFixture
 {
-    private HttpClient _client;
-        
+
+    private PlantDataManagerImpl plantDataManager;
+    private Mock<INotificationSender> notificationSenderMock;
+    private PlantDataDAO plantDataDao;
+    private PlantDataController controller;
+    
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        // Arrange
-        _client = new HttpClient()
-        {
-            BaseAddress = new Uri("http://localhost:5000")
-        };
+        plantDataDao = new PlantDataDAO(Context);
+        notificationSenderMock = new Mock<INotificationSender>();
+
+        plantDataManager = new PlantDataManagerImpl(plantDataDao, notificationSenderMock.Object);
+        controller = new PlantDataController(plantDataManager);
     }
 
     [Test]
@@ -71,9 +82,9 @@ public class PlantDataControllerTests : DatabaseTestFixture
                  
                  await Context.SaveChangesAsync();
                
-                 var plantDataCreationDto = new PlantDataCreationDTO
-                 {
-                     DeviceId = 1, // Assuming a valid device ID for testing
+                 var plantData = new PlantDataCreationDTO(){
+                     
+                     DeviceId = device.DeviceId, // Assuming a valid device ID for testing
                      Humidity = 50,
                      Temperature = 25,
                      Moisture = 30,
@@ -82,22 +93,14 @@ public class PlantDataControllerTests : DatabaseTestFixture
                      TankLevel = 75
                  };
 
-                 // Convert the DTO to JSON string
-                 var jsonContent = JsonConvert.SerializeObject(plantDataCreationDto);
-                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                 Console.WriteLine($"Test Data: {jsonContent}");
+              
 
                  // Act
-                 var response = await _client.PostAsync("PlantData/savePlantData", content);
-                 if (response.StatusCode != HttpStatusCode.Created)
-                 {
-                     var responseContent = await response.Content.ReadAsStringAsync();
-                     Console.WriteLine($"Response Content: {responseContent}");
-                 }
-                 // Assert
-                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
+                 var result = await plantDataManager.SaveAsync(plantData);
 
-                 // Check for detailed error information in case of failure
+                 // Assert
+                 Assert.NotNull(result);
+                 Assert.IsInstanceOf<PlantData>(result);
                
     }
 
@@ -131,11 +134,13 @@ public class PlantDataControllerTests : DatabaseTestFixture
         Context.PlantData.Add(plantData);
         await Context.SaveChangesAsync();
 
+      
         // Act
-        var response = await _client.GetAsync($"/PlantData/fetchPlantData/{user.UserId}");
+        var result = await controller.FetchPlantData(user.UserId);
 
         // Assert
-        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        ClearDatabase();
+        var createdResult = result.Result;
+        Assert.That(createdResult, Is.TypeOf<OkObjectResult>());
+        
     }
 }

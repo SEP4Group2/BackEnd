@@ -1,29 +1,37 @@
 using System.Net;
 using System.Text;
+using BackEndAPI.Controllers;
 using BackEndAPI.Tests;
+using DataAccess.DAOInterfaces;
+using DataAccess.DAOs;
+using Domain.DTOs;
 using Domain.Model;
+using Logic.Implementations;
+using Logic.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
 [TestFixture]
-public class DeviceControllerTests : DatabaseTestFixture
+public class DeviceControllerTest : DatabaseTestFixture
 {
-    private HttpClient _client;
+    
+    private IDeviceManager deviceManager;
+    private IDeviceDAO deviceDao;
+    private DeviceController controller;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-
-        _client = new HttpClient()
-        {
-            BaseAddress = new Uri("http://localhost:5000")
-        };
+        deviceDao = new DeviceDAO(Context);
+        deviceManager = new DeviceManagerImpl(deviceDao);
+        controller = new DeviceController(deviceManager);
     }
 
-    /*
     [Test]
     public async Task CreateAsync_ShouldReturnCreatedStatus()
     {
+        ClearDatabase();
         // Arrange
         var user = new User()
         {
@@ -59,33 +67,18 @@ public class DeviceControllerTests : DatabaseTestFixture
         await Context.SaveChangesAsync();
 
         // Arrange
-        var newDevice = new Device()
+        var newDevice = new DeviceRegistrationDTO()
         {
             DeviceId = 1,
-            Plant = plant,
-            Status = true
         };
 
-        var content = new StringContent(JsonConvert.SerializeObject(newDevice), Encoding.UTF8, "application/json");
-
         // Act
-        var response = await _client.PostAsync("Device/registerDevice", content);
-
-        // Check for detailed error information in case of failure
-        if (response.StatusCode != HttpStatusCode.Created)
-        {
-            var responseContent = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"Response Content: {responseContent}");
-            // Attempt to access the inner exception details
-           
-        }
+        var result = await controller.CreateAsync(newDevice);
 
         // Assert
-        Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
-        
-        ClearDatabase();
+        var createdResult = result.Result;
+        Assert.That(createdResult, Is.TypeOf<CreatedResult>());
     }
-    */
 
     [Test]
     public async Task GetDeviceId_ShouldReturnOkStatus()
@@ -99,12 +92,11 @@ public class DeviceControllerTests : DatabaseTestFixture
         };
         Context.Devices.Add(device);
         await Context.SaveChangesAsync();
-
-        // Act
-        var response = await _client.GetAsync($"/Device/{device.DeviceId}");
+// Act
+        var result = await controller.GetDeviceId(device.DeviceId);
 
         // Assert
-        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        ClearDatabase();
+        var createdResult = result.Result;
+        Assert.That(createdResult, Is.TypeOf<OkObjectResult>());
     }
 }
