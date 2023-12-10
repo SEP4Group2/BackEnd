@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic.Tests", "Logic.Tests\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess.Tests", "DataAccess.Tests\DataAccess.Tests.csproj", "{38C84083-3AF6-470F-AC19-DFE22DDD1A6B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Tests", "Integration.Tests\Integration.Tests.csproj", "{02592F0F-C85B-4B62-BDB2-D12C8DA90948}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,9 @@ Global
 		{38C84083-3AF6-470F-AC19-DFE22DDD1A6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38C84083-3AF6-470F-AC19-DFE22DDD1A6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38C84083-3AF6-470F-AC19-DFE22DDD1A6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02592F0F-C85B-4B62-BDB2-D12C8DA90948}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02592F0F-C85B-4B62-BDB2-D12C8DA90948}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02592F0F-C85B-4B62-BDB2-D12C8DA90948}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02592F0F-C85B-4B62-BDB2-D12C8DA90948}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
