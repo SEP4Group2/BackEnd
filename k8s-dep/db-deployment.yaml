@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose convert
+    kompose.cmd: kompose convert -f docker-compose.yml -o k8s
     kompose.version: 1.30.0 (9d8dcb518)
   creationTimestamp: null
   labels:
@@ -19,11 +19,11 @@ spec:
   template:
     metadata:
       annotations:
-        kompose.cmd: kompose convert
+        kompose.cmd: kompose convert -f docker-compose.yml -o k8s
         kompose.version: 1.30.0 (9d8dcb518)
       creationTimestamp: null
       labels:
-        io.kompose.network/backend-default: "true"
+        io.kompose.network/backend-backend: "true"
         io.kompose.service: db
     spec:
       containers:
@@ -47,6 +47,4 @@ spec:
       restartPolicy: Always
       volumes:
         - name: postgres-data
-          persistentVolumeClaim:
-            claimName: postgres-data
 status: {}
