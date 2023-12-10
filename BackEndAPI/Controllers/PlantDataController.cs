@@ -25,8 +25,8 @@ public class PlantDataController : ControllerBase
         Console.WriteLine($"Recieved data in this format: {plantData.ToString()}");
         try
         {
-            await plantDataManager.SaveAsync(plantData);
-            //await plantDataManager.CheckDataWithPlantPreset(newPlantData);
+            PlantData latestData = await plantDataManager.SaveAsync(plantData);
+            await plantDataManager.CheckDataWithPlantPreset(latestData);
             return Ok();
         }
         catch (Exception e)
