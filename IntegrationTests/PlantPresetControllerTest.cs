@@ -1,38 +1,39 @@
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+using BackEndAPI.Controllers;
+using DataAccess.DAOInterfaces;
+using DataAccess.DAOs;
 using Domain.DTOs;
 using Domain.Model;
-using Newtonsoft.Json;
+using Logic.Implementations;
+using Logic.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 namespace BackEndAPI.Tests
 
 {
-   [TestFixture]
+    [TestFixture]
     public class PlantPresetControllerTests : DatabaseTestFixture
     {
-      
-        private HttpClient _client;
-        
+
+        private IPlantPresetManager presetManager;
+        private IPlantPresetDAO presetDao;
+        private PlantPresetController controller;
+
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            // Arrange
-            _client = new HttpClient()
-            {
-                BaseAddress = new Uri("http://localhost:5000")
-            };
+            presetDao = new PlantPresetDAO(Context);
+            presetManager = new PlantPresetManagerImpl(presetDao);
+            controller = new PlantPresetController(presetManager);
         }
-        
+
         [Test]
         public async Task CreateAsync_ShouldReturnCreatedStatus()
         {
             // Arrange
             var user1 = new User
             {
-                UserId = 1, 
-                Username = "testUser1", 
+                UserId = 1,
+                Username = "testUser1",
                 Password = "testPassword"
             };
             Context.Users.Add(user1);
@@ -46,19 +47,14 @@ namespace BackEndAPI.Tests
                 UserId = 1
             };
 
-            var content = new StringContent(JsonConvert.SerializeObject(plantPresetCreationDto), Encoding.UTF8,
-                "application/json");
+            var result = await controller.CreateAsync(plantPresetCreationDto);
 
-            // Act
-            var response = await _client.PostAsync("/PlantPreset/createPlantPreset", content);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.Created, response.StatusCode,
-                $"Expected HTTP 201 Created, but received {response.StatusCode}");
+            var createdResult = result.Result;
+            Assert.That(createdResult, Is.TypeOf<CreatedResult>());
 
         }
-        
-        
+
+
         [Test]
         public async Task GetPlant_ShouldReturnOkStatus()
         {
@@ -76,12 +72,10 @@ namespace BackEndAPI.Tests
             };
             Context.Presets.Add(plantPreset);
             await Context.SaveChangesAsync();
+            var result = await controller.GetPlant(plantPreset.PresetId);
 
-            // Act
-            var response = await _client.GetAsync($"/PlantPreset/getPreset/{plantPreset.PresetId}");
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            var createdResult = result.Result;
+            Assert.That(createdResult, Is.TypeOf<OkObjectResult>());
         }
 
         [Test]
@@ -109,21 +103,14 @@ namespace BackEndAPI.Tests
             Context.Presets.Add(plantPreset);
             await Context.SaveChangesAsync();
 
-            // Act
-            var response = await _client.GetAsync($"/PlantPreset/getAllPresets/{user.UserId}");
+            var result = await controller.GetPresetsByUserId(user.UserId);
 
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            ClearDatabase();
+            var createdResult = result.Result;
+            Assert.That(createdResult, Is.TypeOf<OkObjectResult>());
         }
-      
-        
-        
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            _client.Dispose();
-        }
+
+
+
     }
 
 }
