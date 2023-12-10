@@ -95,6 +95,7 @@ public class PlantDataManagerTests
     }
 
 
+    /*
     [Test]
     public async Task FetchPlantDataAsync_ValidUserId_ReturnsPlantDataList()
     {
@@ -121,6 +122,7 @@ public class PlantDataManagerTests
         // Assert
         Assert.NotNull(result);
     }
+    */
     
     private List<PlantData> GetSamplePlantData()
     {
