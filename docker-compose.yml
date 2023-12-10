@@ -25,7 +25,7 @@ services:
     networks:
       - backend
   iotbridgeserver:
-      image: "iotbridge"
+      image: tinajassik/tcp-server-1:latest
       depends_on:
         - plantapi
       ports:
