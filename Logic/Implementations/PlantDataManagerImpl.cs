@@ -11,6 +11,11 @@ public class PlantDataManagerImpl : IPlantDataManager
 
     private IPlantDataDAO plantDataDao;
     private INotificationSender notificationSener;
+    
+    private int maxDifferenceAllowedHumidity = 10;
+    private int maxDifferenceAllowedMoisture = 10;
+    private int maxDifferenceAllowedUVLight = 8;
+    private int maxDifferenceAllowedTemperature = 2;
 
     public PlantDataManagerImpl(IPlantDataDAO plantDataDao, INotificationSender notificationSener)
     {
@@ -32,13 +37,12 @@ public class PlantDataManagerImpl : IPlantDataManager
     
     public async Task CheckDataWithPlantPreset(PlantData plantData)
     {
-        int maxDifferenceAllowed = 50;
         PlantPreset optimalPreset = plantData.PlantDevice.Plant.PlantPreset;
         string name = plantData.PlantDevice.Plant.Name;
         string currentUserId = plantData.PlantDevice.Plant.User.UserId.ToString();
         
         // I am making this up, we can change the numbers later so it's more accurate
-        if (Math.Abs(optimalPreset.Humidity - plantData.Humidity) > maxDifferenceAllowed)
+        if (Math.Abs(optimalPreset.Humidity - plantData.Humidity) > maxDifferenceAllowedHumidity)
         {
             await notificationSener.SendNotification(new NotificationRequestDTO()
             {
@@ -47,7 +51,7 @@ public class PlantDataManagerImpl : IPlantDataManager
             });
         }
         
-        if (Math.Abs(optimalPreset.Temperature - plantData.Temperature) > maxDifferenceAllowed)
+        if (Math.Abs(optimalPreset.Temperature - plantData.Temperature) > maxDifferenceAllowedTemperature)
         {
             await notificationSener.SendNotification(new NotificationRequestDTO()
             {
@@ -56,7 +60,7 @@ public class PlantDataManagerImpl : IPlantDataManager
             });
         }
         
-        if (Math.Abs(optimalPreset.UVLight- plantData.UVLight) > maxDifferenceAllowed)
+        if (Math.Abs(optimalPreset.UVLight- plantData.UVLight) > maxDifferenceAllowedUVLight)
         {
             await notificationSener.SendNotification(new NotificationRequestDTO()
             {
@@ -65,7 +69,7 @@ public class PlantDataManagerImpl : IPlantDataManager
             });
         }
         
-        if (Math.Abs(optimalPreset.Moisture- plantData.Moisture) > maxDifferenceAllowed)
+        if (Math.Abs(optimalPreset.Moisture- plantData.Moisture) > maxDifferenceAllowedMoisture)
         {
             await notificationSener.SendNotification(new NotificationRequestDTO()
             {
@@ -93,12 +97,6 @@ public class PlantDataManagerImpl : IPlantDataManager
 
     public async Task<List<PlantData>> FetchPlantDataAsync(int userId)
     {
-        int maxDifferenceAllowedHumidity = 10;
-        int maxDifferenceAllowedMoisture = 10;
-        int maxDifferenceAllowedUVLight = 8;
-        int maxDifferenceAllowedTemperature = 2;
-
-        
         List<PlantData> plantDataObjects = await plantDataDao.FetchPlantDataAsync(userId);
 
         foreach (PlantData plantData in plantDataObjects)
