@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class Migration_20231209_195750 : Migration
+    public partial class Migration_20231209_211528 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -101,7 +101,8 @@ namespace DataAccess.Migrations
                     UVLight = table.Column<float>(type: "real", nullable: false),
                     Moisture = table.Column<float>(type: "real", nullable: false),
                     TankLevel = table.Column<float>(type: "real", nullable: false),
-                    PlantDeviceDeviceId = table.Column<int>(type: "integer", nullable: false)
+                    PlantDeviceDeviceId = table.Column<int>(type: "integer", nullable: false),
+                    PercentageStatus = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {

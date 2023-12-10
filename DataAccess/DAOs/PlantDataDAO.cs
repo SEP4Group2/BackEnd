@@ -49,7 +49,7 @@ public class PlantDataDAO : IPlantDataDAO
         {
             var groupedData = await _appContext.PlantData
             .Where(p => p.PlantDevice.Plant!.User.UserId == userId)
-            .Include(p => p.PlantDevice.Plant)
+            .Include(p => p.PlantDevice.Plant).ThenInclude(p=>p.PlantPreset)
             .ToListAsync();
 
         var fetchedPlantData = groupedData

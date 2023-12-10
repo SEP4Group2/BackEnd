@@ -93,7 +93,45 @@ public class PlantDataManagerImpl : IPlantDataManager
 
     public async Task<List<PlantData>> FetchPlantDataAsync(int userId)
     {
-        return await plantDataDao.FetchPlantDataAsync(userId);
+        int maxDifferenceAllowedHumidity = 10;
+        int maxDifferenceAllowedMoisture = 10;
+        int maxDifferenceAllowedUVLight = 8;
+        int maxDifferenceAllowedTemperature = 2;
+
+        
+        List<PlantData> plantDataObjects = await plantDataDao.FetchPlantDataAsync(userId);
+
+        foreach (PlantData plantData in plantDataObjects)
+        {
+            int percentageStatus = 100;
+            PlantPreset optimalPreset = plantData.PlantDevice.Plant.PlantPreset;
+            if (Math.Abs(optimalPreset.Humidity - plantData.Humidity) > maxDifferenceAllowedHumidity)
+            {
+                percentageStatus -= 25;
+            }
+        
+            if (Math.Abs(optimalPreset.Temperature - plantData.Temperature) > maxDifferenceAllowedTemperature)
+            {
+                percentageStatus -= 25;
+
+            }
+        
+            if (Math.Abs(optimalPreset.UVLight- plantData.UVLight) > maxDifferenceAllowedUVLight)
+            {
+                percentageStatus -= 25;
+
+            }
+        
+            if (Math.Abs(optimalPreset.Moisture- plantData.Moisture) > maxDifferenceAllowedMoisture)
+            {
+                percentageStatus -= 25;
+
+            }
+
+            plantData.PercentageStatus = percentageStatus;
+        }
+
+        return plantDataObjects;
     }
 
     public IEnumerable<PlantData> FilterPlantDataForLastSevenDays(List<PlantData> plantDatas)

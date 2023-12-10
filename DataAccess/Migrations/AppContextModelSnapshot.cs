@@ -90,6 +90,9 @@ namespace DataAccess.Migrations
                     b.Property<float>("Moisture")
                         .HasColumnType("real");
 
+                    b.Property<int?>("PercentageStatus")
+                        .HasColumnType("integer");
+
                     b.Property<int>("PlantDeviceDeviceId")
                         .HasColumnType("integer");
 
