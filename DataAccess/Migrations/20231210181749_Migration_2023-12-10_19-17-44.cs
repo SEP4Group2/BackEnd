@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class Migration_20231209_211528 : Migration
+    public partial class Migration_20231210_191744 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -95,18 +95,20 @@ namespace DataAccess.Migrations
                 name: "PlantData",
                 columns: table => new
                 {
-                    TimeStamp = table.Column<string>(type: "text", nullable: false),
+                    PlantDataId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Humidity = table.Column<float>(type: "real", nullable: false),
                     Temperature = table.Column<float>(type: "real", nullable: false),
                     UVLight = table.Column<float>(type: "real", nullable: false),
                     Moisture = table.Column<float>(type: "real", nullable: false),
                     TankLevel = table.Column<float>(type: "real", nullable: false),
+                    TimeStamp = table.Column<string>(type: "text", nullable: false),
                     PlantDeviceDeviceId = table.Column<int>(type: "integer", nullable: false),
                     PercentageStatus = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PlantData", x => x.TimeStamp);
+                    table.PrimaryKey("PK_PlantData", x => x.PlantDataId);
                     table.ForeignKey(
                         name: "FK_PlantData_Devices_PlantDeviceDeviceId",
                         column: x => x.PlantDeviceDeviceId,
