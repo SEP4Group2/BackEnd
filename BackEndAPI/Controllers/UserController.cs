@@ -137,12 +137,12 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete]
-    [Route("{plantId:int}")]
-    public async Task<ActionResult> RemoveAsync([FromBody] int id)
+    [Route("{userId:int}")]
+    public async Task<ActionResult> RemoveAsync(int userId)
     {
         try
         {
-            await userManager.RemoveAsync(id);
+            await userManager.RemoveAsync(userId);
             return Ok();
         }
         catch (Exception e)
