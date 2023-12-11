@@ -16,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("TestDatabase"));
+    options.EnableSensitiveDataLogging();
 });
 
 
@@ -30,7 +31,6 @@ builder.Services.AddScoped<IUserDAO, UserDAO>();
 builder.Services.AddScoped<IUserManager, UserManagerImpl>();
 builder.Services.AddScoped<IDeviceDAO, DeviceDAO>();
 builder.Services.AddScoped<IDeviceManager, DeviceManagerImpl>();
-
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.RequireHttpsMetadata = false;
@@ -51,15 +51,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppContext>();
+
     dbContext.Database.Migrate();
 }
 
-app.UseSwagger();
-app.UseSwaggerUI();
-
-app.UseHttpsRedirection();
-app.UseCors("AllowSpecificOrigin");
-app.UseAuthorization();
-app.MapControllers();
-
-app.Run();
