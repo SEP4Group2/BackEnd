@@ -137,6 +137,7 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete]
+    [Route("{plantId:int}")]
     public async Task<ActionResult> RemoveAsync([FromBody] int id)
     {
         try
