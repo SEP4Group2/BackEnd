@@ -30,7 +30,6 @@ public class ActionsController : ControllerBase
         }
         catch (Exception ex)
         {
-            // Handle exceptions
             Console.WriteLine($"Error: {ex.Message}");
             return StatusCode(500, "Internal Server Error");
         }
