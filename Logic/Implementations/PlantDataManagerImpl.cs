@@ -9,19 +9,20 @@ namespace Logic.Implementations;
 public class PlantDataManagerImpl : IPlantDataManager
 {
 
-    private IPlantDataDAO plantDataDao;
-    private INotificationSender notificationSender;
-    private IActionsSender actionsSender;
+    private readonly IPlantDataDAO plantDataDao;
+    private readonly INotificationSender notificationSender;
+    private readonly IActionsSender actionsSender;
     
     private int maxDifferenceAllowedHumidity = 10;
     private int maxDifferenceAllowedMoisture = 10;
     private int maxDifferenceAllowedUVLight = 8;
     private int maxDifferenceAllowedTemperature = 2;
 
-    public PlantDataManagerImpl(IPlantDataDAO plantDataDao, INotificationSender notificationSender)
+    public PlantDataManagerImpl(IPlantDataDAO plantDataDao, INotificationSender notificationSender, IActionsSender actionsSender)
     {
         this.plantDataDao = plantDataDao;
         this.notificationSender = notificationSender;
+        this.actionsSender = actionsSender;
     }
     public async Task<PlantData> SaveAsync(PlantDataCreationListDTO plantData)
     {
