@@ -79,7 +79,7 @@ public class UserDAO : IUserDAO
             }
             _appContext.Plants.RemoveRange(plantsToRemove);
 
-            var presets = _appContext.Presets.Where(p => p.UserId == id);
+            IQueryable<PlantPreset> presets = _appContext.Presets.Where(p => p.UserId == id);
             if ( presets != null)
             {
                 foreach (var preset in presets)
