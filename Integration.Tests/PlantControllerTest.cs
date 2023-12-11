@@ -1,5 +1,4 @@
-using System.Net;
-using System.Text;
+
 using BackEndAPI.Controllers;
 using DataAccess.DAOInterfaces;
 using DataAccess.DAOs;
@@ -8,9 +7,6 @@ using Domain.Model;
 using Logic.Implementations;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
-using Newtonsoft.Json;
-using NUnit.Framework;
 
 namespace BackEndAPI.Tests;
 

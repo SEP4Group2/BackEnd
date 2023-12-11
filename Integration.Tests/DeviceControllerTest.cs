@@ -1,16 +1,12 @@
-using System.Net;
-using System.Text;
 using BackEndAPI.Controllers;
 using BackEndAPI.Tests;
 using DataAccess.DAOInterfaces;
 using DataAccess.DAOs;
-using Domain.DTOs;
 using Domain.Model;
 using Logic.Implementations;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using NUnit.Framework;
+
 
 [TestFixture]
 public class DeviceControllerTest : DatabaseTestFixture
