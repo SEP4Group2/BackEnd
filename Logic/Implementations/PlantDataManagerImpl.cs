@@ -129,7 +129,7 @@ public class PlantDataManagerImpl : IPlantDataManager
 
             if ((optimalPreset.Moisture - plantData.Moisture - maxDifferenceAllowedMoisture) > 0 )
             {
-                actionsSender.SendWaterPlantAction(plantData.PlantDevice.DeviceId);
+                await actionsSender.SendWaterPlantAction(plantData.PlantDevice.DeviceId);
             }
 
             plantData.PercentageStatus = percentageStatus;

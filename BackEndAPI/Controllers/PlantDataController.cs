@@ -22,7 +22,7 @@ public class PlantDataController : ControllerBase
     [Route("savePlantData")]
     public async Task<ActionResult<PlantData>> CreateAsync([FromBody] PlantDataCreationListDTO plantData)
     {
-        Console.WriteLine($"Recieved data in this format: {plantData.ToString()}");
+        Console.WriteLine($"Received data in this format: {plantData.ToString()}");
         try
         {
             PlantData latestData = await plantDataManager.SaveAsync(plantData);
