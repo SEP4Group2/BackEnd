@@ -10,17 +10,18 @@ public class PlantDataManagerImpl : IPlantDataManager
 {
 
     private IPlantDataDAO plantDataDao;
-    private INotificationSender notificationSener;
+    private INotificationSender notificationSender;
+    private IActionsSender actionsSender;
     
     private int maxDifferenceAllowedHumidity = 10;
     private int maxDifferenceAllowedMoisture = 10;
     private int maxDifferenceAllowedUVLight = 8;
     private int maxDifferenceAllowedTemperature = 2;
 
-    public PlantDataManagerImpl(IPlantDataDAO plantDataDao, INotificationSender notificationSener)
+    public PlantDataManagerImpl(IPlantDataDAO plantDataDao, INotificationSender notificationSender)
     {
         this.plantDataDao = plantDataDao;
-        this.notificationSener = notificationSener;
+        this.notificationSender = notificationSender;
     }
     public async Task<PlantData> SaveAsync(PlantDataCreationListDTO plantData)
     {
@@ -44,7 +45,7 @@ public class PlantDataManagerImpl : IPlantDataManager
         // I am making this up, we can change the numbers later so it's more accurate
         if (Math.Abs(optimalPreset.Humidity - plantData.Humidity) > maxDifferenceAllowedHumidity)
         {
-            await notificationSener.SendNotification(new NotificationRequestDTO()
+            await notificationSender.SendNotification(new NotificationRequestDTO()
             {
                 UserId = currentUserId,
                 Message = $"Humidity levels of plant {name} are currently out of optimal range. Please check your plant"
@@ -53,7 +54,7 @@ public class PlantDataManagerImpl : IPlantDataManager
         
         if (Math.Abs(optimalPreset.Temperature - plantData.Temperature) > maxDifferenceAllowedTemperature)
         {
-            await notificationSener.SendNotification(new NotificationRequestDTO()
+            await notificationSender.SendNotification(new NotificationRequestDTO()
             {
                 UserId = currentUserId,
                 Message = $"Temperature levels of plant {name} are currently out of optimal range. Please check your plant"
@@ -62,7 +63,7 @@ public class PlantDataManagerImpl : IPlantDataManager
         
         if (Math.Abs(optimalPreset.UVLight- plantData.UVLight) > maxDifferenceAllowedUVLight)
         {
-            await notificationSener.SendNotification(new NotificationRequestDTO()
+            await notificationSender.SendNotification(new NotificationRequestDTO()
             {
                 UserId = currentUserId,
                 Message = $"UV Light levels of plant {name} are currently out of optimal range. Please check your plant"
@@ -71,7 +72,7 @@ public class PlantDataManagerImpl : IPlantDataManager
         
         if (Math.Abs(optimalPreset.Moisture- plantData.Moisture) > maxDifferenceAllowedMoisture)
         {
-            await notificationSener.SendNotification(new NotificationRequestDTO()
+            await notificationSender.SendNotification(new NotificationRequestDTO()
             {
                 UserId = currentUserId,
                 Message = $"Moisture levels of plant {name} are currently out of optimal range. Please check your plant"
@@ -124,6 +125,11 @@ public class PlantDataManagerImpl : IPlantDataManager
             {
                 percentageStatus -= 25;
 
+            }
+
+            if ((optimalPreset.Moisture - plantData.Moisture - maxDifferenceAllowedMoisture) > 0 )
+            {
+                actionsSender.SendWaterPlantAction(plantData.PlantDevice.DeviceId);
             }
 
             plantData.PercentageStatus = percentageStatus;
