@@ -15,6 +15,7 @@ public class AnalyticsControllerTests : DatabaseTestFixture
     private IPlantDataManager plantDataManager;
     private IPlantDataDAO plantDao;
     private Mock<INotificationSender> notificationSenderMock;
+    private Mock<IActionsSender> actionSenderMock;
 
 
     [SetUp]
@@ -22,7 +23,8 @@ public class AnalyticsControllerTests : DatabaseTestFixture
     {
         plantDao = new PlantDataDAO(Context);
         notificationSenderMock = new Mock<INotificationSender>();
-        plantDataManager = new PlantDataManagerImpl(plantDao, notificationSenderMock.Object);
+        actionSenderMock = new Mock<IActionsSender>();
+        plantDataManager = new PlantDataManagerImpl(plantDao, notificationSenderMock.Object,actionSenderMock.Object );
         controller = new AnalyticsController(plantDataManager);
     }
 
@@ -31,6 +33,8 @@ public class AnalyticsControllerTests : DatabaseTestFixture
     {
         // Arrange
         ClearDatabase();
+        await Context.SaveChangesAsync();
+
         var user1 = new User
         {
             UserId = 1, 
@@ -110,6 +114,8 @@ public class AnalyticsControllerTests : DatabaseTestFixture
     {
         ClearDatabase();
         // Arrange
+        await Context.SaveChangesAsync();
+
         
         var user1 = new User
         {
@@ -163,6 +169,8 @@ public class AnalyticsControllerTests : DatabaseTestFixture
     public async Task GetAnalyticsData_WithException_ReturnsInternalServerError()
     {
         ClearDatabase();
+        await Context.SaveChangesAsync();
+
         // Arrange
         int plantId = 1;
       
