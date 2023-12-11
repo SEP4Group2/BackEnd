@@ -87,6 +87,7 @@ public class UserController : ControllerBase
         }
     }
     
+   
     private List<Claim> GenerateClaims(User user)
     {
         var claims = new[]
@@ -128,6 +129,7 @@ public class UserController : ControllerBase
         try
         {
            return await userManager.EditAsync(userToUpdate);
+
         }
         catch (Exception e)
         {

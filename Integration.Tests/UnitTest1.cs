@@ -1,6 +1,5 @@
 using NUnit.Framework;
 
-namespace BackEndAPI.Tests;
 
 public class Tests
 {

@@ -1,4 +1,3 @@
-using System.Net;
 using BackEndAPI.Controllers;
 using BackEndAPI.Tests;
 using DataAccess.DAOInterfaces;
@@ -9,10 +8,7 @@ using Logic.Implementations;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Protocols;
 using Moq;
-using NUnit.Framework;
-
 
 [TestFixture]
     public class UserControllerTests : DatabaseTestFixture
@@ -20,14 +16,15 @@ using NUnit.Framework;
         private IUserManager userManager;
         private IUserDAO userDao;
         private UserController controller;
-        private readonly IConfiguration config;
+        private Mock<IConfiguration> config;
     
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
             userDao = new UserDAO(Context);
             userManager = new UserManagerImpl(userDao);
-            controller = new UserController(userManager, config);
+            config = new Mock<IConfiguration>();
+            controller = new UserController(userManager, config.Object);
         }
 
         [Test]
@@ -44,6 +41,35 @@ using NUnit.Framework;
             var createdResult = result.Result;
             Assert.That(createdResult, Is.TypeOf<CreatedResult>());
         }
+
+        [Test]
+        public async Task Login_WithValidCredentials_ReturnsOkResultWithToken()
+        {
+            ClearDatabase();
+            var user = new User()
+            {
+                Username = "Anushri",
+                Password = "Password"
+            };
+
+            Context.Users.Add(user);
+            await Context.SaveChangesAsync();
+            
+            var userLoginDto = new UserDTO()
+            {
+                Username = "Anushri",
+                Password = "Password"
+            };
+            Assert.IsNotNull(controller);
+
+            
+            // Act
+            var result = await controller.Login(userLoginDto);
+        
+            // Assert
+            Assert.That(result.Result, Is.TypeOf<OkObjectResult>());
+        }
+
 
         [Test]
         public async Task GetAllUsersAsync_ShouldReachController()
@@ -85,12 +111,18 @@ using NUnit.Framework;
         [Test]
         public async Task EditAsync_ShouldReachController()
         {
-            
+            var user = new User()
+            {
+                Username = "Test",
+                Password = "Gupta"
+            };
+
+            Context.Users.Add(user);
+            await Context.SaveChangesAsync();
             
             // Arrange
             var userToUpdate = new UserDTO
             {
-                UserId = 1,
                 Username = "Anushri",
                 Password = "Gupta"
             };
@@ -100,7 +132,7 @@ using NUnit.Framework;
             var createdResult = result.Result;
             Console.WriteLine($"Result Content: {createdResult?.ToString()}");
 
-            Assert.IsInstanceOf<ActionResult<User>>(result);
+            Assert.That(createdResult,Is.TypeOf<ObjectResult>()) ;
             
         }
 
