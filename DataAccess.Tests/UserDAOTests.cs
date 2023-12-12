@@ -37,8 +37,8 @@ using NUnit.Framework;
 
             // Assert
             Assert.IsNotNull(createdUser);
-            Assert.AreEqual(userCreationDto.Username, createdUser.Username);
-            Assert.AreEqual(userCreationDto.Password, createdUser.Password);
+            Assert.IsTrue(userCreationDto.Username.Equals(createdUser.Username));
+            Assert.IsTrue(userCreationDto.Password.Equals(createdUser.Password));
             
         }
 
