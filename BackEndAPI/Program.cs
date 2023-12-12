@@ -46,18 +46,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontendOrigin",
-        builder => builder.WithOrigins("http://localhost:3000")
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials());
-    options.AddPolicy("AllowFrontendAzureOrigin",
-        builder => builder.WithOrigins("https://victorious-beach-0c58fab03.4.azurestaticapps.net")
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials());
-    options.AddPolicy("AllowIotBridgeOrigin",
-        builder => builder.WithOrigins("http://iotbridgeserver:5024")
+    options.AddPolicy("AllowAllOrigins",
+        builder => builder.WithOrigins("http://localhost:3000", "https://victorious-beach-0c58fab03.4.azurestaticapps.net", "http://iotbridgeserver:5024")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials());
@@ -76,9 +66,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
-app.UseCors("AllowFrontendOrigin");
-app.UseCors("AllowIotBridgeOrigin");
-app.UseCors("AllowFrontendAzureOrigin");
+app.UseCors("AllowOrigins");
 app.UseAuthorization();
 app.MapControllers();
 
