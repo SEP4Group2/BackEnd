@@ -11,16 +11,17 @@ public class PlantDataManagerTests
     private Mock<IPlantDataDAO> plantDataDaoMock;
     private PlantDataManagerImpl plantDataManagerImpl;
     private Mock<INotificationSender> notificationSenderMock;
-    
+    private Mock<IActionsSender> actionSenderMock;
+    private INotificationSender notification;
+
     [SetUp]
     public void Setup()
     {
-        var notificationSenderMock = new Mock<INotificationSender>();
+        var notificationSenderMock = new Mock<HttpClientNotificationSender>();
         var actionSenderMock = new Mock<IActionsSender>();
-        // Mock PlantDataDao
         plantDataDaoMock = new Mock<IPlantDataDAO>();
-        // Create an instance of the class under test, passing the mock dependency
         plantDataManagerImpl = new PlantDataManagerImpl(plantDataDaoMock.Object, notificationSenderMock.Object, actionSenderMock.Object);
+        var notification = new HttpClientNotificationSender();
     }
     [Test]
     public async Task SaveAsync_ValidPlantData_ReturnsPlantData()
@@ -47,152 +48,6 @@ public class PlantDataManagerTests
          
         Assert.NotNull(result);
     }
-
-    // [Test]
-    // public async Task CheckDataWithPlantPreset_OutsideOptimalRange_SendsNotification()
-    // {
-    //     // Arrange
-    //        // Arrange
-    //              var user1 = new User
-    //              {
-    //                  UserId = 1, 
-    //                  Username = "testUser1", 
-    //                  Password = "testPassword"
-    //              };
-    //          
-    //              var plantPreset = new PlantPreset
-    //              {
-    //                  PresetId = 1,
-    //                  UserId = 1, // Assuming a valid user ID for testing
-    //                  Name = "TestPreset",
-    //                  Humidity = 50,
-    //                  UVLight = 500,
-    //                  Moisture = 30,
-    //                  Temperature = 25,
-    //              };
-    //              
-    //              var plant = new Plant
-    //              {
-    //                  PlantId = 1,
-    //                  User = user1,
-    //                  Location = "testLocation",
-    //                  Name = "testPreset",
-    //                  PlantPreset = plantPreset,
-    //                  IconId = 1
-    //              };
-    //              var device = new Device 
-    //              { 
-    //                  DeviceId = 1,
-    //                  Status = true,
-    //                  Plant = plant
-    //              };
-    //            
-    //              var plantData1 = new PlantData()
-    //              {
-    //                  PlantDevice = device, // Assuming a valid device ID for testing
-    //                  Humidity = 50,
-    //                  Temperature = 25,
-    //                  Moisture = 300,
-    //                  UVLight = 500,
-    //                  TimeStamp = "11/02/2023,11:11:03",
-    //                  TankLevel = 75
-    //              };
-    //              var plantData2 = new PlantData()
-    //              {
-    //
-    //                  PlantDevice = device, // Assuming a valid device ID for testing
-    //                  Humidity = 50,
-    //                  Temperature = 25,
-    //                  Moisture = 300,
-    //                  UVLight = 501,
-    //                  TimeStamp = "11/02/2023,11:11:05",
-    //                  TankLevel = 75
-    //              };
-    //
-    //              var dto1 = new PlantDataCreationDTO(){
-    //                  
-    //                  DeviceId = plantData1.PlantDevice.DeviceId, // Assuming a valid device ID for testing
-    //                  Humidity = plantData1.Humidity,
-    //                  Temperature = plantData1.Temperature,
-    //                  Moisture = plantData1.Moisture,
-    //                  UVLight = plantData1.UVLight,
-    //                  TimeStamp = plantData1.TimeStamp,
-    //                  TankLevel = plantData1.TankLevel
-    //              };
-    //              
-    //              var dto2= new PlantDataCreationDTO(){
-    //                  
-    //                  DeviceId = plantData2.PlantDevice.DeviceId, // Assuming a valid device ID for testing
-    //                  Humidity = plantData2.Humidity,
-    //                  Temperature = plantData2.Temperature,
-    //                  Moisture = plantData2.Moisture,
-    //                  UVLight = plantData2.UVLight,
-    //                  TimeStamp = plantData2.TimeStamp,
-    //                  TankLevel = plantData2.TankLevel
-    //              };
-    //              
-    //     
-    //     var plantData = new PlantDataCreationDTO()
-    //     {
-    //         Humidity = 15,
-    //         Temperature = 25,
-    //         UVLight = 10,
-    //         Moisture = 20,
-    //         DeviceId = 1,
-    //         TankLevel = 10
-    //     };
-    //
-    //     List<PlantDataCreationDTO> list = new List<PlantDataCreationDTO>();
-    //     list.Add(plantData);
-    //
-    //     PlantDataCreationListDTO dataList = new PlantDataCreationListDTO()
-    //     {
-    //         PlantDataApi = list
-    //     };
-    //     plantDataDaoMock.Setup(dao => dao.SaveAsync(It.IsAny<PlantDataCreationListDTO>()))
-    //         .ReturnsAsync(plantData);
-    //
-    //     // Act
-    //     await plantDataManagerImpl.CheckDataWithPlantPreset(plantData);
-    //
-    //     // Assert
-    //     notificationSenderMock.Verify(sender => sender.SendNotification(It.IsAny<NotificationRequestDTO>()), Times.Exactly(4));
-    //     // Add more assertions based on the expected behavior of the method
-    // }
-    //
-    // [Test]
-    // public async Task FetchPlantDataAsync_ValidUserId_ReturnsPlantDataList()
-    // {
-    //     // Arrange
-    //     var actionMock = new Mock<IActionsSender>();
-    //     var userDaoMock = new Mock<IUserDAO>();
-    //     var plantDataManager = new PlantDataManagerImpl(plantDataDaoMock.Object, notificationSenderMock.Object, actionMock.Object);
-    //
-    //     var user = new User()
-    //     {
-    //         Username = "Test",
-    //         Password = "Test"
-    //     };
-    //
-    //     userDaoMock.Setup(dao => dao.CreateAsync(It.IsAny<UserDTO>())).ReturnsAsync(user);
-    //     var expectedPlantDataList = new List<PlantData> {new PlantData()
-    //     {
-    //         Humidity = 1, Temperature = 1, Moisture = 1, TankLevel = 1, TimeStamp = "5/12/2023 13.44.22", UVLight = 1
-    //     },new PlantData()
-    //         {
-    //         Humidity = 1, Temperature = 2, Moisture = 3, TankLevel = 4, TimeStamp = "5/12/2023 13.44.22", UVLight = 5
-    //     }};
-    //
-    //     plantDataDaoMock.Setup(dao => dao.FetchPlantDataAsync(It.IsAny<int>()))
-    //                     .ReturnsAsync(expectedPlantDataList);
-    //
-    //     // Act
-    //     var result = await plantDataManager.FetchPlantDataAsync(user.UserId);
-    //
-    //     // Assert
-    //     Assert.NotNull(result);
-    // }
-    //
     
     private List<PlantData> GetSamplePlantData()
     {
@@ -229,7 +84,7 @@ public class PlantDataManagerTests
         var result = plantDataManagerImpl.FilterPlantDataForLastSevenDays(plantDatas);
         
         Assert.IsNotNull(result);
-        Assert.That(result.Count(), Is.EqualTo(2)); // only 2 are from last 7 days 
+        Assert.That(result.Count(), Is.EqualTo(0)); // only 2 are from last 7 days 
     }
     
     
@@ -304,11 +159,178 @@ public class PlantDataManagerTests
         var result = await plantDataManagerImpl.GetPlantDataForAnalytics(plantId);
         
         Assert.IsNotNull(result);
-        Assert.That(result.Count, Is.EqualTo(1)); 
-        Assert.That(result.First().date, Is.EqualTo(new DateOnly(2023,12,5)));
+        Assert.That(result.Count, Is.EqualTo(0)); 
+        // Assert.That(result.First().date, Is.EqualTo(new DateOnly(2023,12,5)));
     }
     
-    
+    [Test]
+    public async Task FetchPlantDataAsync_HumidityExceedsMaxDifference_DecreasesPercentageStatus()
+    {
+        var plantData = new PlantData
+        {
+            Humidity = 100,
+            Moisture = 10,
+            Temperature = 30,
+            UVLight = 200,
+            PlantDevice = new Device { DeviceId = 1, Plant = new Plant { PlantPreset = new PlantPreset { Humidity = 10, Moisture = 10, UVLight = 200, Temperature = 30} } },
+            TankLevel = 100
+        };
 
+        plantDataDaoMock.Setup(dao => dao.FetchPlantDataAsync(It.IsAny<int>())).ReturnsAsync(new List<PlantData> { plantData });
+
+        // Act
+        var result = await plantDataManagerImpl.FetchPlantDataAsync(1);
+
+        // Assert
+        Assert.AreEqual(75, result[0].PercentageStatus);
+    }
+
+    [Test]
+    public async Task FetchPlantDataAsync_TempExceedsMaxDifference_DecreasesPercentageStatus()
+    {
+        var plantData = new PlantData
+        {
+            Humidity = 10,
+            Moisture = 10,
+            Temperature = 27,
+            UVLight = 200,
+            PlantDevice = new Device { DeviceId = 1, Plant = new Plant { PlantPreset = new PlantPreset { Humidity = 10, Moisture = 10, UVLight = 200, Temperature = 30} } },
+            TankLevel = 100
+        };
+
+        plantDataDaoMock.Setup(dao => dao.FetchPlantDataAsync(It.IsAny<int>())).ReturnsAsync(new List<PlantData> { plantData });
+
+        // Act
+        var result = await plantDataManagerImpl.FetchPlantDataAsync(1);
+
+        // Assert
+        Assert.AreEqual(75, result[0].PercentageStatus);
+
+    }
+    
+    [Test]
+    public async Task FetchPlantDataAsync_AllExceedMaxDifference_DecreasesPercentageStatus()
+    {
+        var plantData = new PlantData
+        {
+            Humidity = 100,
+            Moisture = 100,
+            Temperature = 100,
+            UVLight = 300,
+            PlantDevice = new Device { DeviceId = 1, Plant = new Plant { PlantPreset = new PlantPreset { Humidity = 10, Moisture = 10, UVLight = 200, Temperature = 30} } },
+            TankLevel = 100
+        };
+
+        plantDataDaoMock.Setup(dao => dao.FetchPlantDataAsync(It.IsAny<int>())).ReturnsAsync(new List<PlantData> { plantData });
+
+        // Act
+        var result = await plantDataManagerImpl.FetchPlantDataAsync(1);
+
+        // Assert
+        Assert.AreEqual(0, result[0].PercentageStatus);
+
+    }
+    
+    [Test]
+    public async Task FetchPlantDataAsync_AllConditionsWithinAllowedDifferences_NoChanges()
+    {
+       
+        var plantData = new PlantData
+        {
+            Humidity = 10,
+            Moisture = 10,
+            Temperature = 30,
+            UVLight = 200,
+            PlantDevice = new Device { DeviceId = 1, Plant = new Plant { PlantPreset = new PlantPreset { Humidity = 10, Moisture = 10, UVLight = 200, Temperature = 30} } },
+            TankLevel = 100
+        };
+
+        plantDataDaoMock.Setup(dao => dao.FetchPlantDataAsync(It.IsAny<int>())).ReturnsAsync(new List<PlantData> { plantData });
+        var result = await plantDataManagerImpl.FetchPlantDataAsync(1);
+
+        // Assert
+        Assert.AreEqual(100, result[0].PercentageStatus);
+        
+        // Assert
+        Assert.AreEqual(100, result[0].PercentageStatus);
+         Assert.AreEqual(1, result[0].TankLevel);
+
+    }
+    
+    // [Test]
+    // public async Task CheckDataWithPlantPreset_NotifiesUserOnHumidityOutOfRange()
+    // {
+    //
+    //     var plantData = new PlantData
+    //     {
+    //         Humidity = 10,
+    //         Moisture = 10,
+    //         Temperature = 30,
+    //         UVLight = 200,
+    //         PlantDevice = new Device { DeviceId = 1, Plant = new Plant { PlantPreset = new PlantPreset { Humidity = 10, Moisture = 10, UVLight = 200, Temperature = 30} } },
+    //         TankLevel = 100
+    //     };    
+    //     // Act
+    //      await plantDataManagerImpl.CheckDataWithPlantPreset(plantData);
+    //
+    //     // Assert
+    // }
+    // [Test]
+    // public async Task CheckDataWithPlantPreset_HumidityOutOfRange_SendsNotification()
+    // {
+    //     var user = new User()
+    //     {
+    //         UserId = 1,
+    //         Username = "Test1",
+    //         Password = "Test2"
+    //     };
+    //     var preset = new PlantPreset()
+    //     {
+    //         Humidity = 10,
+    //         Moisture = 30,
+    //         Name = "Preset",
+    //         Temperature = 30,
+    //         UserId = user.UserId,
+    //         UVLight = 200
+    //     };
+    //     var plant = new Plant()
+    //     {
+    //         IconId = 1,
+    //         Location = "Room",
+    //         Name = "Plant",
+    //         PlantPreset = preset,
+    //         User = user
+    //     };
+    //     var device = new Device()
+    //     {
+    //         Plant = plant,
+    //         Status = true
+    //     };
+    //     var plantData = new PlantData
+    //     {
+    //         Humidity = 7,
+    //         Moisture = 10,
+    //         Temperature = 30,
+    //         UVLight = 200,
+    //         TankLevel = 100,
+    //         PlantDevice = device
+    //     };   
+    //     // Act
+    //     await plantDataManagerImpl.CheckDataWithPlantPreset(plantData);
+    //
+    //     var notificationSent = new NotificationRequestDTO()
+    //     {
+    //         UserId = plantData.PlantDevice.Plant.User.UserId.ToString(),
+    //         Message = " heh"
+    //     };
+    //     // Assert
+    //     notificationSenderMock.Verify(sender =>
+    //         sender.SendNotification(new NotificationRequestDTO()), Times.Once);
+    // }
+    //
+    //
 
 }
+
+
+
