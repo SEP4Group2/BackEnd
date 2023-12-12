@@ -2,6 +2,7 @@ using BackEndAPI.Controllers;
 using BackEndAPI.Tests;
 using DataAccess.DAOInterfaces;
 using DataAccess.DAOs;
+using Domain.DTOs;
 using Domain.Model;
 using Logic.Implementations;
 using Logic.Interfaces;
@@ -24,7 +25,7 @@ public class DeviceControllerTest : DatabaseTestFixture
         controller = new DeviceController(deviceManager);
     }
 
-    /*
+    
     [Test]
     public async Task CreateAsync_ShouldReturnCreatedStatus()
     {
@@ -70,13 +71,13 @@ public class DeviceControllerTest : DatabaseTestFixture
         };
 
         // Act
-        var result = await controller.CreateAsync(newDevice);
+        var result = await controller.CreateAsync(newDevice.DeviceId);
 
         // Assert
         var createdResult = result.Result;
         Assert.That(createdResult, Is.TypeOf<CreatedResult>());
     }
-    */
+    
 
     [Test]
     public async Task GetDeviceId_ShouldReturnOkStatus()

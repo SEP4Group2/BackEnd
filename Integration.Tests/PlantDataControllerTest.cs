@@ -1,9 +1,5 @@
-/*using System.Net;
-using System.Runtime.InteropServices.JavaScript;
-using System.Text;
 using BackEndAPI.Controllers;
 using BackEndAPI.Tests;
-using DataAccess.DAOInterfaces;
 using DataAccess.DAOs;
 using Domain.DTOs;
 using Domain.Model;
@@ -11,8 +7,7 @@ using Logic.Implementations;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Newtonsoft.Json;
-using NUnit.Framework;
+
 
 [TestFixture]
 public class PlantDataControllerTests : DatabaseTestFixture
@@ -22,14 +17,15 @@ public class PlantDataControllerTests : DatabaseTestFixture
     private Mock<INotificationSender> notificationSenderMock;
     private PlantDataDAO plantDataDao;
     private PlantDataController controller;
+    private Mock<IActionsSender> actionMock;
     
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
         plantDataDao = new PlantDataDAO(Context);
         notificationSenderMock = new Mock<INotificationSender>();
-
-        plantDataManager = new PlantDataManagerImpl(plantDataDao, notificationSenderMock.Object);
+        actionMock = new Mock<IActionsSender>();
+        plantDataManager = new PlantDataManagerImpl(plantDataDao, notificationSenderMock.Object, actionMock.Object);
         controller = new PlantDataController(plantDataManager);
     }
 
@@ -74,34 +70,75 @@ public class PlantDataControllerTests : DatabaseTestFixture
                      Status = true,
                      Plant = plant
                  };
-                 
-                 Context.Devices.Add(device);
-                 Context.Users.Add(user1);
-                 Context.Presets.Add(plantPreset);
-                 Context.Plants.Add(plant);
-                 
-                 await Context.SaveChangesAsync();
                
-                 var plantData = new PlantDataCreationDTO(){
-                     
-                     DeviceId = device.DeviceId, // Assuming a valid device ID for testing
+                 var plantData1 = new PlantData()
+                 {
+                     PlantDevice = device, // Assuming a valid device ID for testing
                      Humidity = 50,
                      Temperature = 25,
-                     Moisture = 30,
+                     Moisture = 300,
                      UVLight = 500,
                      TimeStamp = "11/02/2023,11:11:03",
                      TankLevel = 75
                  };
+                 var plantData2 = new PlantData()
+                 {
 
-              
+                     PlantDevice = device, // Assuming a valid device ID for testing
+                     Humidity = 50,
+                     Temperature = 25,
+                     Moisture = 300,
+                     UVLight = 501,
+                     TimeStamp = "11/02/2023,11:11:05",
+                     TankLevel = 75
+                 };
+                 Context.Devices.Add(device);
+                 Context.Users.Add(user1);
+                 Context.Presets.Add(plantPreset);
+                 Context.Plants.Add(plant);
+                 Context.PlantData.Add(plantData1);
+                 Context.PlantData.Add(plantData2);
+                 
+                 await Context.SaveChangesAsync();
+               
+                 var dto1 = new PlantDataCreationDTO(){
+                     
+                     DeviceId = plantData1.PlantDevice.DeviceId, // Assuming a valid device ID for testing
+                     Humidity = plantData1.Humidity,
+                     Temperature = plantData1.Temperature,
+                     Moisture = plantData1.Moisture,
+                     UVLight = plantData1.UVLight,
+                     TimeStamp = plantData1.TimeStamp,
+                     TankLevel = plantData1.TankLevel
+                 };
+                 
+                 var dto2= new PlantDataCreationDTO(){
+                     
+                     DeviceId = plantData2.PlantDevice.DeviceId, // Assuming a valid device ID for testing
+                     Humidity = plantData2.Humidity,
+                     Temperature = plantData2.Temperature,
+                     Moisture = plantData2.Moisture,
+                     UVLight = plantData2.UVLight,
+                     TimeStamp = plantData2.TimeStamp,
+                     TankLevel = plantData2.TankLevel
+                 };
 
+                 List<PlantDataCreationDTO> dataList = new List<PlantDataCreationDTO>();
+                 dataList.Add(dto1);
+                 dataList.Add(dto2);
+
+                 var list = new PlantDataCreationListDTO()
+                 {
+                     PlantDataApi = dataList
+                 };
+                 
                  // Act
-                 var result = await plantDataManager.SaveAsync(plantData);
-
+                 var result = await plantDataManager.SaveAsync(list);
+                 
                  // Assert
                  Assert.NotNull(result);
                  Assert.IsInstanceOf<PlantData>(result);
-               
+                 
     }
 
     [Test]
@@ -143,4 +180,5 @@ public class PlantDataControllerTests : DatabaseTestFixture
         Assert.That(createdResult, Is.TypeOf<OkObjectResult>());
         
     }
-}*/
+    
+}

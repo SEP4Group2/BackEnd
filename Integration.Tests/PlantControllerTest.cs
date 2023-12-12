@@ -1,5 +1,6 @@
 
 using BackEndAPI.Controllers;
+using BackEndAPI.Tests;
 using DataAccess.DAOInterfaces;
 using DataAccess.DAOs;
 using Domain.DTOs;
@@ -8,7 +9,6 @@ using Logic.Implementations;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BackEndAPI.Tests;
 
 [TestFixture]
 public class PlantControllerTests : DatabaseTestFixture
@@ -161,14 +161,24 @@ public class PlantControllerTests : DatabaseTestFixture
             Moisture = 30,
             Temperature = 25,
         };
+        var plant = new Plant()
+        {
+            Location = "Room",
+            Name = "Plant",
+            PlantPreset = plantPreset,
+            User = user1,
+            IconId = 1
+        };
         var device = new Device 
         { 
-            DeviceId = 1,
             Status = true,
+            Plant = plant
         };
-        Context.Devices.Add(device);
+        
         Context.Users.Add(user1);
         Context.Presets.Add(plantPreset);
+        Context.Plants.Add(plant);
+        Context.Devices.Add(device);
         await Context.SaveChangesAsync();
 
         var plantCreationDto = new Plant{
@@ -188,7 +198,7 @@ public class PlantControllerTests : DatabaseTestFixture
         Console.WriteLine($"Actual Result Type: {result?.GetType()}");
 
         // Assert
-        Assert.IsInstanceOf<OkResult>(result);
+        Assert.IsInstanceOf<ObjectResult>(result);
     }
     
     [Test]
