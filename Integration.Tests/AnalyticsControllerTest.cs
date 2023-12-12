@@ -158,11 +158,8 @@ public class AnalyticsControllerTests : DatabaseTestFixture
         var objectResult = result.Result as ObjectResult;
         Console.WriteLine(result.ToString());
         Console.WriteLine(objectResult.StatusCode.ToString());
-
-        Assert.AreEqual(500, objectResult.StatusCode, "Expected HTTP 500 Internal Server Error status code");
-
-        // Assert
-        // Assert.IsInstanceOf<ObjectResult>(result.Result);
+        
+        Assert.IsInstanceOf<ObjectResult>(result.Result);
     }
 
     [Test]

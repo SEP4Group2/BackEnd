@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Json;
-using DataAccess.DAOInterfaces;
+﻿using DataAccess.DAOInterfaces;
 using Domain.DTOs;
 using Domain.Model;
 using Logic.Interfaces;
@@ -17,6 +16,7 @@ public class PlantDataManagerImpl : IPlantDataManager
     private int maxDifferenceAllowedMoisture = 10;
     private int maxDifferenceAllowedUVLight = 8;
     private int maxDifferenceAllowedTemperature = 2;
+    private int maxWaterTankLevel = 200;
 
     public PlantDataManagerImpl(IPlantDataDAO plantDataDao, INotificationSender notificationSender, IActionsSender actionsSender)
     {
@@ -134,6 +134,10 @@ public class PlantDataManagerImpl : IPlantDataManager
             }
 
             plantData.PercentageStatus = percentageStatus;
+            
+            // get percentage value of water tank level and update the object
+            float tankLevelPercentage = (maxWaterTankLevel - plantData.TankLevel) / 100;
+            plantData.TankLevel = tankLevelPercentage;
         }
 
         return plantDataObjects;

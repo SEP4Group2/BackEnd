@@ -110,4 +110,17 @@ public class PlantManagerTests
             Assert.IsInstanceOf<Plant>(result);
         }
 
+        [Test]
+        public async Task CreateAsync_WithInvalidPlantPresetId_ThrowsArgumentException()
+        {
+            // Arrange
+            var plantCreationDto = new PlantCreationDTO
+            {
+                PlantPresetId = -1, // Invalid ID
+            };
+            var mockPlantDao = new Mock<IPlantDAO>();
+            var plantManager = new PlantManagerImpl(mockPlantDao.Object);
+            // Act & Assert
+            Assert.ThrowsAsync<ArgumentException>(async () => await plantManager.CreateAsync(plantCreationDto));
+        }
 }

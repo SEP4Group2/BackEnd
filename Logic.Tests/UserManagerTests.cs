@@ -6,12 +6,26 @@ using DataAccess.DAOInterfaces;
 using Domain.DTOs;
 using Domain.Model;
 using Logic.Implementations;
+using Logic.Interfaces;
 using Moq;
 using NUnit.Framework;
 
 [TestFixture]
 public class UserManagerImplTests
 {
+    private Mock<IUserDAO> userDaoMock;
+    private IUserManager userManagerImpl;
+    
+    [SetUp]
+    public void Setup()
+    {
+        // Mock PlantDataDao
+        userDaoMock = new Mock<IUserDAO>();
+        // Create an instance of the class under test, passing the mock dependency
+        userManagerImpl = new UserManagerImpl(userDaoMock.Object);
+    }
+    
+    
     [Test]
     public async Task CreateUserAsync_ValidUser_ReturnsUser()
     {
@@ -121,5 +135,20 @@ public class UserManagerImplTests
 
         // Act & Assert
         Assert.ThrowsAsync<Exception>(async () => await userManager.ValidateUser(userDto));
+    }
+    
+    [Test]
+    public async Task RemoveAsync_ValidId_CallsUserDaoRemoveAsync()
+    {
+        // Arrange
+        
+
+        var validId = 1;
+
+        // Act
+        await userManagerImpl.RemoveAsync(validId);
+
+        // Assert
+        userDaoMock.Verify(dao => dao.RemoveAsync(validId), Times.Once);
     }
 }

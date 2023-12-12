@@ -1,4 +1,5 @@
 using BackEndAPI.Controllers;
+using BackEndAPI.Tests;
 using DataAccess.DAOInterfaces;
 using DataAccess.DAOs;
 using Domain.DTOs;
@@ -7,9 +8,6 @@ using Logic.Implementations;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BackEndAPI.Tests
-
-{
     [TestFixture]
     public class PlantPresetControllerTests : DatabaseTestFixture
     {
@@ -113,4 +111,3 @@ namespace BackEndAPI.Tests
 
     }
 
-}

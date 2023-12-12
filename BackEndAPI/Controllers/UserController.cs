@@ -16,6 +16,7 @@ public class UserController : ControllerBase
 {
     private IUserManager userManager;
     private readonly IConfiguration config;
+    
 
 
     public UserController(IUserManager userManager, IConfiguration config)
