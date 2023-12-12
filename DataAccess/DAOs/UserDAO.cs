@@ -19,6 +19,9 @@ public class UserDAO : IUserDAO
     {
         try
         {
+            User? existingUser = await _appContext.Users.FirstOrDefaultAsync(u=>u.Username==userCreationDto.Username);
+            if (existingUser != null) throw new Exception("Username already taken");
+
 
             var User = new User()
             {
