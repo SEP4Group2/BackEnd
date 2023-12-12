@@ -35,5 +35,6 @@ spec:
             - containerPort: 5000
               protocol: TCP
           resources: {}
+          imagePullPolicy: Always
       restartPolicy: Always
 status: {}

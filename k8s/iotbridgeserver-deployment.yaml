@@ -39,5 +39,6 @@ spec:
               hostPort: 5024
               protocol: TCP
           resources: {}
+          imagePullPolicy: Always
       restartPolicy: Always
 status: {}

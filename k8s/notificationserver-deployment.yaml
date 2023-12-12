@@ -33,5 +33,6 @@ spec:
               hostPort: 5016
               protocol: TCP
           resources: {}
+          imagePullPolicy: Always
       restartPolicy: Always
 status: {}
