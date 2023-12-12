@@ -84,12 +84,9 @@ public class PlantDAO : IPlantDAO
         Device deviceWithPlant = await _appContext.Devices
             .Include(d => d.Plant)  // Ensure Plant is loaded
             .FirstOrDefaultAsync(d => d.Plant.PlantId == id);
-        Console.WriteLine("Im here");
 
         if (deviceWithPlant != null)
         {
-            Console.WriteLine("Im there");
-
             deviceWithPlant.Plant = null;
             _appContext.Devices.Update(deviceWithPlant);
             await _appContext.SaveChangesAsync();  // Save changes for the device

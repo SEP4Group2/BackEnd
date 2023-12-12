@@ -258,7 +258,7 @@ using NUnit.Framework;
                 Moisture = 30,
                 Temperature = 25,
             };
-            
+
             var plant = new Plant
             {
                 PlantId = plantIdToRemove,
@@ -268,11 +268,14 @@ using NUnit.Framework;
                 PlantPreset = plantPreset,
                 IconId = 1
             };
-            var device = new Device()
+
+            var device = new Device
             {
+                DeviceId = 1,
                 Plant = plant,
                 Status = true
             };
+            
             Context.Users.Add(user1);
             Context.Presets.Add(plantPreset);
             Context.Plants.Add(plant);

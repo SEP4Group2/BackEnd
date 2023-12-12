@@ -43,7 +43,11 @@ public class UserDAO : IUserDAO
 
     public async Task<User> EditAsync(UserDTO user)
     {
+        User? existingUser = await _appContext.Users.FirstOrDefaultAsync(u=>u.Username==user.Username);
+        if (existingUser != null) throw new Exception("Username already taken");
+        
         User updatedUser = _appContext.Users.First(u => u.UserId == user.UserId);
+        
         if (user.Username != null) updatedUser.Username = user.Username;
         if (user.Password != null) updatedUser.Password = user.Password;
         try
