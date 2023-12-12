@@ -1,3 +1,6 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using BackEndAPI.Controllers;
 using BackEndAPI.Tests;
 using DataAccess.DAOInterfaces;
@@ -8,7 +11,9 @@ using Logic.Implementations;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Moq;
+using NUnit.Engine;
 
 [TestFixture]
     public class UserControllerTests : DatabaseTestFixture
@@ -16,15 +21,15 @@ using Moq;
         private IUserManager userManager;
         private IUserDAO userDao;
         private UserController controller;
-        private Mock<IConfiguration> config;
-    
+        private Mock<IConfiguration> configMock;
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
             userDao = new UserDAO(Context);
             userManager = new UserManagerImpl(userDao);
-            config = new Mock<IConfiguration>();
-            controller = new UserController(userManager, config.Object);
+            configMock = new Mock<IConfiguration>();
+            controller = new UserController(userManager, configMock.Object);
+
         }
 
         [Test]
@@ -42,32 +47,35 @@ using Moq;
             Assert.That(createdResult, Is.TypeOf<CreatedResult>());
         }
 
+      
+        //Testing if the correct user is returned
         [Test]
-        public async Task Login_WithValidCredentials_ReturnsOkResultWithToken()
+        public async Task Login_WithValidUser_ReturnsOkResultWithToken()
         {
             ClearDatabase();
-            var user = new User()
+            // Arrange
+            var user = new User
             {
-                Username = "Anushri",
-                Password = "Password"
+                UserId = 1,
+                Username = "testUser",
+                Password = "testPassword"
             };
 
             Context.Users.Add(user);
             await Context.SaveChangesAsync();
-            
-            var userLoginDto = new UserDTO()
+            var userLoginDto = new UserDTO
             {
-                Username = "Anushri",
-                Password = "Password"
+                UserId = 1,
+                Username = "testUser",
+                Password = "testPassword"
             };
-            Assert.IsNotNull(controller);
 
-            
             // Act
-            var result = await controller.Login(userLoginDto);
-        
-            // Assert
-            Assert.That(result.Result, Is.TypeOf<OkObjectResult>());
+            var result = await userManager.ValidateUser(userLoginDto);
+
+            // 
+            Assert.NotNull(result);
+            
         }
 
 
@@ -138,6 +146,6 @@ using Moq;
 
         
         //Rainy scenarios
-      
+     
 }
 

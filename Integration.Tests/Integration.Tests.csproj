@@ -27,4 +27,10 @@
       <ProjectReference Include="..\Logic\Logic.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="nunit.engine">
+        <HintPath>bin\Debug\net7.0\nunit.engine.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>
