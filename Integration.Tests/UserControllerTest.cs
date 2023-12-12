@@ -145,7 +145,32 @@ using NUnit.Engine;
         }
 
         
-        //Rainy scenarios
+        [Test]
+        public async Task DeletePlant_ShouldReturnOk()
+        {
+            // Arrange
+            ClearDatabase();
+            var user1 = new User
+            {
+                UserId = 1, 
+                Username = "testUser1", 
+                Password = "testPassword"
+            };
+        
+        
+            Context.Users.Add(user1);
+           
+            await Context.SaveChangesAsync();
+
+          
+
+            var result = await controller.RemoveAsync(user1.UserId);
+            Console.WriteLine($"Actual Result Type: {result?.GetType()}");
+
+            // Assert
+            Assert.IsInstanceOf<OkResult>(result);
+        }
+
      
 }
 
