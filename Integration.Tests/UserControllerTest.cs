@@ -146,7 +146,7 @@ using NUnit.Engine;
 
         
         [Test]
-        public async Task DeletePlant_ShouldReturnOk()
+        public async Task DeleteUser_ShouldReturnOk()
         {
             // Arrange
             ClearDatabase();
