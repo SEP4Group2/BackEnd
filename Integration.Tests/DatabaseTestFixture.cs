@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
-namespace BackEndAPI.Tests;
 
 [TestFixture]
 public class DatabaseTestFixture
