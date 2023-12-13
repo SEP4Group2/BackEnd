@@ -1,5 +1,4 @@
 using BackEndAPI.Controllers;
-using BackEndAPI.Tests;
 using DataAccess.DAOs;
 using Domain.DTOs;
 using Domain.Model;
@@ -32,11 +31,9 @@ public class PlantDataControllerTests : DatabaseTestFixture
     [Test]
     public async Task CreateAsync_ShouldReturnCreatedStatus()
     {
-     //Clear database
                  
                  ClearDatabase();
                  
-                 // Arrange
                  var user1 = new User
                  {
                      UserId = 1, 
@@ -133,11 +130,12 @@ public class PlantDataControllerTests : DatabaseTestFixture
                  };
                  
                  // Act
-                 var result = await plantDataManager.SaveAsync(list);
+                 var result = await controller.CreateAsync(list);
                  
                  // Assert
                  Assert.NotNull(result);
-                 Assert.IsInstanceOf<PlantData>(result);
+                 var createdResult = result.Result;
+                 Assert.That(createdResult, Is.TypeOf<OkResult>());
                  
     }
 

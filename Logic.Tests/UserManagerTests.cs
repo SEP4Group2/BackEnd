@@ -151,4 +151,31 @@ public class UserManagerImplTests
         // Assert
         userDaoMock.Verify(dao => dao.RemoveAsync(validId), Times.Once);
     }
+    [Test]
+    public async Task EditAsync_WhenCalled_ShouldReturnEditedUser()
+    {
+        // Arrange
+
+        var userDto = new UserDTO
+        {
+           Username = "Test",
+           Password = "Test"
+        };
+
+        var editedUser = new User
+        {
+            UserId = userDto.UserId,
+            Username = "EditedTest",
+            Password = "Test"
+        };
+
+        userDaoMock.Setup(dao => dao.EditAsync(userDto)).ReturnsAsync(editedUser);
+
+        // Act
+        var result = await userManagerImpl.EditAsync(userDto);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual(editedUser, result);
+    }
 }

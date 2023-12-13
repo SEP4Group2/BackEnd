@@ -2,7 +2,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using BackEndAPI.Controllers;
-using BackEndAPI.Tests;
 using DataAccess.DAOInterfaces;
 using DataAccess.DAOs;
 using Domain.DTOs;
