@@ -114,7 +114,22 @@ using NUnit.Engine;
 
         }
 
+        [Test]
+        public async Task GetAllUsersAsync_WithNoUsers_ShouldReturnNotFound()
+        {
+            // Arrange
+            ClearDatabase();
 
+            var result = await controller.GetAllUsersAsync();
+
+            var createdResult = result.Result;
+            // Assert
+            Assert.IsInstanceOf<ObjectResult>(createdResult);
+            var statusCodeResult = createdResult as ObjectResult;
+            Assert.AreEqual(500, statusCodeResult.StatusCode);
+        }
+
+ 
         [Test]
         public async Task EditAsync_ShouldReachController()
         {
@@ -168,6 +183,20 @@ using NUnit.Engine;
 
             // Assert
             Assert.IsInstanceOf<OkResult>(result);
+        }
+        [Test]
+        public async Task RemoveAsync_InvalidUserId_ShouldReturnInternalServerError()
+        {
+            // Arrange
+            ClearDatabase();
+
+            // Act
+            var result = await controller.RemoveAsync(999); // Assuming this ID does not exist
+
+            // Assert
+            Assert.IsInstanceOf<ObjectResult>(result);
+            var statusCodeResult = result as ObjectResult;
+            Assert.AreEqual(500, statusCodeResult.StatusCode);
         }
 
      

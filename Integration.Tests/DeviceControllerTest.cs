@@ -29,7 +29,6 @@ public class DeviceControllerTest : DatabaseTestFixture
     public async Task CreateAsync_ShouldReturnCreatedStatus()
     {
         ClearDatabase();
-        // Arrange
         var user = new User()
         {
             UserId = 1,
@@ -63,16 +62,13 @@ public class DeviceControllerTest : DatabaseTestFixture
         Context.Plants.Add(plant);
         await Context.SaveChangesAsync();
 
-        // Arrange
         var newDevice = new DeviceRegistrationDTO()
         {
             DeviceId = 1,
         };
 
-        // Act
         var result = await controller.CreateAsync(newDevice.DeviceId);
 
-        // Assert
         var createdResult = result.Result;
         Assert.That(createdResult, Is.TypeOf<CreatedResult>());
     }
@@ -81,20 +77,99 @@ public class DeviceControllerTest : DatabaseTestFixture
     [Test]
     public async Task GetDeviceId_ShouldReturnOkStatus()
     {
-        // Arrange
         ClearDatabase();
-        // Add a sample device to the database
         var device = new Device
         {
             Status = true
         };
         Context.Devices.Add(device);
         await Context.SaveChangesAsync();
-// Act
         var result = await controller.GetDeviceId(device.DeviceId);
 
-        // Assert
         var createdResult = result.Result;
         Assert.That(createdResult, Is.TypeOf<OkObjectResult>());
+    }
+     [Test]
+    public async Task GetAllDeviceIdsAsync_WithDeviceIds_ShouldReturnOkWithDeviceIds()
+    {
+        
+        ClearDatabase();
+        var expectedDeviceIds = new List<int> { 3, 2, 1 };
+        var device1 = new Device()
+        {
+            DeviceId = 1,
+            Status = true
+        };
+        var device2 = new Device()
+        {
+            DeviceId = 2,
+            Status = true
+        };
+        var device3 = new Device()
+        {
+            DeviceId = 3,
+            Status = true
+        };
+        Context.Devices.Add(device1);
+        Context.Devices.Add(device2);
+        Context.Devices.Add(device3);
+        await Context.SaveChangesAsync();
+        var result = await controller.GetAllDeviceIdsAsync();
+
+        var okObjectResult = result.Result as OkObjectResult;
+        Assert.IsInstanceOf<DeviceIdsResponse>(okObjectResult.Value);
+        var deviceIdsResponse = okObjectResult.Value as DeviceIdsResponse;
+        Assert.AreEqual(expectedDeviceIds.ToString(), deviceIdsResponse.DeviceIds.ToString());
+    }
+
+    [Test]
+    public async Task GetAllDeviceIdsAsync_WithNoDeviceIds_ShouldReturnOkWithEmptyDeviceIds()
+    {
+        ClearDatabase();
+        var result = await controller.GetAllDeviceIdsAsync();
+        var okObjectResult = result.Result as OkObjectResult;
+        Assert.IsInstanceOf<DeviceIdsResponse>(okObjectResult.Value);
+        var deviceIdsResponse = okObjectResult.Value as DeviceIdsResponse;
+        Assert.IsEmpty(deviceIdsResponse.DeviceIds);
+    }
+
+    [Test]
+    public async Task SetStatusByIdAsync_ValidDeviceStatus_ShouldReturnOk()
+    {
+        ClearDatabase();
+        var device = new Device()
+        {
+            DeviceId = 10,
+            Status = true
+        };
+        Context.Devices.Add(device);
+        await Context.SaveChangesAsync();
+        var deviceStatusDTO = new DeviceStatusDTO
+        {
+            DeviceId = device.DeviceId,
+            Status = false
+        };
+ 
+        var result = await controller.SetStatusByIdAsync(deviceStatusDTO);
+        var createdResult = result as OkResult;
+
+        Assert.IsInstanceOf<OkResult>(createdResult);
+    }
+
+    [Test]
+    public async Task SetStatusByIdAsync_WithException_ShouldReturnInternalServerError()
+    {
+        ClearDatabase();
+        var deviceStatusDTO = new DeviceStatusDTO
+        {
+            DeviceId = 1,
+            Status = true
+        };
+
+        var result = await controller.SetStatusByIdAsync(deviceStatusDTO);
+
+        Assert.IsInstanceOf<ObjectResult>(result);
+        var statusCodeResult = result as ObjectResult;
+        Assert.AreEqual(500, statusCodeResult.StatusCode);
     }
 }
