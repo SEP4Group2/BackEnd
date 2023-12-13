@@ -136,7 +136,7 @@ public class PlantDataManagerImpl : IPlantDataManager
             plantData.PercentageStatus = percentageStatus;
             
             // get percentage value of water tank level and update the object
-            float tankLevelPercentage = (maxWaterTankLevel - plantData.TankLevel) / 100;
+            float tankLevelPercentage = (maxWaterTankLevel - plantData.TankLevel) / maxWaterTankLevel * 100;
             plantData.TankLevel = tankLevelPercentage;
         }
 

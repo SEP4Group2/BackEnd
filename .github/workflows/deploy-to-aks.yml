@@ -5,9 +5,11 @@ permissions:
   contents: read
 
 on:
-  push:
+  pull_request:
+    types:
+      - closed
     branches:
-      - master
+      - develop
 
 jobs:
   deploy:
