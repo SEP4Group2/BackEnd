@@ -139,6 +139,16 @@ public class PlantDataManagerImpl : IPlantDataManager
             
             // get percentage value of water tank level and update the object
             float tankLevelPercentage = (maxWaterTankLevel - plantData.TankLevel) / maxWaterTankLevel * 100;
+
+            if (tankLevelPercentage < 20)
+            {
+                await notificationSender.SendNotification(new NotificationRequestDTO()
+                {
+                    UserId = userId.ToString(),
+                    Message = $"Water tank level of plant {plantData.PlantDevice.Plant.Name} is below 20%, please refill water tank."
+                });
+            }
+
             plantData.TankLevel = tankLevelPercentage;
         }
 
