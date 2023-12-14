@@ -1,12 +1,9 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
+
 using DataAccess.DAOInterfaces;
 using Domain.DTOs;
-using Domain.Model;
 using Logic.Implementations;
 using Logic.Interfaces;
 using Moq;
-using NUnit.Framework;
 
 [TestFixture]
 public class DeviceManagerImplTests

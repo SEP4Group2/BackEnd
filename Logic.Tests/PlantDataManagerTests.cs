@@ -21,12 +21,10 @@ public class PlantDataManagerTests
         var actionSenderMock = new Mock<IActionsSender>();
         plantDataDaoMock = new Mock<IPlantDataDAO>();
         plantDataManagerImpl = new PlantDataManagerImpl(plantDataDaoMock.Object, notificationSenderMock.Object, actionSenderMock.Object);
-        var notification = new HttpClientNotificationSender();
     }
     [Test]
     public async Task SaveAsync_ValidPlantData_ReturnsPlantData()
     {
-        // Arrange
 
         var plantDataCreationDto = new PlantDataCreationDTO {Temperature = 1, Moisture = 2, UVLight = 3, Humidity = 4, DeviceId = 1, TankLevel = 12, TimeStamp = "5/12/2023 13.44.23"};
         var expectedPlantData = new PlantData {Temperature = 1, Moisture = 2, UVLight = 3, Humidity = 4, TankLevel = 12, TimeStamp = "5/12/2023 13.44.23"};
@@ -51,7 +49,6 @@ public class PlantDataManagerTests
     [Test]
     public void SaveAsync_ExceptionThrown()
     {
-        // Arrange
         var plantDataCreationDto = new PlantDataCreationDTO {Temperature = 1, Moisture = 2, UVLight = 3, Humidity = 4, DeviceId = 1, TankLevel = 12, TimeStamp = "5/12/2023 13.44.23"};
 
         List<PlantDataCreationDTO> list = new List<PlantDataCreationDTO>();
@@ -62,7 +59,6 @@ public class PlantDataManagerTests
         };
         plantDataDaoMock.Setup(x => x.SaveAsync(It.IsAny<PlantDataCreationListDTO>())).ThrowsAsync(new Exception());
 
-        // Act & Assert
         Assert.ThrowsAsync<Exception>(async () => await plantDataManagerImpl.SaveAsync(dataList));
     }
     
@@ -101,7 +97,7 @@ public class PlantDataManagerTests
         var result = plantDataManagerImpl.FilterPlantDataForLastSevenDays(plantDatas);
         
         Assert.IsNotNull(result);
-        Assert.That(result.Count(), Is.EqualTo(0)); // only 2 are from last 7 days 
+        Assert.That(result.Count(), Is.EqualTo(0)); 
     }
     
     
@@ -112,7 +108,7 @@ public class PlantDataManagerTests
 
         var result = plantDataManagerImpl.FilterPlantDataForLastSevenDays(plantDatas);
         
-        Assert.That(result, Is.Empty); // result should be empty as there was no recent sample data
+        Assert.That(result, Is.Empty);
     }
     
     [Test]
@@ -123,9 +119,8 @@ public class PlantDataManagerTests
         var result = plantDataManagerImpl.GroupPlantDataByDate(plantDatas);
         
         Assert.IsNotNull(result);
-        Assert.That(result.Count(), Is.EqualTo(2)); // should result in two groupings 
+        Assert.That(result.Count(), Is.EqualTo(2));  
         
-        // check the count of items within a specific group
         foreach (var group in result)
         {
             if (group.Key == new DateTime(2023, 12, 05)) 
@@ -146,18 +141,15 @@ public class PlantDataManagerTests
         Assert.IsNotNull(result);
         Assert.That(result.Count(), Is.EqualTo(2)); 
         
-        // we should have two groups in the sample data
-        var firstGroup = result.First(); // should have 1 plant data
-        var secondGroup = result.Skip(1).First(); // should have 2 plant data 
+        var firstGroup = result.First(); 
+        var secondGroup = result.Skip(1).First(); 
 
-        // assertions for the first group
         Assert.That(firstGroup.date, Is.EqualTo(new DateOnly(2023, 11, 01))); 
         Assert.That(firstGroup.avgHumidity, Is.EqualTo(50.0)); 
         Assert.That(firstGroup.avgTemperature, Is.EqualTo(25.0)); 
         Assert.That(firstGroup.avgMoisture, Is.EqualTo(30.0));
         Assert.That(firstGroup.avgUVLight, Is.EqualTo(100.0));
 
-        // Assertions for the second group
         Assert.That(secondGroup.date, Is.EqualTo(new DateOnly(2023, 12, 05))); 
         Assert.That(secondGroup.avgHumidity, Is.EqualTo(50.0)); // (55 + 45 )/ 2
         Assert.That(secondGroup.avgTemperature, Is.EqualTo(25.0)); // (24 + 26) / 2
@@ -214,10 +206,8 @@ public class PlantDataManagerTests
 
         plantDataDaoMock.Setup(dao => dao.FetchPlantDataAsync(It.IsAny<int>())).ReturnsAsync(new List<PlantData> { plantData });
 
-        // Act
         var result = await plantDataManagerImpl.FetchPlantDataAsync(1);
 
-        // Assert
         Assert.AreEqual(75, result[0].PercentageStatus);
 
     }

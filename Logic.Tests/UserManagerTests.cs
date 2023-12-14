@@ -57,8 +57,7 @@ public class UserManagerImplTests
     public async Task ValidateUser_ValidCredentials_ReturnsUser()
     {
         var userDto = new UserDTO { Username = "Anushri1", Password = "Gupta"};
-        var mockUserDao = new Mock<IUserDAO>();
-        mockUserDao.Setup(dao => dao.GetAllUsersAsync())
+        userDaoMock.Setup(dao => dao.GetAllUsersAsync())
                    .ReturnsAsync(new List<User> { new User()
                    {
                        Username = "Anushri1", Password = "Gupta"
@@ -68,9 +67,8 @@ public class UserManagerImplTests
                            Username = "Username1", Password = "Password"
                        }
                    });
-        var userManager = new UserManagerImpl(mockUserDao.Object);
 
-        var result = await userManager.ValidateUser(userDto);
+        var result = await userManagerImpl.ValidateUser(userDto);
 
         Assert.NotNull(result);
     }
@@ -79,8 +77,7 @@ public class UserManagerImplTests
     public async Task ValidateUser_UserNotFound_ThrowsException()
     {
         var userDto = new UserDTO { Username = "Wrong", Password = "User"};
-        var mockUserDao = new Mock<IUserDAO>();
-        mockUserDao.Setup(dao => dao.GetAllUsersAsync())
+        userDaoMock.Setup(dao => dao.GetAllUsersAsync())
                    .ReturnsAsync(new List<User> {new User()
                    {
                        Username = "Test2", Password = "Test1"
@@ -90,17 +87,15 @@ public class UserManagerImplTests
                            Username = "Test3", Password = "Test11"
                        }
                    });
-        var userManager = new UserManagerImpl(mockUserDao.Object);
 
-        Assert.ThrowsAsync<Exception>(async () => await userManager.ValidateUser(userDto));
+        Assert.ThrowsAsync<Exception>(async () => await userManagerImpl.ValidateUser(userDto));
     }
 
     [Test]
     public async Task ValidateUser_PasswordMismatch_ThrowsException()
     {
         var userDto = new UserDTO {Username = "User", Password = "Wrong"};
-        var mockUserDao = new Mock<IUserDAO>();
-        mockUserDao.Setup(dao => dao.GetAllUsersAsync())
+        userDaoMock.Setup(dao => dao.GetAllUsersAsync())
                    .ReturnsAsync(new List<User> {new User()
                    {
                        Username = "User", Password = "Right"
@@ -110,9 +105,8 @@ public class UserManagerImplTests
                            Username = "Test", Password = "Test"
                        }
                    });
-        var userManager = new UserManagerImpl(mockUserDao.Object);
 
-        Assert.ThrowsAsync<Exception>(async () => await userManager.ValidateUser(userDto));
+        Assert.ThrowsAsync<Exception>(async () => await userManagerImpl.ValidateUser(userDto));
     }
     
     [Test]
