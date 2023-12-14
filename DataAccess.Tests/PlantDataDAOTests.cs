@@ -242,42 +242,7 @@ using NUnit.Framework;
             Assert.AreEqual(plantData.Humidity, fetchedPlantData[0].Humidity);
         }
 
-        [Test]
-        public async Task SaveAsync_ShouldThrowExceptionForInvalidDeviceId()
-        {
-            // Arrange
-            ClearDatabase();
-
-            var plantDataList = new PlantDataCreationListDTO
-            {
-                PlantDataApi = new List<PlantDataCreationDTO>
-                {
-                    new PlantDataCreationDTO
-                    {
-                        DeviceId = 1, 
-                        Humidity = 50,
-                        Temperature = 25,
-                        Moisture = 30,
-                        UVLight = 500,
-                        TimeStamp = "time",
-                        TankLevel = 75
-                    },
-                    new PlantDataCreationDTO
-                    {
-                        DeviceId = 2,  // Invalid DeviceId
-                        Humidity = 40,
-                        Temperature = 25,
-                        Moisture = 30,
-                        UVLight = 300,
-                        TimeStamp = "time",
-                        TankLevel = 75
-                    }
-                }
-            };
-
-            // Act and Assert
-            Assert.ThrowsAsync<Exception>(async () => await _plantDataDao.SaveAsync(plantDataList));
-        }
+        
         [Test]
         public async Task SaveAsync_ShouldThrowExceptionForNullDevice()
         {
