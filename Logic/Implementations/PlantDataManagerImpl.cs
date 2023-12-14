@@ -36,13 +36,13 @@ public class PlantDataManagerImpl : IPlantDataManager
             throw;
         }
     }
-    
+
     public async Task CheckDataWithPlantPreset(PlantData plantData)
     {
         PlantPreset optimalPreset = plantData.PlantDevice.Plant.PlantPreset;
         string name = plantData.PlantDevice.Plant.Name;
         string currentUserId = plantData.PlantDevice.Plant.User.UserId.ToString();
-        
+
         // I am making this up, we can change the numbers later so it's more accurate
         if (Math.Abs(optimalPreset.Humidity - plantData.Humidity) > maxDifferenceAllowedHumidity)
         {
@@ -52,17 +52,18 @@ public class PlantDataManagerImpl : IPlantDataManager
                 Message = $"Humidity levels of plant {name} are currently out of optimal range. Please check your plant"
             });
         }
-        
+
         if (Math.Abs(optimalPreset.Temperature - plantData.Temperature) > maxDifferenceAllowedTemperature)
         {
             await notificationSender.SendNotification(new NotificationRequestDTO()
             {
                 UserId = currentUserId,
-                Message = $"Temperature levels of plant {name} are currently out of optimal range. Please check your plant"
+                Message =
+                    $"Temperature levels of plant {name} are currently out of optimal range. Please check your plant"
             });
         }
-        
-        if (Math.Abs(optimalPreset.UVLight- plantData.UVLight) > maxDifferenceAllowedUVLight)
+
+        if (Math.Abs(optimalPreset.UVLight - plantData.UVLight) > maxDifferenceAllowedUVLight)
         {
             await notificationSender.SendNotification(new NotificationRequestDTO()
             {
@@ -70,8 +71,8 @@ public class PlantDataManagerImpl : IPlantDataManager
                 Message = $"UV Light levels of plant {name} are currently out of optimal range. Please check your plant"
             });
         }
-        
-        if (Math.Abs(optimalPreset.Moisture- plantData.Moisture) > maxDifferenceAllowedMoisture)
+
+        if (Math.Abs(optimalPreset.Moisture - plantData.Moisture) > maxDifferenceAllowedMoisture)
         {
             await notificationSender.SendNotification(new NotificationRequestDTO()
             {
@@ -79,6 +80,7 @@ public class PlantDataManagerImpl : IPlantDataManager
                 Message = $"Moisture levels of plant {name} are currently out of optimal range. Please check your plant"
             });
         }
+
     }
 
     public async Task<List<AnalyticsDTO>> GetPlantDataForAnalytics(int plantId)
