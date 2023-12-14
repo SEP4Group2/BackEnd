@@ -154,6 +154,7 @@ public class DeviceControllerTest : DatabaseTestFixture
         var createdResult = result as OkResult;
 
         Assert.IsInstanceOf<OkResult>(createdResult);
+        Assert.AreEqual(200, createdResult.StatusCode);
     }
 
     [Test]

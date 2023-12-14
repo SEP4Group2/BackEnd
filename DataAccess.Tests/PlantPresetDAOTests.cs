@@ -32,7 +32,7 @@ public class PlantPresetDAOTests : DatabaseTestFixture
         
         var plantPresetCreationDto = new PlantPresetCreationDTO
         {
-            UserId = 1, // Assuming a valid user ID for testing
+            UserId = 1,
             Name = "TestPreset",
             Humidity = 50,
             UVLight = 500,
@@ -62,7 +62,7 @@ public class PlantPresetDAOTests : DatabaseTestFixture
             
         await Context.SaveChangesAsync();
         // Arrange
-        var presetId = 1; // Assuming a valid preset ID for testing
+        var presetId = 1;
         var user1 = new User
         {
             UserId = 1, 
@@ -103,7 +103,7 @@ public class PlantPresetDAOTests : DatabaseTestFixture
         
         await Context.SaveChangesAsync();
         // Arrange
-        var userId = 1; // Assuming a valid user ID for testing
+        var userId = 1; 
         
         var user1 = new User
         {
@@ -114,7 +114,7 @@ public class PlantPresetDAOTests : DatabaseTestFixture
         
         var plantPreset1 = new PlantPreset
         {
-            UserId = 1, // Assuming a valid user ID for testing
+            UserId = 1, 
             Name = "TestPreset",
             Humidity = 50,
             UVLight = 500,
@@ -124,7 +124,7 @@ public class PlantPresetDAOTests : DatabaseTestFixture
         
         var plantPreset2 = new PlantPreset
         {
-            UserId = 1, // Assuming a valid user ID for testing
+            UserId = 1, 
             Name = "TestPreset",
             Humidity = 50,
             UVLight = 500,
@@ -134,7 +134,7 @@ public class PlantPresetDAOTests : DatabaseTestFixture
         
         var plantPreset3 = new PlantPreset
         {
-            UserId = 1, // Assuming a valid user ID for testing
+            UserId = 1, 
             Name = "TestPreset",
             Humidity = 50,
             UVLight = 500,
@@ -158,4 +158,44 @@ public class PlantPresetDAOTests : DatabaseTestFixture
         Assert.IsInstanceOf<List<PlantPreset>>(presets);
         
     }
+    
+    [Test]
+    public async Task CreateAsync_ShouldThrowExceptionForInvalidUserId()
+    {
+        // Arrange
+        ClearDatabase();
+
+        var plantPresetCreationDto = new PlantPresetCreationDTO
+        {
+            UserId = 1, // Invalid user 
+            Name = "TestPreset",
+            Humidity = 50,
+            UVLight = 500,
+            Moisture = 30,
+            Temperature = 25
+        };
+
+        // Act
+        async Task Act() => await _plantPresetDao.CreateAsync(plantPresetCreationDto);
+
+        // Assert
+        Assert.ThrowsAsync<Exception>(Act);
+    }
+
+    [Test]
+    public async Task GetAsync_ShouldThrowExceptionForInvalidPresetId()
+    {
+        // Arrange
+        ClearDatabase();
+
+        var invalidPresetId = 1; // Invalid preset ID for testing
+
+        // Act
+        async Task Act() => await _plantPresetDao.GetAsync(invalidPresetId);
+
+        // Assert
+        Assert.ThrowsAsync<Exception>(Act);
+    }
+    
+
 }

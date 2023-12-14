@@ -190,7 +190,7 @@ using NUnit.Engine;
             ClearDatabase();
 
             // Act
-            var result = await controller.RemoveAsync(999); // Assuming this ID does not exist
+            var result = await controller.RemoveAsync(6); 
 
             // Assert
             Assert.IsInstanceOf<ObjectResult>(result);
