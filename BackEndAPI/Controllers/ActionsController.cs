@@ -1,7 +1,4 @@
-﻿using System.Net.Sockets;
-using System.Text;
-using System.Text.Json;
-using Logic.Interfaces;
+﻿using Logic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BackEndAPI.Controllers;
@@ -30,7 +27,6 @@ public class ActionsController : ControllerBase
         }
         catch (Exception ex)
         {
-            // Handle exceptions
             Console.WriteLine($"Error: {ex.Message}");
             return StatusCode(500, "Internal Server Error");
         }

@@ -1,5 +1,3 @@
-using System.Net;
-using System.Text;
 using BackEndAPI.Controllers;
 using DataAccess.DAOInterfaces;
 using DataAccess.DAOs;
@@ -8,11 +6,7 @@ using Domain.Model;
 using Logic.Implementations;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
-using Newtonsoft.Json;
-using NUnit.Framework;
 
-namespace BackEndAPI.Tests;
 
 [TestFixture]
 public class PlantControllerTests : DatabaseTestFixture
@@ -46,7 +40,7 @@ public class PlantControllerTests : DatabaseTestFixture
         var plantPreset = new PlantPreset
         {
             PresetId = 1,
-            UserId = 1, // Assuming a valid user ID for testing
+            UserId = 1, 
             Name = "TestPreset",
             Humidity = 50,
             UVLight = 500,
@@ -68,20 +62,42 @@ public class PlantControllerTests : DatabaseTestFixture
         var plantCreationDto = new PlantCreationDTO
         {
             Location = "TestLocation",
-            PlantPresetId = 1, // Assuming a valid preset ID for testing
-            UserId = 1, // Assuming a valid user ID for testing
-            DeviceId = 1, // Assuming a valid device ID for testing
+            PlantPresetId = 1, 
+            UserId = 1, 
+            DeviceId = 1, 
             Name = "TestPlant",
             IconId = 1
         };
         
-        // Act
         var result = await controller.CreateAsync(plantCreationDto);
 
-        // Assert
        var createdResult = result.Result;
         Assert.That(createdResult, Is.TypeOf<CreatedResult>());
         
+    }
+    [Test]
+    public async Task CreateAsync_WhenCreateAsyncThrowsException_ShouldReturnInternalServerError()
+    {
+        ClearDatabase();
+       
+       
+            
+        var plantCreationDto = new PlantCreationDTO
+        {
+            Location = "TestLocation",
+            PlantPresetId = 0, 
+            UserId = 0, 
+            DeviceId = 1, 
+            Name = "TestPlant",
+            IconId = 1
+        };
+        
+        var result = await controller.CreateAsync(plantCreationDto);
+
+        Assert.IsInstanceOf<ObjectResult>(result.Result);
+        var objectResult = (ObjectResult)result.Result;
+
+        Assert.AreEqual(500, objectResult.StatusCode);
     }
 
    
@@ -99,7 +115,7 @@ public class PlantControllerTests : DatabaseTestFixture
         var plantPreset = new PlantPreset
         {
             PresetId = 1,
-            UserId = 1, // Assuming a valid user ID for testing
+            UserId = 1, 
             Name = "TestPreset",
             Humidity = 50,
             UVLight = 500,
@@ -118,8 +134,8 @@ public class PlantControllerTests : DatabaseTestFixture
 
         var plantCreationDto = new Plant{
             Location = "TestLocation",
-            PlantPreset = plantPreset, // Assuming a valid preset ID for testing
-            User = user1, // Assuming a valid user ID for testing
+            PlantPreset = plantPreset, 
+            User = user1, 
             Name = "TestPlant",
             IconId = 1
         };
@@ -158,27 +174,37 @@ public class PlantControllerTests : DatabaseTestFixture
         var plantPreset = new PlantPreset
         {
             PresetId = 1,
-            UserId = 1, // Assuming a valid user ID for testing
+            UserId = 1, 
             Name = "TestPreset",
             Humidity = 50,
             UVLight = 500,
             Moisture = 30,
             Temperature = 25,
         };
+        var plant = new Plant()
+        {
+            Location = "Room",
+            Name = "Plant",
+            PlantPreset = plantPreset,
+            User = user1,
+            IconId = 1
+        };
         var device = new Device 
         { 
-            DeviceId = 1,
             Status = true,
+            Plant = plant
         };
-        Context.Devices.Add(device);
+        
         Context.Users.Add(user1);
         Context.Presets.Add(plantPreset);
+        Context.Plants.Add(plant);
+        Context.Devices.Add(device);
         await Context.SaveChangesAsync();
 
         var plantCreationDto = new Plant{
             Location = "TestLocation",
-            PlantPreset = plantPreset, // Assuming a valid preset ID for testing
-            User = user1, // Assuming a valid user ID for testing
+            PlantPreset = plantPreset,
+            User = user1, 
             Name = "TestPlant",
             IconId = 1
         };
@@ -192,7 +218,7 @@ public class PlantControllerTests : DatabaseTestFixture
         Console.WriteLine($"Actual Result Type: {result?.GetType()}");
 
         // Assert
-        Assert.IsInstanceOf<OkResult>(result);
+        Assert.IsInstanceOf<ObjectResult>(result);
     }
     
     [Test]
@@ -202,8 +228,6 @@ public class PlantControllerTests : DatabaseTestFixture
          //Clear database
             ClearDatabase();
             
-            //Arrange 
-        
             var user1 = new User
             {
                 UserId = 11, 
@@ -215,7 +239,7 @@ public class PlantControllerTests : DatabaseTestFixture
             var plantPreset = new PlantPreset
             {
                 PresetId = 1,
-                UserId = 1, // Assuming a valid user ID for testing
+                UserId = 1, 
                 Name = "TestPreset",
                 Humidity = 50,
                 UVLight = 500,
@@ -280,14 +304,12 @@ public class PlantControllerTests : DatabaseTestFixture
 
             await Context.SaveChangesAsync();
 
-        // Act
         var result = await controller.GetAllPlantsAsync(user1.UserId);
 
-        // Assert
         var createdResult = result.Result;
         Assert.That(createdResult, Is.TypeOf<OkObjectResult>());
     }
-
+    
 }
 
 

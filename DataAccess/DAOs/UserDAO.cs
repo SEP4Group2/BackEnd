@@ -19,6 +19,9 @@ public class UserDAO : IUserDAO
     {
         try
         {
+            User? existingUser = await _appContext.Users.FirstOrDefaultAsync(u=>u.Username==userCreationDto.Username);
+            if (existingUser != null) throw new Exception("Username already taken");
+
 
             var User = new User()
             {
@@ -40,7 +43,11 @@ public class UserDAO : IUserDAO
 
     public async Task<User> EditAsync(UserDTO user)
     {
+        User? existingUser = await _appContext.Users.FirstOrDefaultAsync(u=>u.Username==user.Username);
+        if (existingUser != null) throw new Exception("Username already taken");
+        
         User updatedUser = _appContext.Users.First(u => u.UserId == user.UserId);
+        
         if (user.Username != null) updatedUser.Username = user.Username;
         if (user.Password != null) updatedUser.Password = user.Password;
         try
@@ -78,6 +85,15 @@ public class UserDAO : IUserDAO
                 }
             }
             _appContext.Plants.RemoveRange(plantsToRemove);
+
+            IQueryable<PlantPreset> presets = _appContext.Presets.Where(p => p.UserId == id);
+            if ( presets != null)
+            {
+                foreach (var preset in presets)
+                {
+                    _appContext.Presets.Remove(preset);
+                }
+            }
         }
 
         _appContext.Users.Remove(user);

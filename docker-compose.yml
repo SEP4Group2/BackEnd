@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   plantapi:
-    image: "plantapi"
+    image: tinajassik/plantapi:latest
     ports:
       - "5000:5000"
     environment:
@@ -25,7 +25,7 @@ services:
     networks:
       - backend
   iotbridgeserver:
-      image: "iotbridge"
+      image: tinajassik/tcp-server-1:latest
       depends_on:
         - plantapi
       ports:

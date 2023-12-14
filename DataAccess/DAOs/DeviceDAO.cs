@@ -77,11 +77,11 @@ public class DeviceDAO : IDeviceDAO
     {
         try
         {
-            var Changeddevice =  _appContext.Devices.First(d=> d.DeviceId==device.DeviceId);
+            var changedDevice = await _appContext.Devices.FirstAsync(d=> d.DeviceId==device.DeviceId);
 
-            if (Changeddevice != null)
+            if (changedDevice != null)
             {
-                device.Status = device.Status; 
+                changedDevice.Status = device.Status; 
                 await _appContext.SaveChangesAsync();
             }
         }

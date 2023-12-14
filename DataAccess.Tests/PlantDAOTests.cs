@@ -38,7 +38,7 @@ using NUnit.Framework;
             var plantPreset = new PlantPreset
             {
                 PresetId = 1,
-                UserId = 1, // Assuming a valid user ID for testing
+                UserId = 1, 
                 Name = "TestPreset",
                 Humidity = 50,
                 UVLight = 500,
@@ -59,9 +59,9 @@ using NUnit.Framework;
             var plantCreationDto = new PlantCreationDTO
             {
                 Location = "TestLocation",
-                PlantPresetId = 1, // Assuming a valid preset ID for testing
-                UserId = 1, // Assuming a valid user ID for testing
-                DeviceId = 1, // Assuming a valid device ID for testing
+                PlantPresetId = 1, 
+                UserId = 1,
+                DeviceId = 1, 
                 Name = "TestPlant",
                 IconId = 1
             };
@@ -87,7 +87,7 @@ using NUnit.Framework;
             
             await Context.SaveChangesAsync();
             // Arrange
-            var plantId = 1; // Assuming a valid plant ID for testing
+            var plantId = 1; 
             var user1 = new User
             {
                 UserId = 1, 
@@ -98,7 +98,7 @@ using NUnit.Framework;
             var plantPreset = new PlantPreset
             {
                 PresetId = 1,
-                UserId = 1, // Assuming a valid user ID for testing
+                UserId = 1, 
                 Name = "TestPreset",
                 Humidity = 50,
                 UVLight = 500,
@@ -151,7 +151,7 @@ using NUnit.Framework;
             var plantPreset = new PlantPreset
             {
                 PresetId = 1,
-                UserId = userId, // Assuming a valid user ID for testing
+                UserId = userId, 
                 Name = "TestPreset",
                 Humidity = 50,
                 UVLight = 500,
@@ -240,7 +240,7 @@ using NUnit.Framework;
             
             await Context.SaveChangesAsync();
             // Arrange
-            var plantIdToRemove = 1; // Assuming a valid plant ID for testing
+            var plantIdToRemove = 1; 
             var user1 = new User
             {
                 UserId = 1, 
@@ -251,7 +251,7 @@ using NUnit.Framework;
             var plantPreset = new PlantPreset
             {
                 PresetId = 1,
-                UserId = 1, // Assuming a valid user ID for testing
+                UserId = 1, 
                 Name = "TestPreset",
                 Humidity = 50,
                 UVLight = 500,
@@ -268,9 +268,18 @@ using NUnit.Framework;
                 PlantPreset = plantPreset,
                 IconId = 1
             };
+
+            var device = new Device
+            {
+                DeviceId = 1,
+                Plant = plant,
+                Status = true
+            };
+            
             Context.Users.Add(user1);
             Context.Presets.Add(plantPreset);
             Context.Plants.Add(plant);
+            Context.Devices.Add(device);
             
             await Context.SaveChangesAsync();
             
@@ -300,7 +309,7 @@ using NUnit.Framework;
             var plantPreset = new PlantPreset
             {
                 PresetId = 1,
-                UserId = 1, // Assuming a valid user ID for testing
+                UserId = 1, 
                 Name = "TestPreset",
                 Humidity = 50,
                 UVLight = 500,
@@ -326,7 +335,7 @@ using NUnit.Framework;
             
             var editPlantDto = new EditPlantDTO
             {
-                PlantId = 1, // Assuming a valid plant ID for testing
+                PlantId = 1, 
                 Location = "EditedLocation",
                 Name = "EditedPlant"
             };
@@ -340,4 +349,74 @@ using NUnit.Framework;
             Assert.AreEqual(editPlantDto.Name, editedPlant.Name);
             
         }
+        
+        [Test]
+        public async Task CreateAsync_ShouldThrowExceptionForNonExistingPreset()
+        {
+            // Arrange
+            ClearDatabase();
+
+            var plantCreationDto = new PlantCreationDTO
+            {
+                PlantPresetId = 1, 
+            };
+
+            // Act
+            async Task Act() => await _plantDao.CreateAsync(plantCreationDto);
+
+            // Assert
+            Assert.ThrowsAsync<Exception>(Act);
+        }
+
+        [Test]
+        public async Task CreateAsync_ShouldThrowExceptionForInvalidUserId()
+        {
+            // Arrange
+            ClearDatabase();
+
+            var plantCreationDto = new PlantCreationDTO
+            {
+                UserId = 1, 
+            };
+
+            // Act
+            async Task Act() => await _plantDao.CreateAsync(plantCreationDto);
+
+            // Assert
+            Assert.ThrowsAsync<Exception>(Act);
+        }
+
+        [Test]
+        public async Task CreateAsync_ShouldThrowExceptionForInvalidDeviceId()
+        {
+            // Arrange
+            ClearDatabase();
+
+            var plantCreationDto = new PlantCreationDTO
+            {
+                DeviceId = 999, 
+            };
+
+            // Act
+            async Task Act() => await _plantDao.CreateAsync(plantCreationDto);
+
+            // Assert
+            Assert.ThrowsAsync<Exception>(Act);
+        }
+
+        [Test]
+        public async Task RemoveAsync_ShouldThrowExceptionForInvalidPlantId()
+        {
+            // Arrange
+            ClearDatabase();
+
+            var plantIdToRemove = 999; 
+
+            // Act
+            async Task Act() => await _plantDao.RemoveAsync(plantIdToRemove);
+
+            // Assert
+            Assert.ThrowsAsync<Exception>(Act);
+        }
+
     }

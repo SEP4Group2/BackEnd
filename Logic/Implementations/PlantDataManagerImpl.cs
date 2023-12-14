@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Json;
-using DataAccess.DAOInterfaces;
+﻿using DataAccess.DAOInterfaces;
 using Domain.DTOs;
 using Domain.Model;
 using Logic.Interfaces;
@@ -9,19 +8,28 @@ namespace Logic.Implementations;
 public class PlantDataManagerImpl : IPlantDataManager
 {
 
-    private IPlantDataDAO plantDataDao;
-    private INotificationSender notificationSener;
+    private readonly IPlantDataDAO plantDataDao;
+    private readonly INotificationSender notificationSender;
+    private readonly IActionsSender actionsSender;
+    
+    private int maxDifferenceAllowedHumidity = 10;
+    private int maxDifferenceAllowedMoisture = 10;
+    private int maxDifferenceAllowedUVLight = 8;
+    private int maxDifferenceAllowedTemperature = 2;
+    
+    private int maxWaterTankLevel = 200;
 
-    public PlantDataManagerImpl(IPlantDataDAO plantDataDao, INotificationSender notificationSener)
+    public PlantDataManagerImpl(IPlantDataDAO plantDataDao, INotificationSender notificationSender, IActionsSender actionsSender)
     {
         this.plantDataDao = plantDataDao;
-        this.notificationSener = notificationSener;
+        this.notificationSender = notificationSender;
+        this.actionsSender = actionsSender;
     }
-    public async Task SaveAsync(PlantDataCreationListDTO plantData)
+    public async Task<PlantData> SaveAsync(PlantDataCreationListDTO plantData)
     {
         try
         {
-            await plantDataDao.SaveAsync(plantData);
+            return await plantDataDao.SaveAsync(plantData);
         }
         catch (Exception e)
         {
@@ -29,50 +37,51 @@ public class PlantDataManagerImpl : IPlantDataManager
             throw;
         }
     }
-    
+
     public async Task CheckDataWithPlantPreset(PlantData plantData)
     {
-        int maxDifferenceAllowed = 50;
         PlantPreset optimalPreset = plantData.PlantDevice.Plant.PlantPreset;
         string name = plantData.PlantDevice.Plant.Name;
         string currentUserId = plantData.PlantDevice.Plant.User.UserId.ToString();
-        
+
         // I am making this up, we can change the numbers later so it's more accurate
-        if (Math.Abs(optimalPreset.Humidity - plantData.Humidity) > maxDifferenceAllowed)
+        if (Math.Abs(optimalPreset.Humidity - plantData.Humidity) > maxDifferenceAllowedHumidity)
         {
-            await notificationSener.SendNotification(new NotificationRequestDTO()
+            await notificationSender.SendNotification(new NotificationRequestDTO()
             {
                 UserId = currentUserId,
                 Message = $"Humidity levels of plant {name} are currently out of optimal range. Please check your plant"
             });
         }
-        
-        if (Math.Abs(optimalPreset.Temperature - plantData.Temperature) > maxDifferenceAllowed)
+
+        if (Math.Abs(optimalPreset.Temperature - plantData.Temperature) > maxDifferenceAllowedTemperature)
         {
-            await notificationSener.SendNotification(new NotificationRequestDTO()
+            await notificationSender.SendNotification(new NotificationRequestDTO()
             {
                 UserId = currentUserId,
-                Message = $"Temperature levels of plant {name} are currently out of optimal range. Please check your plant"
+                Message =
+                    $"Temperature levels of plant {name} are currently out of optimal range. Please check your plant"
             });
         }
-        
-        if (Math.Abs(optimalPreset.UVLight- plantData.UVLight) > maxDifferenceAllowed)
+
+        if (Math.Abs(optimalPreset.UVLight - plantData.UVLight) > maxDifferenceAllowedUVLight)
         {
-            await notificationSener.SendNotification(new NotificationRequestDTO()
+            await notificationSender.SendNotification(new NotificationRequestDTO()
             {
                 UserId = currentUserId,
                 Message = $"UV Light levels of plant {name} are currently out of optimal range. Please check your plant"
             });
         }
-        
-        if (Math.Abs(optimalPreset.Moisture- plantData.Moisture) > maxDifferenceAllowed)
+
+        if (Math.Abs(optimalPreset.Moisture - plantData.Moisture) > maxDifferenceAllowedMoisture)
         {
-            await notificationSener.SendNotification(new NotificationRequestDTO()
+            await notificationSender.SendNotification(new NotificationRequestDTO()
             {
                 UserId = currentUserId,
                 Message = $"Moisture levels of plant {name} are currently out of optimal range. Please check your plant"
             });
         }
+
     }
 
     public async Task<List<AnalyticsDTO>> GetPlantDataForAnalytics(int plantId)
@@ -93,12 +102,6 @@ public class PlantDataManagerImpl : IPlantDataManager
 
     public async Task<List<PlantData>> FetchPlantDataAsync(int userId)
     {
-        int maxDifferenceAllowedHumidity = 10;
-        int maxDifferenceAllowedMoisture = 10;
-        int maxDifferenceAllowedUVLight = 8;
-        int maxDifferenceAllowedTemperature = 2;
-
-        
         List<PlantData> plantDataObjects = await plantDataDao.FetchPlantDataAsync(userId);
 
         foreach (PlantData plantData in plantDataObjects)
@@ -128,7 +131,26 @@ public class PlantDataManagerImpl : IPlantDataManager
 
             }
 
+            if ((optimalPreset.Moisture - plantData.Moisture - maxDifferenceAllowedMoisture) > 0 )
+            {
+                await actionsSender.SendWaterPlantAction(plantData.PlantDevice.DeviceId);
+            }
+
             plantData.PercentageStatus = percentageStatus;
+            
+            // get percentage value of water tank level and update the object
+            float tankLevelPercentage = (maxWaterTankLevel - plantData.TankLevel) / maxWaterTankLevel * 100;
+
+            if (tankLevelPercentage < 20)
+            {
+                await notificationSender.SendNotification(new NotificationRequestDTO()
+                {
+                    UserId = userId.ToString(),
+                    Message = $"Water tank level of plant {plantData.PlantDevice.Plant.Name} is below 20%, please refill water tank."
+                });
+            }
+
+            plantData.TankLevel = tankLevelPercentage;
         }
 
         return plantDataObjects;

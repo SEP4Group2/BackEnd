@@ -1,4 +1,3 @@
-
 using BackEndAPI.Controllers;
 using DataAccess.DAOInterfaces;
 using DataAccess.DAOs;
@@ -8,9 +7,6 @@ using Logic.Implementations;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BackEndAPI.Tests
-
-{
     [TestFixture]
     public class PlantPresetControllerTests : DatabaseTestFixture
     {
@@ -61,7 +57,7 @@ namespace BackEndAPI.Tests
         {
             // Arrange
             ClearDatabase();
-            // Add a sample plant preset to the database
+            
             var plantPreset = new PlantPreset
             {
                 Temperature = 30,
@@ -84,7 +80,7 @@ namespace BackEndAPI.Tests
         {
             // Arrange
             ClearDatabase();
-            // Add a sample user and plant preset to the database
+
             var user = new User
             {
                 UserId = 1,
@@ -98,7 +94,7 @@ namespace BackEndAPI.Tests
                 Humidity = 20,
                 UVLight = 80,
                 Name = "MyPreset",
-                UserId = user.UserId // Link the plant preset to the user
+                UserId = user.UserId 
             };
             Context.Users.Add(user);
             Context.Presets.Add(plantPreset);
@@ -114,4 +110,3 @@ namespace BackEndAPI.Tests
 
     }
 
-}

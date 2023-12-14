@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
-namespace BackEndAPI.Tests;
 
 [TestFixture]
 public class DatabaseTestFixture
@@ -15,9 +14,8 @@ public class DatabaseTestFixture
         Options = new DbContextOptionsBuilder<DataAccess.AppContext>()
             .UseInMemoryDatabase(databaseName: "TestDatabase")
             .Options;
-
         Context = new DataAccess.AppContext(Options);
-       
+
     }
 
     [OneTimeTearDown]

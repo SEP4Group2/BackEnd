@@ -6,7 +6,7 @@ namespace Logic.Interfaces;
 
 public interface IPlantDataManager
 {
-    Task SaveAsync(PlantDataCreationListDTO plantData);
+    Task<PlantData> SaveAsync(PlantDataCreationListDTO plantData);
     Task<List<PlantData>> FetchPlantDataAsync(int userId);
     Task CheckDataWithPlantPreset(PlantData plantData);
     Task<List<AnalyticsDTO>> GetPlantDataForAnalytics(int plantId);

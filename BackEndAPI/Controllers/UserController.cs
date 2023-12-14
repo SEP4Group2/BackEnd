@@ -16,6 +16,7 @@ public class UserController : ControllerBase
 {
     private IUserManager userManager;
     private readonly IConfiguration config;
+    
 
 
     public UserController(IUserManager userManager, IConfiguration config)
@@ -87,6 +88,7 @@ public class UserController : ControllerBase
         }
     }
     
+   
     private List<Claim> GenerateClaims(User user)
     {
         var claims = new[]
@@ -128,6 +130,7 @@ public class UserController : ControllerBase
         try
         {
            return await userManager.EditAsync(userToUpdate);
+
         }
         catch (Exception e)
         {
@@ -137,11 +140,12 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<ActionResult> RemoveAsync([FromBody] int id)
+    [Route("{userId:int}")]
+    public async Task<ActionResult> RemoveAsync(int userId)
     {
         try
         {
-            await userManager.RemoveAsync(id);
+            await userManager.RemoveAsync(userId);
             return Ok();
         }
         catch (Exception e)
