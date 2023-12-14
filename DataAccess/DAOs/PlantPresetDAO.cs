@@ -63,8 +63,6 @@ public class PlantPresetDAO : IPlantPresetDAO
             return await _appContext.Presets
                 .Where(p => p.UserId == userId || p.UserId == null)
                 .ToListAsync();
-
-
         }
         catch (Exception e)
         {

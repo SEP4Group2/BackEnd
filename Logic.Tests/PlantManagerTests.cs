@@ -123,7 +123,7 @@ public class PlantManagerTests
             var plantPreset = new PlantPreset
             {
                 PresetId = 1,
-                UserId = 1, // Assuming a valid user ID for testing
+                UserId = 1, 
                 Name = "TestPreset",
                 Humidity = 50,
                 UVLight = 500,
@@ -138,8 +138,8 @@ public class PlantManagerTests
            
             var plantCreationDto = new Plant{
                 Location = "TestLocation",
-                PlantPreset = plantPreset, // Assuming a valid preset ID for testing
-                User = user1, // Assuming a valid user ID for testing
+                PlantPreset = plantPreset, 
+                User = user1, 
                 Name = "TestPlant",
                 IconId = 1
             };

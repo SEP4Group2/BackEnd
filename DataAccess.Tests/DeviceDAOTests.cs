@@ -2,6 +2,7 @@
 using Domain.DTOs;
 using Domain.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.Internal;
 
 namespace Tests.DataAccess
 {
@@ -113,6 +114,41 @@ namespace Tests.DataAccess
             Assert.IsNotNull(updatedDevice);
             Assert.AreEqual(deviceStatusDTO.Status, updatedDevice.Status);
         }
+        
+        [Test]
+        public async Task GetDeviceIdAsync_ShouldThrowExceptionForInvalidDeviceId()
+        {
+            // Arrange
+            ClearDatabase();
+
+            var invalidDeviceId = 1; 
+
+            // Act
+            async Task Act() => await _deviceDao.GetDeviceIdAsync(invalidDeviceId);
+
+            // Assert
+            Assert.ThrowsAsync<Exception>(Act);
+        }
+
+        [Test]
+        public async Task SetStatusById_ShouldThrowExceptionForInvalidDeviceId()
+        {
+            // Arrange
+            ClearDatabase();
+
+            var invalidDeviceStatusDTO = new DeviceStatusDTO
+            {
+                DeviceId = 1,
+                Status = false
+            };
+
+            // Act
+            async Task Act() => await _deviceDao.SetStatusById(invalidDeviceStatusDTO);
+
+            // Assert
+            Assert.ThrowsAsync<InvalidOperationException>(Act);
+        }
+
     }
     
     

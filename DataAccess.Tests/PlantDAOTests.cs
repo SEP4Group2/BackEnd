@@ -38,7 +38,7 @@ using NUnit.Framework;
             var plantPreset = new PlantPreset
             {
                 PresetId = 1,
-                UserId = 1, // Assuming a valid user ID for testing
+                UserId = 1, 
                 Name = "TestPreset",
                 Humidity = 50,
                 UVLight = 500,
@@ -59,9 +59,9 @@ using NUnit.Framework;
             var plantCreationDto = new PlantCreationDTO
             {
                 Location = "TestLocation",
-                PlantPresetId = 1, // Assuming a valid preset ID for testing
-                UserId = 1, // Assuming a valid user ID for testing
-                DeviceId = 1, // Assuming a valid device ID for testing
+                PlantPresetId = 1, 
+                UserId = 1, 
+                DeviceId = 1, 
                 Name = "TestPlant",
                 IconId = 1
             };
@@ -87,7 +87,7 @@ using NUnit.Framework;
             
             await Context.SaveChangesAsync();
             // Arrange
-            var plantId = 1; // Assuming a valid plant ID for testing
+            var plantId = 1;
             var user1 = new User
             {
                 UserId = 1, 
@@ -98,7 +98,7 @@ using NUnit.Framework;
             var plantPreset = new PlantPreset
             {
                 PresetId = 1,
-                UserId = 1, // Assuming a valid user ID for testing
+                UserId = 1, 
                 Name = "TestPreset",
                 Humidity = 50,
                 UVLight = 500,
@@ -151,7 +151,7 @@ using NUnit.Framework;
             var plantPreset = new PlantPreset
             {
                 PresetId = 1,
-                UserId = userId, // Assuming a valid user ID for testing
+                UserId = userId,
                 Name = "TestPreset",
                 Humidity = 50,
                 UVLight = 500,
@@ -240,7 +240,7 @@ using NUnit.Framework;
             
             await Context.SaveChangesAsync();
             // Arrange
-            var plantIdToRemove = 1; // Assuming a valid plant ID for testing
+            var plantIdToRemove = 1;
             var user1 = new User
             {
                 UserId = 1, 
@@ -251,7 +251,7 @@ using NUnit.Framework;
             var plantPreset = new PlantPreset
             {
                 PresetId = 1,
-                UserId = 1, // Assuming a valid user ID for testing
+                UserId = 1, 
                 Name = "TestPreset",
                 Humidity = 50,
                 UVLight = 500,

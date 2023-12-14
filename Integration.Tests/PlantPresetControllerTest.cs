@@ -57,7 +57,7 @@ using Microsoft.AspNetCore.Mvc;
         {
             // Arrange
             ClearDatabase();
-            // Add a sample plant preset to the database
+            
             var plantPreset = new PlantPreset
             {
                 Temperature = 30,
@@ -80,7 +80,7 @@ using Microsoft.AspNetCore.Mvc;
         {
             // Arrange
             ClearDatabase();
-            // Add a sample user and plant preset to the database
+
             var user = new User
             {
                 UserId = 1,
@@ -94,7 +94,7 @@ using Microsoft.AspNetCore.Mvc;
                 Humidity = 20,
                 UVLight = 80,
                 Name = "MyPreset",
-                UserId = user.UserId // Link the plant preset to the user
+                UserId = user.UserId 
             };
             Context.Users.Add(user);
             Context.Presets.Add(plantPreset);

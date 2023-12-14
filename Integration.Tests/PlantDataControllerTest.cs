@@ -44,7 +44,7 @@ public class PlantDataControllerTests : DatabaseTestFixture
                  var plantPreset = new PlantPreset
                  {
                      PresetId = 1,
-                     UserId = 1, // Assuming a valid user ID for testing
+                     UserId = 1, 
                      Name = "TestPreset",
                      Humidity = 50,
                      UVLight = 500,
@@ -70,7 +70,7 @@ public class PlantDataControllerTests : DatabaseTestFixture
                
                  var plantData1 = new PlantData()
                  {
-                     PlantDevice = device, // Assuming a valid device ID for testing
+                     PlantDevice = device, 
                      Humidity = 50,
                      Temperature = 25,
                      Moisture = 300,
@@ -81,7 +81,7 @@ public class PlantDataControllerTests : DatabaseTestFixture
                  var plantData2 = new PlantData()
                  {
 
-                     PlantDevice = device, // Assuming a valid device ID for testing
+                     PlantDevice = device,
                      Humidity = 50,
                      Temperature = 25,
                      Moisture = 300,
@@ -100,7 +100,7 @@ public class PlantDataControllerTests : DatabaseTestFixture
                
                  var dto1 = new PlantDataCreationDTO(){
                      
-                     DeviceId = plantData1.PlantDevice.DeviceId, // Assuming a valid device ID for testing
+                     DeviceId = plantData1.PlantDevice.DeviceId, 
                      Humidity = plantData1.Humidity,
                      Temperature = plantData1.Temperature,
                      Moisture = plantData1.Moisture,
@@ -111,7 +111,7 @@ public class PlantDataControllerTests : DatabaseTestFixture
                  
                  var dto2= new PlantDataCreationDTO(){
                      
-                     DeviceId = plantData2.PlantDevice.DeviceId, // Assuming a valid device ID for testing
+                     DeviceId = plantData2.PlantDevice.DeviceId, 
                      Humidity = plantData2.Humidity,
                      Temperature = plantData2.Temperature,
                      Moisture = plantData2.Moisture,
@@ -144,7 +144,8 @@ public class PlantDataControllerTests : DatabaseTestFixture
     {
         // Arrange
         ClearDatabase();
-        // Add a sample user and plant data to the database
+        
+        
         var device = new Device()
         {
             Status = true

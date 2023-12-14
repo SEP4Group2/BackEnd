@@ -16,6 +16,7 @@ public class PlantDataManagerImpl : IPlantDataManager
     private int maxDifferenceAllowedMoisture = 10;
     private int maxDifferenceAllowedUVLight = 8;
     private int maxDifferenceAllowedTemperature = 2;
+    
     private int maxWaterTankLevel = 200;
 
     public PlantDataManagerImpl(IPlantDataDAO plantDataDao, INotificationSender notificationSender, IActionsSender actionsSender)

@@ -105,7 +105,7 @@ using NUnit.Framework;
         }
 
         [Test]
-        public async Task EditAsync_AlreadyExistingUsername_ShouldThrowException()
+        public async Task EditAsync_AlreadyExistingUser_ShouldThrowException()
         {
             // Arrange
             ClearDatabase();
@@ -139,7 +139,7 @@ using NUnit.Framework;
         }
 
         [Test]
-        public async Task RemoveAsync_ShouldRemoveUserAndAssociatedData()
+        public async Task RemoveAsync_ShouldRemoveUserAndReferencedData()
         {
             // Arrange
             ClearDatabase();
@@ -187,7 +187,7 @@ using NUnit.Framework;
             // Act
             await _userDao.RemoveAsync(user.UserId);
 
-            // Assert throwing an exception when there are no users int he database
+            // Assert throwing an exception when there are no users int the database
             Assert.ThrowsAsync<Exception>(async () => await _userDao.GetAllUsersAsync());
 
             // Ensure associated plants and presets are removed
@@ -198,7 +198,7 @@ using NUnit.Framework;
         }
 
         [Test]
-        public async Task RemoveAsync_InvalidUserId_ShouldThrowException()
+        public async Task RemoveAsync_NonExistingUser_ShouldThrowException()
         {
             // Arrange
             ClearDatabase();
