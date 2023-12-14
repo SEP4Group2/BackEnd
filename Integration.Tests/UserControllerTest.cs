@@ -47,7 +47,6 @@ using NUnit.Engine;
         }
 
       
-        //Testing if the correct user is returned
         [Test]
         public async Task Login_WithValidUser_ReturnsOkResultWithToken()
         {

@@ -22,17 +22,14 @@ public class PlantPresetManagerImplTests
         plantPresetDaoMock.Setup(dao => dao.CreateAsync(It.IsAny<PlantPresetCreationDTO>()))
                           .ReturnsAsync(expectedPlantPreset);
 
-        // Act
         var result = await plantPresetManager.CreateAsync(plantPresetCreationDto);
 
-        // Assert
         Assert.NotNull(result);
     }
 
     [Test]
     public async Task GetByIdAsync_ValidPresetId_ReturnsPlantPreset()
     {
-        // Arrange
         var plantPresetDaoMock = new Mock<IPlantPresetDAO>();
         var plantPresetManager = new PlantPresetManagerImpl(plantPresetDaoMock.Object);
 
@@ -42,18 +39,14 @@ public class PlantPresetManagerImplTests
         plantPresetDaoMock.Setup(dao => dao.GetAsync(It.IsAny<int>()))
                           .ReturnsAsync(expectedPlantPreset);
 
-        // Act
         var result = await plantPresetManager.GetByIdAsync(presetId);
 
-        // Assert
         Assert.NotNull(result);
-        // Add more assertions based on your requirements
     }
 
     [Test]
     public async Task GetAllPresetsAsync_ValidUserId_ReturnsPlantPresetList()
     {
-        // Arrange
         var plantPresetDaoMock = new Mock<IPlantPresetDAO>();
         var plantPresetManager = new PlantPresetManagerImpl(plantPresetDaoMock.Object);
 
@@ -66,10 +59,8 @@ public class PlantPresetManagerImplTests
         plantPresetDaoMock.Setup(dao => dao.GetAllPresetsAsync(It.IsAny<int>()))
                           .ReturnsAsync(expectedPlantPresetsList);
 
-        // Act
         var result = await plantPresetManager.GetAllPresetsAsync(userId);
 
-        // Assert
         Assert.NotNull(result);
     }
 }

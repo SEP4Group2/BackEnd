@@ -15,15 +15,12 @@ public class PlantManagerTests
     [SetUp]
     public void Setup()
     {
-        // Mock PlantDataDao
         mockPlantDao = new Mock<IPlantDAO>();
-        // Create an instance of the class under test, passing the mock dependency
         plantManager = new PlantManagerImpl(mockPlantDao.Object);
     }
     [Test]
         public async Task CreateAsync_ValidPlantCreationDTO_ReturnsPlant()
         {
-            // Arrange
             mockPlantDao.Setup(dao => dao.CreateAsync(It.IsAny<PlantCreationDTO>()))
                 .ReturnsAsync(new Plant { Name = "TestPlant",
                     Location = "TestLocation",
@@ -37,10 +34,8 @@ public class PlantManagerTests
                 PlantPresetId = 1
             };
 
-            // Act
             var result = await plantManager.CreateAsync(validPlantCreationDto);
 
-            // Assert
             Assert.NotNull(result);
             Assert.IsInstanceOf<Plant>(result);
         }
@@ -54,7 +49,7 @@ public class PlantManagerTests
             {
                 Name = "TestPlant",
                 Location = "TestLocation",
-                PlantPresetId = 0 // Invalid PlantPresetId
+                PlantPresetId = 0 
             };
 
             Assert.ThrowsAsync<ArgumentException>(() => plantManager.CreateAsync(invalidPlantCreationDto));
@@ -74,7 +69,6 @@ public class PlantManagerTests
             
             var result = await plantManager.GetAllPlantsAsync(1);
 
-            // Assert
             Assert.NotNull(result);
             Assert.IsInstanceOf<IEnumerable<GetAllPlantsDTO>>(result);
         }
@@ -86,24 +80,20 @@ public class PlantManagerTests
 
             var validId = 1;
 
-            // Act
             await plantManager.RemoveAsync(validId);
 
-            // Assert
             mockPlantDao.Verify(dao => dao.RemoveAsync(validId), Times.Once);
         }
 
         [Test]
         public async Task GetAsync_ValidId_ReturnsPlant()
         {
-            mockPlantDao.Setup(dao => dao.GetAsync(It.IsAny<int>())).ReturnsAsync(new Plant { /* Initialize properties */ });
+            mockPlantDao.Setup(dao => dao.GetAsync(It.IsAny<int>())).ReturnsAsync(new Plant { Name = "plant", Location = "Room"});
 
             var validId = 1;
 
-            // Act
             var result = await plantManager.GetAsync(validId);
 
-            // Assert
             Assert.NotNull(result);
             Assert.IsInstanceOf<Plant>(result);
         }
@@ -165,11 +155,19 @@ public class PlantManagerTests
 
             mockPlantDao.Setup(dao => dao.EditAsync(plantToUpdate)).ReturnsAsync(plantCreationDto);
 
-            // Act
             var result = await plantManager.EditAsync(plantToUpdate);
 
-            // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(plantCreationDto, result);
+        }
+        
+
+        [Test]
+        public void GetAsync_ExceptionThrown()
+        {
+            int plantId = 1;
+            mockPlantDao.Setup(x => x.GetAsync(It.IsAny<int>())).ThrowsAsync(new Exception());
+
+            Assert.ThrowsAsync<Exception>(async () => await plantManager.GetAsync(plantId));
         }
 }

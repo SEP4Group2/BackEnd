@@ -1,14 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using DataAccess.DAOInterfaces;
 using Domain.DTOs;
 using Domain.Model;
 using Logic.Implementations;
 using Logic.Interfaces;
 using Moq;
-using NUnit.Framework;
 
 [TestFixture]
 public class UserManagerImplTests
@@ -19,9 +15,7 @@ public class UserManagerImplTests
     [SetUp]
     public void Setup()
     {
-        // Mock PlantDataDao
         userDaoMock = new Mock<IUserDAO>();
-        // Create an instance of the class under test, passing the mock dependency
         userManagerImpl = new UserManagerImpl(userDaoMock.Object);
     }
     
@@ -29,24 +23,18 @@ public class UserManagerImplTests
     [Test]
     public async Task CreateUserAsync_ValidUser_ReturnsUser()
     {
-        // Arrange
         var userDto = new UserDTO {Username = "Anushri", Password = "Gupta"};
         var mockUserDao = new Mock<IUserDAO>();
         mockUserDao.Setup(dao => dao.CreateAsync(It.IsAny<UserDTO>()))
                    .ReturnsAsync(new User {Username = "Anushri", Password = "Gupta"});
         var userManager = new UserManagerImpl(mockUserDao.Object);
-
-        // Act
         var result = await userManager.CreateAsync(userDto);
-
-        // Assert
         Assert.NotNull(result);
     }
 
     [Test]
     public async Task GetAllUsersAsync_ReturnsUsersList()
     {
-        // Arrange
         var mockUserDao = new Mock<IUserDAO>();
         mockUserDao.Setup(dao => dao.GetAllUsersAsync())
                    .ReturnsAsync(new List<User> { new User()
@@ -60,101 +48,80 @@ public class UserManagerImplTests
                    });
         var userManager = new UserManagerImpl(mockUserDao.Object);
 
-        // Act
         var result = await userManager.GetAllUsersAsync();
 
-        // Assert
         Assert.NotNull(result);
     }
 
     [Test]
     public async Task ValidateUser_ValidCredentials_ReturnsUser()
     {
-        // Arrange
-        var userDto = new UserDTO { Username = "Anushri1", Password = "Guptaa"};
-        var mockUserDao = new Mock<IUserDAO>();
-        mockUserDao.Setup(dao => dao.GetAllUsersAsync())
+        var userDto = new UserDTO { Username = "Anushri1", Password = "Gupta"};
+        userDaoMock.Setup(dao => dao.GetAllUsersAsync())
                    .ReturnsAsync(new List<User> { new User()
                    {
-                       Username = "Anushri1", Password = "Guptaa"
+                       Username = "Anushri1", Password = "Gupta"
                    },
                        new User()
                        {
-                           Username = "Username1", Password = "Passowrd"
+                           Username = "Username1", Password = "Password"
                        }
                    });
-        var userManager = new UserManagerImpl(mockUserDao.Object);
 
-        // Act
-        var result = await userManager.ValidateUser(userDto);
+        var result = await userManagerImpl.ValidateUser(userDto);
 
-        // Assert
         Assert.NotNull(result);
-        // Add more assertions based on your requirements
     }
 
     [Test]
     public async Task ValidateUser_UserNotFound_ThrowsException()
     {
-        // Arrange
         var userDto = new UserDTO { Username = "Wrong", Password = "User"};
-        var mockUserDao = new Mock<IUserDAO>();
-        mockUserDao.Setup(dao => dao.GetAllUsersAsync())
+        userDaoMock.Setup(dao => dao.GetAllUsersAsync())
                    .ReturnsAsync(new List<User> {new User()
                    {
-                       Username = "Anushri2", Password = "Gupta1"
+                       Username = "Test2", Password = "Test1"
                    } ,
                        new User()
                        {
-                           Username = "Ansuhri3", Password = "Gupta11"
+                           Username = "Test3", Password = "Test11"
                        }
                    });
-        var userManager = new UserManagerImpl(mockUserDao.Object);
 
-        // Act & Assert
-        Assert.ThrowsAsync<Exception>(async () => await userManager.ValidateUser(userDto));
+        Assert.ThrowsAsync<Exception>(async () => await userManagerImpl.ValidateUser(userDto));
     }
 
     [Test]
     public async Task ValidateUser_PasswordMismatch_ThrowsException()
     {
-        // Arrange
         var userDto = new UserDTO {Username = "User", Password = "Wrong"};
-        var mockUserDao = new Mock<IUserDAO>();
-        mockUserDao.Setup(dao => dao.GetAllUsersAsync())
+        userDaoMock.Setup(dao => dao.GetAllUsersAsync())
                    .ReturnsAsync(new List<User> {new User()
                    {
                        Username = "User", Password = "Right"
                    } ,
                        new User()
                        {
-                           Username = "Anushri4", Password = "Guptaaaa"
+                           Username = "Test", Password = "Test"
                        }
                    });
-        var userManager = new UserManagerImpl(mockUserDao.Object);
 
-        // Act & Assert
-        Assert.ThrowsAsync<Exception>(async () => await userManager.ValidateUser(userDto));
+        Assert.ThrowsAsync<Exception>(async () => await userManagerImpl.ValidateUser(userDto));
     }
     
     [Test]
     public async Task RemoveAsync_ValidId_CallsUserDaoRemoveAsync()
     {
-        // Arrange
-        
 
         var validId = 1;
 
-        // Act
         await userManagerImpl.RemoveAsync(validId);
 
-        // Assert
         userDaoMock.Verify(dao => dao.RemoveAsync(validId), Times.Once);
     }
     [Test]
     public async Task EditAsync_WhenCalled_ShouldReturnEditedUser()
     {
-        // Arrange
 
         var userDto = new UserDTO
         {
@@ -171,10 +138,8 @@ public class UserManagerImplTests
 
         userDaoMock.Setup(dao => dao.EditAsync(userDto)).ReturnsAsync(editedUser);
 
-        // Act
         var result = await userManagerImpl.EditAsync(userDto);
 
-        // Assert
         Assert.IsNotNull(result);
         Assert.AreEqual(editedUser, result);
     }

@@ -1,7 +1,4 @@
-﻿using System.Net.Sockets;
-using System.Text;
-using System.Text.Json;
-using Logic.Interfaces;
+﻿using Logic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BackEndAPI.Controllers;
